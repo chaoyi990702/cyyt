@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图文内容拼接</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f4f7fa;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.box{background:#fff;width:100%;max-width:480px;padding:32px;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,0.08)}
+h2{text-align:center;margin-bottom:24px;color:#222}
+.form-item{margin-bottom:18px}
+label{display:block;margin-bottom:6px;font-size:14px;color:#444}
+input,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px}
+textarea{height:110px;resize:none}
+#resultBox{margin-top:12px;padding:12px;background:#f7f8fa;border-radius:8px;white-space:pre-wrap;word-break:break-all;font-size:14px}
+.btns{display:flex;gap:10px;margin-top:16px}
+button{padding:11px 14px;border:none;border-radius:8px;cursor:pointer;font-size:15px}
+#combineBtn{background:#3b82f6;color:white}
+#copyBtn{background:#e5e7eb}
+.tip{margin-top:16px;font-size:12px;color:#777}
+</style>
+</head>
+<body>
+<div class="box">
+    <h2>图文内容拼接</h2>
+
+    <div class="form-item">
+        <label>图片链接（在线图片网址）</label>
+        <input id="imgLink" placeholder="https://xxx.jpg">
+    </div>
+
+    <div class="form-item">
+        <label>文字内容</label>
+        <textarea id="textContent" placeholder="写下你的文字"></textarea>
+    </div>
+
+    <div class="btns">
+        <button id="combineBtn">拼接内容</button>
+        <button id="copyBtn">复制全部内容</button>
+    </div>
+
+    <div id="resultBox">拼接后的内容会显示在这里</div>
+
+    <div class="tip">
+部署后，复制浏览器地址栏网址，粘贴到二维码生成器，生成指向本网页的二维码。
+    </div>
+</div>
+
+<script>
+const imgLinkEl = document.querySelector('#imgLink');
+const textEl = document.querySelector('#textContent');
+const combineBtn = document.querySelector('#combineBtn');
+const copyBtn = document.querySelector('#copyBtn');
+const resultBox = document.querySelector('#resultBox');
+
+combineBtn.onclick = function(){
+    const img = imgLinkEl.value.trim();
+    const txt = textEl.value.trim();
+    let out = '';
+    if(img) out += "图片："+img+"\n\n";
+    if(txt) out += txt;
+    resultBox.innerText = out || "请填写图片链接或者文字";
+}
+
+copyBtn.onclick = async function(){
+    const text = resultBox.innerText;
+    if(!text || text==="请填写图片链接或者文字")return;
+    try{
+        await navigator.clipboard.writeText(text);
+        alert("已复制！可以粘贴到二维码生成器");
+    }catch(e){
+        alert("复制失败，请手动选中复制");
+    }
+}
+</script>
+</body>
+</html>
