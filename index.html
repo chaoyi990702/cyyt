@@ -15,7 +15,7 @@ body{
   justify-content:center;
   align-items:center;
   padding:24px;
-  background-color:#e8edf4;
+  background-color:#e8edf4 !important;
 }
 .mask-container{
   max-width:540px;
@@ -51,7 +51,6 @@ input{
   transition:0.2s;
 }
 .btn:hover{background:#374151}
-
 .audio-tip {
   display: flex;
   align-items: center;
@@ -62,19 +61,16 @@ input{
   color: #6b7280;
   animation: pulse 2s ease-in-out infinite;
 }
-
 .audio-tip img {
   width: 20px;
   height: 20px;
   object-fit: contain;
 }
-
 @keyframes pulse {
   0% { opacity: 0.6; }
   50% { opacity: 1; }
   100% { opacity: 0.6; }
 }
-
 .audio-control-btn{
   position:absolute;
   top:16px;
@@ -93,17 +89,15 @@ input{
   width:20px;
   height:20px;
 }
-
 .tips{margin-top:16px;font-size:12px;color:#777;text-align:center}
 .error-text{color:#c82423;font-size:13px;margin-top:10px;display:none}
-
 #surprisePage{
   min-height:100vh;
   display:none;
   justify-content:center;
   align-items:center;
   padding:24px 16px;
-  background-color:#f0e8ee;
+  background-color:#f0e8ee !important;
 }
 .surprise-box{
   max-width:580px;
@@ -139,13 +133,11 @@ input{
   <source src="./bgm.mp3" type="audio/mpeg">
 
 
-
 <div id="maskPage">
   <div class="mask-container">
     <div class="audio-control-btn" id="audioToggle">
       <img id="speakerIcon" src="https://cdn-icons-png.flaticon.com/512/727/727269.png" alt="音乐">
     </div>
-
     <div class="header">
       <div class="book-title">《沧澜归屿》读者客服中心</div>
       <div class="desc">书籍序列号核验｜读者问题反馈</div>
@@ -156,22 +148,18 @@ input{
       <div class="error-text" id="errMsg">序列号无效，请核对实体书扉页重新输入</div>
     </div>
     <button class="btn" id="submitBtn">提交核验</button>
-
     <div class="audio-tip">
       <img src="https://cdn-icons-png.flaticon.com/512/727/727269.png" alt="声音图标">
       <span>点击页面任意位置开启背景音乐</span>
     </div>
-
     <div class="tips">仅正版实体书籍可完成核验 · 客服工作时间 10:00‑22:00</div>
   </div>
 </div>
-
 <div id="surprisePage">
   <div class="surprise-box">
     <div class="audio-control-btn" id="audioToggle2">
       <img id="speakerIcon2" src="https://cdn-icons-png.flaticon.com/512/727/727269.png" alt="音乐">
     </div>
-
     <h1>致我的女孩</h1>
     <p>跨越新山与贵阳遥遥的距离<br>我把所有日思夜想，都写进这本书。</p>
     <p>莫比乌斯对戒象征没有尽头的思念<br>山海相隔，但我的心意不会被距离隔断。</p>
@@ -180,12 +168,8 @@ input{
     <p>💛</p>
   </div>
 </div>
-
 <script>
 const SECRET_PASSWORD = "990702051125";
-// 暂时禁用外网图片防盗链
-const bgMaskUrl = "https://images.pexels.com/photos/5713818/pexels-photo-5713818.jpeg";
-const bgSurpriseUrl = "https://images.pexels.com/photos/20137266/pexels-photo-20137266.jpeg";
 const musicUrl = "./bgm.mp3";
 
 const maskPage = document.querySelector("#maskPage");
@@ -201,11 +185,8 @@ const speakerIcon2 = document.querySelector("#speakerIcon2");
 
 const iconPlay = "https://cdn-icons-png.flaticon.com/512/727/727269.png";
 const iconMute = "https://cdn-icons-png.flaticon.com/512/727/727271.png";
-
 let userActivated = false;
 
-if(bgMaskUrl) maskPage.style.backgroundImage = `url(${bgMaskUrl})`;
-if(bgSurpriseUrl) surprisePage.style.backgroundImage = `url(${bgSurpriseUrl})`;
 if(musicUrl) audio.src = musicUrl;
 
 audio.addEventListener("loadedmetadata",function(){
