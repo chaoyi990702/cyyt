@@ -8,9 +8,6 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system}
 body{
   min-height:100vh;
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
 }
 #maskPage{
   min-height:100vh;
@@ -18,7 +15,7 @@ body{
   justify-content:center;
   align-items:center;
   padding:24px;
-  background-color:#f3f4f6;
+  background-color:#e8edf4;
 }
 .mask-container{
   max-width:540px;
@@ -106,7 +103,7 @@ input{
   justify-content:center;
   align-items:center;
   padding:24px 16px;
-  background-color:#fef2f2;
+  background-color:#f0e8ee;
 }
 .surprise-box{
   max-width:580px;
@@ -186,8 +183,9 @@ input{
 
 <script>
 const SECRET_PASSWORD = "990702051125";
-const bgMaskUrl = "https://images.pexels.com/photos/5713818/pexels-photo-5713818.jpeg";
-const bgSurpriseUrl = "https://images.pexels.com/photos/20137266/pexels-photo-20137266.jpeg";
+// 暂时禁用外网图片防盗链
+const bgMaskUrl = "";
+const bgSurpriseUrl = "";
 const musicUrl = "./bgm.mp3";
 
 const maskPage = document.querySelector("#maskPage");
@@ -204,24 +202,21 @@ const speakerIcon2 = document.querySelector("#speakerIcon2");
 const iconPlay = "https://cdn-icons-png.flaticon.com/512/727/727269.png";
 const iconMute = "https://cdn-icons-png.flaticon.com/512/727/727271.png";
 
-let userActivated = false; //标记用户是否已经点击激活音频权限
+let userActivated = false;
 
 if(bgMaskUrl) maskPage.style.backgroundImage = `url(${bgMaskUrl})`;
 if(bgSurpriseUrl) surprisePage.style.backgroundImage = `url(${bgSurpriseUrl})`;
 if(musicUrl) audio.src = musicUrl;
 
-//音频加载完成后恢复上次播放时间
 audio.addEventListener("loadedmetadata",function(){
   let savedTime = localStorage.getItem("bgmTime");
   if(savedTime) audio.currentTime = parseFloat(savedTime);
 });
 
-//保存播放进度
 audio.addEventListener("timeupdate",()=>{
   localStorage.setItem("bgmTime", audio.currentTime);
 });
 
-//更新喇叭图标
 function updateIcon(){
   if(audio.paused){
     speakerIcon.src = iconMute;
@@ -232,7 +227,6 @@ function updateIcon(){
   }
 }
 
-//页面任意点击，只执行一次，激活音频权限
 document.body.addEventListener("click",function(){
   if(!userActivated){
     userActivated = true;
@@ -241,7 +235,6 @@ document.body.addEventListener("click",function(){
   }
 },{once:true});
 
-//喇叭按钮：只有用户已经激活音频之后，才可以暂停/继续
 function toggleAudio(){
   if(!userActivated) return;
   if(audio.paused){
