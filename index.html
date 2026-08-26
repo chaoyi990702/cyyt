@@ -171,7 +171,6 @@ input{
 <script>
 const SECRET_PASSWORD = "990702051125";
 const musicUrl = "./bgm.mp3";
-
 const maskPage = document.querySelector("#maskPage");
 const surprisePage = document.querySelector("#surprisePage");
 const inputEl = document.querySelector("#passwordInput");
@@ -182,22 +181,17 @@ const audioToggle = document.querySelector("#audioToggle");
 const audioToggle2 = document.querySelector("#audioToggle2");
 const speakerIcon = document.querySelector("#speakerIcon");
 const speakerIcon2 = document.querySelector("#speakerIcon2");
-
 const iconPlay = "https://cdn-icons-png.flaticon.com/512/727/727269.png";
 const iconMute = "https://cdn-icons-png.flaticon.com/512/727/727271.png";
 let userActivated = false;
-
 if(musicUrl) audio.src = musicUrl;
-
 audio.addEventListener("loadedmetadata",function(){
   let savedTime = localStorage.getItem("bgmTime");
   if(savedTime) audio.currentTime = parseFloat(savedTime);
 });
-
 audio.addEventListener("timeupdate",()=>{
   localStorage.setItem("bgmTime", audio.currentTime);
 });
-
 function updateIcon(){
   if(audio.paused){
     speakerIcon.src = iconMute;
@@ -207,7 +201,6 @@ function updateIcon(){
     speakerIcon2.src = iconPlay;
   }
 }
-
 document.body.addEventListener("click",function(){
   if(!userActivated){
     userActivated = true;
@@ -215,7 +208,6 @@ document.body.addEventListener("click",function(){
     updateIcon();
   }
 },{once:true});
-
 function toggleAudio(){
   if(!userActivated) return;
   if(audio.paused){
@@ -225,10 +217,8 @@ function toggleAudio(){
   }
   updateIcon();
 }
-
 audioToggle.onclick = toggleAudio;
 audioToggle2.onclick = toggleAudio;
-
 submitBtn.onclick = function(){
   errMsg.style.display = "none";
   const val = inputEl.value.trim();
