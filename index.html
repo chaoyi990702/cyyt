@@ -30,8 +30,8 @@ body{
 .book-title{font-size:19px;font-weight:600;margin-bottom:8px;color:#222}
 .desc{font-size:13px;color:#666}
 .form-item{margin-bottom:22px}
-label{display:block;font-size:14px;margin-bottom:8px;color:#444}
-input{
+.form-item label{display:block;font-size:14px;margin-bottom:8px;color:#444}
+#passwordInput{
   width:100%;
   padding:14px 15px;
   border:1px solid #bbb;
@@ -129,9 +129,6 @@ input{
 </style>
 </head>
 <body>
-<audio id="bgMusic" loop preload="auto">
-  <source src="./bgm.mp3" type="audio/mpeg">
-
 
 <div id="maskPage">
   <div class="mask-container">
@@ -143,7 +140,7 @@ input{
       <div class="desc">书籍序列号核验｜读者问题反馈</div>
     </div>
     <div class="form-item">
-      <label>请输入印刷在扉页的书籍序列号</label>
+      <label for="passwordInput">请输入印刷在扉页的书籍序列号</label>
       <input id="passwordInput" placeholder="在此输入序列号">
       <div class="error-text" id="errMsg">序列号无效，请核对实体书扉页重新输入</div>
     </div>
@@ -155,6 +152,7 @@ input{
     <div class="tips">仅正版实体书籍可完成核验 · 客服工作时间 10:00‑22:00</div>
   </div>
 </div>
+
 <div id="surprisePage">
   <div class="surprise-box">
     <div class="audio-control-btn" id="audioToggle2">
@@ -168,30 +166,38 @@ input{
     <p>💛</p>
   </div>
 </div>
+
 <script>
 const SECRET_PASSWORD = "990702051125";
 const musicUrl = "./bgm.mp3";
+
 const maskPage = document.querySelector("#maskPage");
 const surprisePage = document.querySelector("#surprisePage");
 const inputEl = document.querySelector("#passwordInput");
 const submitBtn = document.querySelector("#submitBtn");
 const errMsg = document.querySelector("#errMsg");
-const audio = document.querySelector("#bgMusic");
 const audioToggle = document.querySelector("#audioToggle");
 const audioToggle2 = document.querySelector("#audioToggle2");
 const speakerIcon = document.querySelector("#speakerIcon");
 const speakerIcon2 = document.querySelector("#speakerIcon2");
+
 const iconPlay = "https://cdn-icons-png.flaticon.com/512/727/727269.png";
 const iconMute = "https://cdn-icons-png.flaticon.com/512/727/727271.png";
 let userActivated = false;
-if(musicUrl) audio.src = musicUrl;
+
+// JS动态创建audio，彻底避免标签闭合bug
+const audio = new Audio(musicUrl);
+audio.loop = true;
+
 audio.addEventListener("loadedmetadata",function(){
   let savedTime = localStorage.getItem("bgmTime");
   if(savedTime) audio.currentTime = parseFloat(savedTime);
 });
+
 audio.addEventListener("timeupdate",()=>{
   localStorage.setItem("bgmTime", audio.currentTime);
 });
+
 function updateIcon(){
   if(audio.paused){
     speakerIcon.src = iconMute;
@@ -201,6 +207,7 @@ function updateIcon(){
     speakerIcon2.src = iconPlay;
   }
 }
+
 document.body.addEventListener("click",function(){
   if(!userActivated){
     userActivated = true;
@@ -208,6 +215,7 @@ document.body.addEventListener("click",function(){
     updateIcon();
   }
 },{once:true});
+
 function toggleAudio(){
   if(!userActivated) return;
   if(audio.paused){
@@ -217,8 +225,10 @@ function toggleAudio(){
   }
   updateIcon();
 }
+
 audioToggle.onclick = toggleAudio;
 audioToggle2.onclick = toggleAudio;
+
 submitBtn.onclick = function(){
   errMsg.style.display = "none";
   const val = inputEl.value.trim();
