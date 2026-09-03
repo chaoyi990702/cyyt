@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>《沧澜归屿》读者客服中心</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+/* ============ 默认主题: 星空海浪小熊 ============ */
+:root{
+  --rose:#7BA4D6;
+  --rose-deep:#5C8AC2;
+  --rose-light:#7BA4D6;
+  --peach:#FCEEF1;
+  --gold:#FDEE87;
+  --gold-light:#FDEE87;
+  --cream:#FDFBF7;
+  --foam:#FDFBF7;
+  --ink:#5A4A63;
+  --ink-light:#9A8CA3;
+  --sky:#E6DFF5;
+  --sea:#D4E4F7;
+  --serif:"Noto Serif SC", "Songti SC", "SimSun", serif;
+  --sans:"Noto Sans SC", system-ui, -apple-system, "PingFang SC", sans-serif;
+}
+/* ============ 主题1: 落日玫瑰 ============ */
+body.theme-rose {
+  --rose:#e0759a;
+  --rose-deep:#c85f87;
+  --rose-light:#f3a8c2;
+  --peach:#f7c6a5;
+  --gold:#d9a45c;
+  --gold-light:#ecc88c;
+  --cream:#fff8f2;
+  --foam:#fffdf9;
+  --ink:#5b4250;
+  --ink-light:#a08697;
+  --sky:#fceef3;
+  --sea:#eaf1fa;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+  background:
+    radial-gradient(900px 400px at 15% -5%, rgba(123,164,214,0.25), transparent 60%),
+    radial-gradient(800px 420px at 90% 8%, rgba(252,238,241,0.20), transparent 60%),
+    radial-gradient(900px 500px at 50% 45%, rgba(224,228,247,0.45), transparent 65%),
+    linear-gradient(180deg, var(--sky) 0%, #D4E4F7 50%, #E8F0F8 100%);
+  background-attachment:fixed;
+  transition: background 0.6s ease;
+}
+body.theme-rose {
+  background:
+    radial-gradient(900px 400px at 15% -5%, rgba(243,168,194,0.35), transparent 60%),
+    radial-gradient(800px 420px at 90% 8%, rgba(247,198,165,0.30), transparent 60%),
+    radial-gradient(900px 500px at 50% 45%, rgba(234,241,250,0.55), transparent 65%),
+    linear-gradient(180deg, var(--sky) 0%, #fdeef2 25%, #fcf3ec 55%, var(--sea) 100%);
+}
+button{font-family:inherit}
+a{text-decoration:none;color:inherit}
+.hidden{display:none !important}
+/* 星空点缀（仅星空海浪主题显示） */
+body:not(.theme-rose)::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+    radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+    radial-gradient(2px 2px at 50px 160px, #fff, transparent),
+    radial-gradient(2px 2px at 90px 40px, #fff, transparent),
+    radial-gradient(2px 2px at 130px 80px, #fff, transparent);
+  background-repeat:repeat;
+  background-size:200px 200px;
+  opacity:0.5;
+}
+/* 漂浮的光晕装饰（仅落日玫瑰主题） */
+body.theme-rose::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    radial-gradient(420px 260px at 80% 30%, rgba(243,168,194,0.14), transparent 70%),
+    radial-gradient(380px 240px at 12% 70%, rgba(233,186,210,0.12), transparent 70%);
+}
+/* ============ 登录页 ============ */
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
+  position:relative;
+  overflow:hidden;
+}
+#loginPage::before,
+#loginPage::after{
+  content:"";
+  position:absolute;
+  left:-20%;
+  width:140%;
+  height:46px;
+  background:repeating-linear-gradient(90deg, rgba(224,117,154,0.10) 0 44px, transparent 44px 88px);
+  transform:rotate(-2deg);
+}
+#loginPage::before{top:24%;animation:drift 15s ease-in-out infinite}
+#loginPage::after{bottom:18%;animation:drift 19s ease-in-out infinite reverse}
+@keyframes drift{50%{transform:translateX(20px) rotate(-2deg)}}
+.login-card{
+  position:relative;
+  width:100%;
+  max-width:430px;
+  background:var(--cream);
+  border:1px solid rgba(123,164,214,0.35);
+  border-radius:20px;
+  padding:38px 26px 28px;
+  box-shadow:0 18px 50px rgba(92,138,194,0.15), inset 0 1px 0 rgba(255,255,255,0.8);
+  backdrop-filter:blur(6px);
+  z-index:1;
+  transition: all 0.6s ease;
+}
+body.theme-rose .login-card {
+  background: rgba(255,253,249,0.86);
+  border-color: rgba(224,117,154,0.35);
+  box-shadow: 0 18px 50px rgba(200,95,135,0.18), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+/* ===== 登录页 Logo 方形 ===== */
+.seal{
+  width:66px;height:66px;
+  margin:0 auto 18px;
+  border-radius:14px;
+  background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:700;font-size:24px;
+  letter-spacing:2px;
+  box-shadow:0 10px 24px rgba(123,164,214,0.35);
+  transition: all 0.6s ease;
+}
+body.theme-rose .seal {
+  border-radius:12px;
+  background:linear-gradient(145deg, #f6b3cb, var(--rose-deep));
+  box-shadow:0 10px 24px rgba(224,117,154,0.35);
+}
+.seal::after{
+  content:"♡";
+  position:absolute;
+  font-size:11px;
+  margin-top:40px;
+  color:var(--rose-deep);
+  opacity:.55;
+}
+.login-head{text-align:center;margin-bottom:26px}
+.login-head .book-title{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:1px;color:var(--ink)}
+.login-head .desc{margin-top:8px;font-size:12.5px;color:var(--ink-light);letter-spacing:2px}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:13.5px;margin-bottom:9px;color:var(--ink)}
+#passwordInput{
+  width:100%;
+  padding:14px 15px;
+  border-radius:12px;
+  border:1px solid rgba(123,164,214,0.4);
+  background:rgba(255,255,255,0.7);
+  color:var(--ink);
+  font-size:16px;
+  letter-spacing:1px;
+  outline:none;
+  transition: all 0.3s ease;
+}
+body.theme-rose #passwordInput {
+  border-color: rgba(224,117,154,0.4);
+}
+#passwordInput::placeholder{color:rgba(154,140,163,0.5);letter-spacing:0}
+#passwordInput:focus{border-color:var(--rose)}
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;border-radius:12px;
+  background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
+  color:#fff;
+  font-size:15.5px;font-weight:700;letter-spacing:4px;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+  box-shadow:0 10px 24px rgba(123,164,214,0.30);
+}
+body.theme-rose .btn {
+  box-shadow:0 10px 24px rgba(224,117,154,0.30);
+}
+.btn:active{transform:scale(0.98)}
+#errMsg{display:none;margin-top:12px;font-size:13px;color:#d9606f;text-align:center}
+.login-foot{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-light);letter-spacing:1px}
+.music-hint{margin-top:12px;text-align:center;font-size:12px;color:var(--rose-deep);opacity:.9;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+/* ============ 主站 ============ */
+#mainApp{display:none;min-height:100vh;position:relative;z-index:1}
+/* 顶部导航：左侧可滑动链接 + 右侧固定按钮组 */
+.topnav{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;
+  padding:8px 12px 8px 12px;
+  background:rgba(253,251,247,0.85);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(123,164,214,0.22);
+  transition: all 0.6s ease;
+  min-height:48px;
+}
+body.theme-rose .topnav {
+  background: rgba(255,253,249,0.82);
+  border-bottom-color: rgba(224,117,154,0.22);
+}
+/* 左侧：品牌 + 可横向滚动的链接 */
+.nav-left{
+  display:flex;
+  align-items:center;
+  gap:2px;
+  flex:1 1 auto;
+  min-width:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav-left::-webkit-scrollbar{display:none}
+.topnav .brand{
+  display:flex;align-items:center;gap:8px;
+  margin-right:4px;white-space:nowrap;
+  font-family:var(--serif);font-weight:700;color:var(--rose-deep);
+  flex-shrink:0;
+}
+.topnav .brand .seal-sm{
+  width:26px;height:26px;border-radius:8px;
+  background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
+  color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.nav-link{
+  white-space:nowrap;
+  padding:7px 12px;border-radius:999px;
+  font-size:13.5px;color:var(--ink-light);
+  cursor:pointer;transition:.2s;
+  flex-shrink:0;
+}
+.nav-link:hover{color:var(--rose-deep);background:rgba(123,164,214,0.12)}
+body.theme-rose .nav-link:hover {
+  color:var(--rose-deep);
+  background:rgba(224,117,154,0.12);
+}
+/* 右侧：固定的按钮组（音乐 + 换色），右对齐垂直居中 */
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+  margin-left:8px;
+  padding-left:8px;
+  border-left:1px solid rgba(123,164,214,0.2);
+}
+body.theme-rose .nav-actions {
+  border-left-color: rgba(224,117,154,0.2);
+}
+/* 音乐开关 */
+#audioBtn{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(123,164,214,0.4);
+  background:rgba(255,253,249,0.8);
+  color:var(--rose-deep);
+  font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:10;
+  box-shadow:0 2px 8px rgba(123,164,214,0.15);
+  transition: all 0.3s ease;
+  flex-shrink:0;
+  -webkit-appearance:none;
+  appearance:none;
+}
+body.theme-rose #audioBtn {
+  border-color: rgba(224,117,154,0.4);
+  background: rgba(255,253,249,0.8);
+  box-shadow: 0 2px 8px rgba(224,117,154,0.15);
+}
+#audioBtn.mute{color:var(--ink-light);border-color:rgba(154,140,163,0.4)}
+#audioBtn.mute::after{
+  content:"";position:absolute;width:18px;height:2px;background:var(--ink-light);
+  transform:rotate(-45deg);
+}
+/* 换色按钮 */
+.theme-toggle{
+  padding:5px 14px;
+  border-radius:999px;
+  border:1px solid var(--rose);
+  background:transparent;
+  color:var(--rose-deep);
+  font-size:12.5px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition: all 0.3s ease;
+  font-family:var(--sans);
+  display:flex;align-items:center;gap:5px;
+  flex-shrink:0;
+  -webkit-appearance:none;
+  appearance:none;
+}
+.theme-toggle:hover{
+  background:var(--rose);
+  color:#fff;
+}
+.theme-toggle .toggle-icon{font-size:14px;}
+/* 章节通用 */
+section{position:relative;padding:52px 20px 44px;max-width:640px;margin:0 auto}
+.sec-eyebrow{font-size:12px;letter-spacing:3px;color:var(--rose-deep);margin-bottom:10px}
+.sec-title{font-family:var(--serif);font-size:24px;font-weight:700;letter-spacing:2px;margin-bottom:8px;color:var(--ink)}
+.sec-sub{font-size:13.5px;color:var(--ink-light);line-height:1.7;margin-bottom:22px}
+.card{
+  background:rgba(255,253,249,0.8);
+  border:1px solid rgba(123,164,214,0.22);
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 6px 22px rgba(123,164,214,0.08);
+  transition: all 0.6s ease;
+}
+body.theme-rose .card {
+  background:rgba(255,253,249,0.8);
+  border:1px solid rgba(224,117,154,0.22);
+  box-shadow:0 6px 22px rgba(200,95,135,0.08);
+}
+/* 波峰分隔线 */
+.wave-div{display:block;width:100%;height:52px;opacity:.85}
+.wave-div svg{display:block;width:100%;height:100%}
+/* ============ Hero ============ */
+#hero{padding-top:72px;text-align:center}
+.hero-eyebrow{font-size:13px;letter-spacing:6px;color:var(--rose)}
+.hero-title{
+  font-family:var(--serif);font-size:38px;font-weight:900;
+  letter-spacing:6px;margin:18px 0 6px;
+  background:linear-gradient(180deg, var(--rose-light), var(--rose-deep));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-sub{font-size:13px;color:var(--ink-light);letter-spacing:3px;margin-bottom:26px}
+.day-counter{
+  display:inline-block;
+  font-family:var(--serif);
+  font-size:15px;letter-spacing:1px;
+  padding:12px 22px;border-radius:999px;
+  border:1px solid rgba(123,164,214,0.5);
+  background:rgba(253,251,247,0.7);
+  color:var(--ink);
+  margin-bottom:26px;
+  transition: all 0.6s ease;
+}
+body.theme-rose .day-counter {
+  border-color: rgba(224,117,154,0.5);
+  background: rgba(255,253,249,0.7);
+}
+.day-counter b{font-size:26px;color:var(--rose-deep);margin:0 4px}
+.hero-words{font-size:15.5px;line-height:2.1;color:var(--ink);max-width:480px;margin:0 auto 26px}
+.hero-words .hl{color:var(--rose-deep);font-weight:600}
+.photo-frame{
+  position:relative;
+  width:100%;max-width:420px;height:250px;margin:0 auto 14px;
+  border-radius:18px;overflow:hidden;
+  border:1px solid rgba(123,164,214,0.35);
+  background:linear-gradient(160deg, #eef4fb, #dbeafe 55%, #FCEEF1);
+  display:flex;align-items:center;justify-content:center;
+  transition: all 0.6s ease;
+}
+body.theme-rose .photo-frame {
+  border-color: rgba(224,117,154,0.35);
+  background:linear-gradient(160deg, #fdeef2, #fbe4d6 55%, #eaf1fa);
+}
+.photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-placeholder{text-align:center;color:var(--ink-light);font-size:13px;line-height:2;padding:0 20px}
+.photo-placeholder .heart{color:var(--rose);font-size:26px;margin-bottom:6px}
+.scroll-tip{margin-top:26px;color:var(--ink-light);font-size:12.5px;letter-spacing:2px;opacity:.8}
+/* ============ 每日一句 ============ */
+.daily-card{text-align:center;padding:34px 24px}
+.daily-card .d-label{font-size:12px;letter-spacing:3px;color:var(--rose-deep);margin-bottom:16px}
+.daily-card .d-quote{
+  font-family:var(--serif);font-size:20px;line-height:1.9;font-weight:600;
+  color:var(--ink);letter-spacing:1px;
+}
+.daily-card .d-date{margin-top:16px;font-size:12px;color:var(--ink-light);letter-spacing:2px}
+/* ============ 书目录 ============ */
+.chapter{
+  border:1px solid rgba(123,164,214,0.25);
+  background:rgba(255,253,249,0.8);
+  border-radius:14px;
+  margin-bottom:12px;overflow:hidden;
+  box-shadow:0 4px 14px rgba(123,164,214,0.06);
+  transition: all 0.6s ease;
+}
+body.theme-rose .chapter {
+  border-color: rgba(224,117,154,0.25);
+  box-shadow:0 4px 14px rgba(200,95,135,0.06);
+}
+.chapter .ch-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 18px;cursor:pointer;
+}
+.chapter .ch-title{font-family:var(--serif);font-size:16.5px;font-weight:700;letter-spacing:1px;color:var(--ink)}
+.chapter .ch-num{font-size:11.5px;color:var(--rose);letter-spacing:2px;margin-top:4px}
+.chapter .ch-arrow{color:var(--rose);transition:transform .25s ease;font-size:13px}
+.chapter.open .ch-arrow{transform:rotate(180deg)}
+/* 修复：展开后高度足够容纳全部小章节，不再截断 */
+.chapter .ch-body{
+  max-height:0;overflow:hidden;transition:max-height .4s ease;
+  border-top:0 solid rgba(123,164,214,0.2);
+}
+body.theme-rose .chapter .ch-body {
+  border-top-color: rgba(224,117,154,0.2);
+}
+.chapter.open .ch-body{max-height:5000px;border-top-width:1px}
+.chapter .ch-quote{
+  padding:16px 18px;font-family:var(--serif);font-size:14.5px;
+  line-height:1.9;color:var(--rose-deep);letter-spacing:1px;
+}
+.chapter .ch-sub{
+  padding:7px 18px;font-size:13.5px;color:var(--ink-light);
+  line-height:1.8;border-top:1px dashed rgba(123,164,214,0.12);
+}
+.chapter .ch-sub:first-of-type{border-top:none}
+body.theme-rose .chapter .ch-sub {
+  border-top-color: rgba(224,117,154,0.12);
+}
+/* ============ 时间线 ============ */
+.timeline{position:relative;padding-left:26px}
+.timeline::before{
+  content:"";position:absolute;left:7px;top:6px;bottom:6px;
+  width:2px;background:linear-gradient(180deg, var(--rose), rgba(123,164,214,0.1));
+}
+body.theme-rose .timeline::before {
+  background:linear-gradient(180deg, var(--rose), rgba(224,117,154,0.1));
+}
+.tl-item{position:relative;padding-bottom:26px}
+.tl-item::before{
+  content:"";
+  position:absolute;left:-26px;top:4px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--cream);
+  border:2px solid var(--rose);
+}
+.tl-item .tl-date{font-size:12px;letter-spacing:1.5px;color:var(--rose-deep);margin-bottom:6px}
+.tl-item .tl-title{font-family:var(--serif);font-size:16.5px;font-weight:700;margin-bottom:6px;letter-spacing:1px;color:var(--ink)}
+.tl-item .tl-desc{font-size:13.5px;line-height:1.8;color:var(--ink-light)}
+.tl-item .tl-place{display:inline-block;margin-top:8px;font-size:11.5px;color:var(--rose-deep);
+  border:1px solid rgba(123,164,214,0.4);border-radius:999px;padding:3px 10px;letter-spacing:1px}
+body.theme-rose .tl-item .tl-place {
+  border-color: rgba(224,117,154,0.4);
+}
+/* ============ 兑换券 ============ */
+.coupon-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.coupon{
+  position:relative;border-radius:14px;overflow:hidden;cursor:pointer;
+  background:rgba(255,253,249,0.8);
+  border:1px dashed rgba(123,164,214,0.55);
+  padding:18px 14px;text-align:center;min-height:118px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  transition:transform .18s ease, background .18s ease;
+}
+body.theme-rose .coupon {
+  background:rgba(255,253,249,0.8);
+  border:1px dashed rgba(224,117,154,0.55);
+}
+.coupon:active{transform:scale(0.96)}
+.coupon .cp-icon{font-size:22px;color:var(--rose)}
+.coupon .cp-name{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:1px;color:var(--ink)}
+.coupon .cp-tip{font-size:11px;color:var(--ink-light)}
+.coupon.used{border-style:solid;opacity:.78;background:rgba(123,164,214,0.12)}
+body.theme-rose .coupon.used {
+  background:rgba(243,168,194,0.12);
+  border-color: rgba(224,117,154,0.55);
+}
+.coupon.used .cp-tip{color:var(--rose-deep)}
+.coupon .cp-code{
+  font-size:11px;color:var(--rose-deep);letter-spacing:2px;word-break:break-all;
+}
+/* ============ 兑换券 - 面板与背包 ============ */
+.coupon-panel-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;
+}
+.cp-panel-title{
+  font-family:var(--serif);font-size:16px;font-weight:700;
+  color:var(--ink);letter-spacing:1px;
+}
+.cp-panel-state,.cp-panel-count{
+  font-size:12px;color:var(--ink-light);letter-spacing:1px;
+}
+.coupon.disabled{
+  opacity:.5;pointer-events:none;
+}
+.backpack-list{
+  min-height:20px;
+}
+.backpack-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;
+  border:1px dashed rgba(123,164,214,0.5);
+  border-radius:12px;margin-bottom:10px;
+  background:rgba(255,253,249,0.6);
+  transition: opacity .4s ease, transform .4s ease;
+}
+body.theme-rose .backpack-item {
+  border-color: rgba(224,117,154,0.5);
+  background:rgba(255,253,249,0.6);
+}
+.backpack-item .bp-info{
+  display:flex;align-items:center;gap:10px;
+  min-width:0;
+}
+.backpack-item .bp-icon{font-size:20px;flex-shrink:0}
+.backpack-item .bp-name{font-size:14.5px;font-weight:700;color:var(--ink)}
+.backpack-item .bp-code{font-size:11px;color:var(--ink-light);margin-top:2px;letter-spacing:.5px}
+.bp-use-btn{
+  padding:7px 18px;border-radius:999px;border:none;
+  background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
+  color:#fff;font-size:13px;font-weight:700;
+  cursor:pointer;flex-shrink:0;
+  transition: transform .15s ease, opacity .4s ease;
+  -webkit-appearance:none;appearance:none;
+}
+.bp-use-btn:active{transform:scale(0.94)}
+.bp-use-btn.using{opacity:.75}
+.backpack-empty{
+  text-align:center;color:var(--ink-light);
+  font-size:13px;padding:22px 0;letter-spacing:1px;
+}
+/* ============ 小游戏 ============ */
+.quiz-box{text-align:center}
+.quiz-q{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:1px;line-height:1.7;margin-bottom:18px;min-height:54px;color:var(--ink)}
+.quiz-opt{
+  display:block;width:100%;text-align:center;
+  padding:13px;margin-bottom:10px;border-radius:12px;cursor:pointer;
+  background:rgba(255,253,249,0.85);
+  border:1px solid rgba(123,164,214,0.35);
+  color:var(--ink);font-size:14.5px;letter-spacing:1px;
+  transition:.18s;
+}
+body.theme-rose .quiz-opt {
+  background:rgba(255,253,249,0.85);
+  border:1px solid rgba(224,117,154,0.35);
+}
+.quiz-opt:active{transform:scale(0.98)}
+.quiz-opt.correct{background:rgba(123,164,214,0.35);border-color:var(--rose);color:var(--rose-deep)}
+body.theme-rose .quiz-opt.correct {
+  background:rgba(243,168,194,0.35);
+  border-color:var(--rose);
+  color:var(--rose-deep);
+}
+.quiz-opt.wrong{background:rgba(255,110,130,0.15);border-color:#ff7a8a;color:#c85f6f}
+.quiz-progress{font-size:12px;color:var(--ink-light);letter-spacing:2px;margin-bottom:14px}
+.quiz-result{display:none;padding:18px 0}
+.quiz-result .score{font-family:var(--serif);font-size:34px;font-weight:900;color:var(--rose-deep);margin:8px 0}
+.quiz-result .score-word{font-family:var(--serif);font-size:16px;line-height:1.9;color:var(--ink)}
+.btn-ghost{
+  margin-top:16px;padding:12px 28px;border-radius:999px;cursor:pointer;
+  background:transparent;border:1px solid var(--rose);color:var(--rose-deep);
+  font-size:14px;letter-spacing:2px;
+}
+/* ============ Footer ============ */
+.footer{
+  text-align:center;padding:40px 20px calc(36px + env(safe-area-inset-bottom));
+  color:var(--ink-light);font-size:13px;line-height:2.1;
+  border-top:1px solid rgba(123,164,214,0.18);
+  max-width:640px;margin:0 auto;
+  transition: all 0.6s ease;
+}
+body.theme-rose .footer {
+  border-top-color: rgba(224,117,154,0.18);
+}
+.footer .f-serif{font-family:var(--serif);font-size:15px;color:var(--rose-deep);letter-spacing:1px}
+.logout-btn{margin-top:10px;font-size:12px;color:var(--ink-light);cursor:pointer;border:none;background:none}
+.logout-btn:hover{color:var(--rose-deep)}
+/* ============ 响应式 - 手机适配 ============ */
+@media (max-width: 480px) {
+  .topnav {
+    padding: 8px 10px;
+    gap: 0;
+  }
+  .topnav .brand {
+    margin-right: 2px;
+    gap: 6px;
+  }
+  .topnav .brand .seal-sm {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 12.5px;
+  }
+  #audioBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .theme-toggle {
+    padding: 4px 10px;
+    font-size: 11.5px;
+  }
+  .theme-toggle .toggle-text {
+    display: none;
+  }
+  .theme-toggle .toggle-icon {
+    font-size: 16px;
+  }
+  .nav-actions {
+    gap: 6px;
+    margin-left: 4px;
+    padding-left: 6px;
+  }
+  section {
+    padding: 40px 16px 36px;
+  }
+  .hero-title {
+    font-size: 28px;
+    letter-spacing: 4px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+  }
+  .hero-words {
+    font-size: 14px;
+  }
+  .photo-frame {
+    height: 200px;
+  }
+  .day-counter {
+    font-size: 13px;
+    padding: 10px 18px;
+  }
+  .day-counter b {
+    font-size: 22px;
+  }
+  .sec-title {
+    font-size: 21px;
+  }
+  .login-card {
+    padding: 32px 22px 24px;
+  }
+  .login-head .book-title {
+    font-size: 18px;
+  }
+  .seal {
+    width: 58px;
+    height: 58px;
+    font-size: 22px;
+  }
+  .chapter .ch-head {
+    padding: 14px 14px;
+  }
+  .chapter .ch-title {
+    font-size: 15px;
+  }
+}
+/* 小屏幕进一步适配 */
+@media (max-width: 380px) {
+  .topnav {
+    padding: 7px 8px;
+  }
+  .nav-link {
+    padding: 5px 8px;
+    font-size: 11.5px;
+  }
+  .theme-toggle {
+    padding: 4px 8px;
+  }
+  section {
+    padding: 32px 14px 28px;
+  }
+  .hero-title {
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+  .hero-words {
+    font-size: 13px;
+  }
+  .photo-frame {
+    height: 180px;
+  }
+  .card {
+    padding: 16px;
+  }
+}
+/* 横屏适配 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-title {
+    font-size: 28px;
+  }
+  .photo-frame {
+    height: 160px;
+  }
+  section {
+    padding: 30px 20px 24px;
+  }
+}
+/* 大屏适配 */
+@media (min-width: 768px) {
+  .topnav {
+    padding: 10px 24px;
+  }
+  .hero-title {
+    font-size: 42px;
+  }
+  .hero-words {
+    font-size: 16px;
+  }
+  .sec-title {
+    font-size: 28px;
+  }
+}
+@media (min-width: 1024px) {
+  .topnav {
+    padding: 12px 40px;
+  }
+  .hero-title {
+    font-size: 48px;
+  }
+}
+</style>
+</head>
+<body>
+<!-- ===== 登录页 ===== -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="seal">归屿</div>
+    <div class="login-head">
+      <div class="book-title">《沧澜归屿》读者客服中心</div>
+      <div class="desc">书籍序列号核验 ｜ 读者问题反馈</div>
+    </div>
+    <div class="field">
+      <label for="passwordInput">请扫描封面的条码获得书籍序列号</label>
+      <input id="passwordInput" type="text" inputmode="text" placeholder="在此输入序列号" autocomplete="off">
+    </div>
+    <button class="btn" id="submitBtn">提交核验</button>
+    <div id="errMsg">序列号无效，请核对实体书扉页重新输入</div>
+    <div class="music-hint">点击页面任意位置开启背景音乐</div>
+    <div class="login-foot">仅正版实体书籍可完成核验 · 客服在线 10:00-22:00</div>
+  </div>
+</div>
+<!-- ===== 主站 ===== -->
+<div id="mainApp">
+  <nav class="topnav">
+    <div class="nav-left">
+      <div class="brand"><span class="seal-sm">归</span><span>沧澜归屿</span></div>
+      <span class="nav-link" data-target="hero">情话</span>
+      <span class="nav-link" data-target="book">书</span>
+      <span class="nav-link" data-target="timeline">时光</span>
+      <span class="nav-link" data-target="coupon">兑换券</span>
+      <span class="nav-link" data-target="game">小游戏</span>
+    </div>
+    <div class="nav-actions">
+      <button id="audioBtn" title="背景音乐">♫</button>
+      <button class="theme-toggle" id="themeToggle" title="切换主题配色">
+        <span class="toggle-icon">◑</span>
+        <span class="toggle-text">落日玫瑰</span>
+      </button>
+    </div>
+  </nav>
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-eyebrow">致 我 的 女 孩</div>
+    <h1 class="hero-title">欢迎归屿</h1>
+    <div class="hero-sub">WELCOME HOME · 沧澜归屿</div>
+    <div class="day-counter">我们已在一起 <b id="daysTogether">0</b> 天</div>
+    <p class="hero-words">
+      跨越新山与贵阳遥遥的距离，<br>我把所有日思夜想，都写进这本书。<br>
+      <span class="hl">莫比乌斯对戒</span>象征没有尽头的思念，<br>山海相隔，但我的心意不会被距离隔断。
+    </p>
+    <div class="photo-frame" id="heroPhoto">
+      <div class="photo-placeholder" id="photoPh">
+        <div class="heart">♡</div>
+        在这里放上你们的回忆照片
+      </div>
+    </div>
+    <div class="scroll-tip">往下滑，故事还长 ▼</div>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 10 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/><path d="M0 40 Q 100 24 200 38 T 400 38 T 640 36 V56 H0 Z" fill="#7BA4D6" opacity="0.55"/></svg></div>
+  <!-- 每日一句 -->
+  <section id="daily">
+    <div class="sec-eyebrow">今日潮语</div>
+    <h2 class="sec-title">每天一句，想你多一点</h2>
+    <p class="sec-sub">每次打开，都是今天限定的情话。</p>
+    <div class="card daily-card">
+      <div class="d-label">— 今日寄语 —</div>
+      <div class="d-quote" id="dailyQuote"></div>
+      <div class="d-date" id="dailyDate"></div>
+    </div>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 26 Q 100 10 200 24 T 400 24 T 640 22 V56 H0 Z" fill="#7BA4D6" opacity="0.4"/></svg></div>
+  <!-- 书目录 -->
+  <section id="book">
+    <div class="sec-eyebrow">我们的书</div>
+    <h2 class="sec-title">《沧澜归屿》目录</h2>
+    <p class="sec-sub">点击章节，展开属于那一章的心事。</p>
+    <div id="chapterList"></div>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
+  <!-- 时间线 -->
+  <section id="timeline">
+    <div class="sec-eyebrow">我们的时光</div>
+    <h2 class="sec-title">从 2025.08.14 开始</h2>
+    <p class="sec-sub">故事的第一页，从这里翻开。回忆会随着时间越来越长。</p>
+    <div class="timeline" id="timelineList"></div>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 26 Q 100 10 200 24 T 400 24 T 640 22 V56 H0 Z" fill="#7BA4D6" opacity="0.4"/></svg></div>
+  <!-- 兑换券 -->
+  <section id="coupon">
+    <div class="sec-eyebrow">甜蜜兑换</div>
+    <h2 class="sec-title">甜蜜兑换券</h2>
+    <p class="sec-sub">每天可以挑选一张喜欢的券存入背包，想兑现时再去背包里使用。</p>
+
+    <div class="card">
+      <div class="coupon-panel-head">
+        <span class="cp-panel-title">🎀 今日领取</span>
+        <span class="cp-panel-state" id="claimState">今日可领 1 张</span>
+      </div>
+      <div class="coupon-grid" id="couponGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="coupon-panel-head">
+        <span class="cp-panel-title">🎒 我的背包</span>
+        <span class="cp-panel-count" id="backpackCount">0 张</span>
+      </div>
+      <div class="backpack-list" id="backpackList"></div>
+    </div>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
+  <!-- 小游戏 -->
+  <section id="game">
+    <div class="sec-eyebrow">小游戏</div>
+    <h2 class="sec-title">你有多了解我</h2>
+    <p class="sec-sub">五道题，答对越多，奖励越甜。</p>
+    <div class="card quiz-box" id="quizBox"></div>
+  </section>
+  <footer class="footer">
+    <div class="f-serif">属于我们的故事，还会继续往下写</div>
+    <div>《沧澜归屿》 · 独家典藏版</div>
+    <button class="logout-btn" id="logoutBtn">退出登录</button>
+  </footer>
+</div>
+<script>
+/* ==================== 可编辑配置 ==================== */
+const SECRET_PASSWORD = "990702051125";
+const ANNIVERSARY = new Date(2025, 7, 14);
+const MUSIC_URL = "https://aka.doubaocdn.com/s/NnK3onGxN5";
+const PHOTO_URL = "";
+/* 每日一句 */
+const DAILY_QUOTES = [
+  "海会记得每一朵浪花，就像我记得每一次心动。",
+  "你在贵阳，我在新山，但我们的想念在同一片潮汐里。",
+  "所有风浪都有归处，而我的归处，是你。",
+  "莫比乌斯没有尽头，如同我对你的喜欢。",
+  "我把思念折成船，漂过整片海，停靠进你的港口。",
+  "你是我的屿，我是奔你而来的潮。",
+  "山海很远，心很近。"
+];
+/* 书目录 - 完整目录（含全部子章节，可继续增补） */
+const CHAPTERS = [
+  { n:"前言", t:"前言", q:"故事的序章，从这里开始。" },
+  { n:"序章", t:"序章", q:"一切的开始，都是命中注定。" },
+  {
+    n:"第一章", t:"缘起",
+    sub:[
+      "第一次相遇",
+      "不听妈妈的话，要听神明的话",
+      "一切都是缘分",
+      "这个世界好小",
+      "我去载你吧",
+      "有趣的对话",
+      "莫比乌斯对戒",
+      "刷题刷不明白",
+      "你说你很恋爱脑的故事",
+      "瑜有情，乔有意",
+      "九州行之又是你的车",
+      "这叫智取，宝贝儿",
+      "我有一个朋友！"
+    ]
+  },
+  {
+    n:"第二章", t:"坚持到底",
+    sub:[
+      "未曾言明的拒绝",
+      "念念不忘，必有回响",
+      "关心，总有回响",
+      "秋序与日月兮同光",
+      "有些话，还是想亲口说",
+      "第一次约会",
+      "喜欢，还是错觉？",
+      "23分15秒",
+      "等待天亮"
+    ]
+  },
+  {
+    n:"第三章", t:"山海相隔，两座城市",
+    sub:[
+      "看不到你的45天",
+      "你不在的生日",
+      "你在贵阳，我在新山",
+      "你去新疆，我在新山",
+      "归来的那一天",
+      "没有"
+    ]
+  },
+  {
+    n:"第四章", t:"何其有幸",
+    sub:[
+      "不够喜欢",
+      "七夕有你",
+      "有你陪着的我",
+      "你和我的不安",
+      "寿司烤饭",
+      "悄悄的礼物",
+      "戏里戏外皆你",
+      "婚礼",
+      "仙女的二十岁生辰",
+      "如约而至",
+      "生活趣事",
+      "重赴朝曦",
+      "你又不在的生日"
+    ]
+  },
+  {
+    n:"第五章", t:"日思夜想",
+    sub:[
+      "伤心的一天",
+      "看不到你的30天"
+    ]
+  },
+  {
+    n:"第六章", t:"潮屿长伴",
+    sub:[
+      "我很喜欢你",
+      "爱不分对错",
+      "迪士尼城堡",
+      "如果我们有争执了请看这页"
+    ]
+  },
+  {
+    n:"第七章", t:"共赴未来",
+    sub:[
+      "未来"
+    ]
+  },
+  { n:"后记", t:"后记", q:"故事的结尾，也是新的开始。" }
+];
+/* 时间线 */
+const TIMELINE = [
+  { date:"2025.08.14", title:"我们在一起了", place:"起点", desc:"故事的第一页，从这里翻开。" },
+  { date:"2025.08", title:"隔着新山与贵阳", place:"异地", desc:"思念从这里开始涨潮，也从此学会了等待。" },
+  { date:"2025.09", title:"《沧澜归屿》动笔", place:"我们的书", desc:"想把我们的故事，写成一本只属于你的书。" },
+  { date:"2026 · 未完待续", title:"我们的故事", place:"归途", desc:"属于我们的故事，还会继续往下写。" }
+];
+/* 兑换券 */
+const COUPONS = [
+  { icon:"♡", name:"抱抱券", tip:"凭券可兑换一个抱抱" },
+  { icon:"♡", name:"奶茶券", tip:"凭券可兑换一杯奶茶" },
+  { icon:"♡", name:"免生气券", tip:"凭券可抵消一次生气" },
+  { icon:"♡", name:"亲亲券", tip:"凭券可兑换一个亲亲" },
+  { icon:"♡", name:"陪我看电影券", tip:"凭券指定一部电影" },
+  { icon:"♡", name:"听我讲心事券", tip:"凭券交换今晚的心事" }
+];
+/* 小游戏题目 */
+const QUIZ = [
+  { q:"我最喜欢的水果是？", opts:["芒果","西瓜","榴莲"], a:0 },
+  { q:"我们的纪念日是？", opts:["8月14日","2月14日","5月20日"], a:0 },
+  { q:"我写这本书最想说的是？", opts:["所有风浪都有归处","海誓山盟","来日方长"], a:0 },
+  { q:"异地时我最常想对你说？", opts:["我在想你","吃饭了吗","早点睡"], a:0 },
+  { q:"我们的专属暗号是？", opts:["沧澜归屿","早安晚安","520"], a:0 }
+];
+/* ==================== 核心元素 ==================== */
+const loginPage = document.getElementById("loginPage");
+const mainApp = document.getElementById("mainApp");
+const inputEl = document.getElementById("passwordInput");
+const submitBtn = document.getElementById("submitBtn");
+const errMsg = document.getElementById("errMsg");
+const audioBtn = document.getElementById("audioBtn");
+const themeToggle = document.getElementById("themeToggle");
+/* ==================== 登录 ==================== */
+function unlock(){
+  loginPage.classList.add("hidden");
+  mainApp.style.display = "block";
+  window.scrollTo(0,0);
+}
+submitBtn.addEventListener("click", ()=>{
+  errMsg.style.display = "none";
+  if(inputEl.value.trim() === SECRET_PASSWORD){
+    unlock();
+  }else{
+    errMsg.style.display = "block";
+  }
+});
+inputEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter") submitBtn.click(); });
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+  mainApp.style.display = "none";
+  loginPage.classList.remove("hidden");
+  inputEl.value = "";
+  errMsg.style.display = "none";
+  window.scrollTo(0,0);
+});
+/* ==================== 主题切换 ==================== */
+const savedTheme = localStorage.getItem("cgl_theme");
+if(savedTheme === "theme-rose") {
+  document.body.classList.add("theme-rose");
+  themeToggle.querySelector(".toggle-text").textContent = "星空海浪";
+} else {
+  themeToggle.querySelector(".toggle-text").textContent = "落日玫瑰";
+}
+themeToggle.addEventListener("click", ()=>{
+  document.body.classList.toggle("theme-rose");
+  const isRose = document.body.classList.contains("theme-rose");
+  localStorage.setItem("cgl_theme", isRose ? "theme-rose" : "theme-sea");
+  themeToggle.querySelector(".toggle-text").textContent = isRose ? "星空海浪" : "落日玫瑰";
+});
+/* ==================== 背景音乐 ==================== */
+const audio = new Audio(MUSIC_URL);
+audio.loop = true;
+audio.preload = "none";
+audio.addEventListener("timeupdate", ()=>{ localStorage.setItem("bgmTime", String(audio.currentTime)); });
+function syncIcon(){
+  if(audio.paused){ audioBtn.classList.add("mute"); }
+  else{ audioBtn.classList.remove("mute"); }
+}
+function startMusic(){
+  if(audio.preload === "none") audio.load();
+  audio.play().catch(()=>{});
+  syncIcon();
+}
+document.body.addEventListener("click", function firstTap(){
+  const saved = parseFloat(localStorage.getItem("bgmTime") || "0");
+  if(saved && isFinite(saved)) audio.currentTime = saved;
+  startMusic();
+  document.body.removeEventListener("click", firstTap);
+},{ once:true });
+audioBtn.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(audio.paused){ startMusic(); } else { audio.pause(); }
+  syncIcon();
+});
+/* ==================== 在一起天数 ==================== */
+function calcDays(){
+  const now = new Date();
+  const diff = Math.floor((now - ANNIVERSARY) / 86400000) + 1;
+  document.getElementById("daysTogether").textContent = Math.max(1, diff);
+}
+calcDays();
+/* ==================== 照片占位 ==================== */
+if(PHOTO_URL){
+  const img = document.createElement("img");
+  img.src = PHOTO_URL;
+  img.alt = "我们的回忆";
+  document.getElementById("heroPhoto").appendChild(img);
+  document.getElementById("photoPh").style.display = "none";
+}
+/* ==================== 每日一句 ==================== */
+function renderDaily(){
+  const now = new Date();
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(),0,0)) / 86400000);
+  const quote = DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length];
+  document.getElementById("dailyQuote").textContent = "\u201c" + quote + "\u201d";
+  document.getElementById("dailyDate").textContent = now.getFullYear() + "年" + (now.getMonth()+1) + "月" + now.getDate() + "日";
+}
+renderDaily();
+/* ==================== 书目录 ==================== */
+const chapterList = document.getElementById("chapterList");
+CHAPTERS.forEach((ch)=>{
+  const item = document.createElement("div");
+  item.className = "chapter";
+
+  let subHtml = "";
+  if(ch.sub && ch.sub.length > 0) {
+    subHtml = ch.sub.map(s => '<div class="ch-sub">· ' + s + '</div>').join('');
+  }
+
+  item.innerHTML =
+    '<div class="ch-head">' +
+      '<div><div class="ch-num">'+ch.n+'</div><div class="ch-title">'+ch.t+'</div></div>' +
+      '<span class="ch-arrow">▼</span>' +
+    '</div>' +
+    '<div class="ch-body">' +
+      (ch.q ? '<div class="ch-quote">\u201c'+ch.q+'\u201d</div>' : '') +
+      subHtml +
+    '</div>';
+
+  item.querySelector(".ch-head").addEventListener("click", ()=>{
+    item.classList.toggle("open");
+  });
+  chapterList.appendChild(item);
+});
+/* ==================== 时间线 ==================== */
+const timelineList = document.getElementById("timelineList");
+TIMELINE.forEach((tl)=>{
+  const item = document.createElement("div");
+  item.className = "tl-item";
+  item.innerHTML =
+    '<div class="tl-date">'+tl.date+'</div>' +
+    '<div class="tl-title">'+tl.title+'</div>' +
+    '<div class="tl-desc">'+tl.desc+'</div>' +
+    '<span class="tl-place">'+tl.place+'</span>';
+  timelineList.appendChild(item);
+});
+/* ==================== 兑换券 - 领券 + 背包 ==================== */
+const couponGrid = document.getElementById("couponGrid");
+const backpackList = document.getElementById("backpackList");
+const backpackCount = document.getElementById("backpackCount");
+const claimState = document.getElementById("claimState");
+
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function getBackpack(){
+  try { return JSON.parse(localStorage.getItem("cgl_backpack") || "[]"); }
+  catch(e){ return []; }
+}
+function saveBackpack(list){ localStorage.setItem("cgl_backpack", JSON.stringify(list)); }
+/* 今日是否已领取 */
+function claimedToday(){
+  return localStorage.getItem("cgl_claim_date") === todayKey();
+}
+function claimedIdxToday(){
+  if(!claimedToday()) return -1;
+  return parseInt(localStorage.getItem("cgl_claim_idx") || "-1", 10);
+}
+/* 今日领取区 */
+function renderCouponGrid(){
+  const claimedIdx = claimedIdxToday();
+  couponGrid.innerHTML = "";
+  COUPONS.forEach((cp, idx)=>{
+    const el = document.createElement("div");
+    el.className = "coupon" + (claimedIdx >= 0 ? " disabled" : "");
+    el.innerHTML =
+      '<div class="cp-icon">'+cp.icon+'</div>' +
+      '<div class="cp-name">'+cp.name+'</div>' +
+      '<div class="cp-tip">'+cp.tip+'</div>';
+    if(claimedIdx === idx){
+      el.classList.add("used");
+      el.querySelector(".cp-tip").textContent = "今天已领取这张";
+    }
+    el.addEventListener("click", ()=>{
+      if(claimedIdxToday() >= 0) return;
+      const code = "CGL-" + Math.random().toString(36).slice(2,8).toUpperCase();
+      const list = getBackpack();
+      list.push({ icon:cp.icon, name:cp.name, tip:cp.tip, code:code, date:todayKey() });
+      saveBackpack(list);
+      localStorage.setItem("cgl_claim_date", todayKey());
+      localStorage.setItem("cgl_claim_idx", String(idx));
+      renderCouponGrid();
+      renderBackpack();
+    });
+    couponGrid.appendChild(el);
+  });
+  claimState.textContent = claimedIdx >= 0 ? "今日已领取，明天再来" : "今日可领 1 张";
+}
+/* 背包区 */
+function renderBackpack(){
+  const list = getBackpack();
+  backpackCount.textContent = list.length + " 张";
+  if(list.length === 0){
+    backpackList.innerHTML = '<div class="backpack-empty">背包空空的，先去领一张券吧 🎀</div>';
+    return;
+  }
+  backpackList.innerHTML = "";
+  list.forEach((cp, i)=>{
+    const item = document.createElement("div");
+    item.className = "backpack-item";
+    item.innerHTML =
+      '<div class="bp-info">' +
+        '<span class="bp-icon">'+cp.icon+'</span>' +
+        '<div>' +
+          '<div class="bp-name">'+cp.name+'</div>' +
+          '<div class="bp-code">券号 '+cp.code+' · '+cp.date+'</div>' +
+        '</div>' +
+      '</div>' +
+      '<button class="bp-use-btn" data-i="'+i+'">使用</button>';
+    item.querySelector(".bp-use-btn").addEventListener("click", (ev)=>{
+      const btn = ev.currentTarget;
+      btn.classList.add("using");
+      btn.textContent = "已使用 ♥";
+      btn.disabled = true;
+      setTimeout(()=>{
+        const l = getBackpack();
+        l.splice(i, 1);
+        saveBackpack(l);
+        renderBackpack();
+      }, 600);
+    });
+    backpackList.appendChild(item);
+  });
+}
+renderCouponGrid();
+renderBackpack();
+/* ==================== 小游戏 ==================== */
+const quizBox = document.getElementById("quizBox");
+let qIndex = 0, score = 0, answered = false;
+function renderQuiz(){
+  if(qIndex >= QUIZ.length){ renderResult(); return; }
+  const item = QUIZ[qIndex];
+  answered = false;
+  quizBox.innerHTML =
+    '<div class="quiz-progress">第 '+(qIndex+1)+' / '+QUIZ.length+' 题</div>' +
+    '<div class="quiz-q">'+item.q+'</div>' +
+    item.opts.map((o,i)=>'<button class="quiz-opt" data-i="'+i+'">'+o+'</button>').join('');
+  quizBox.querySelectorAll(".quiz-opt").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(answered) return; answered = true;
+      const i = parseInt(btn.dataset.i, 10);
+      if(i === item.a){
+        score++;
+        btn.classList.add("correct");
+        setTimeout(()=>{ qIndex++; renderQuiz(); }, 700);
+      }else{
+        btn.classList.add("wrong");
+        quizBox.querySelectorAll(".quiz-opt").forEach(b=>{
+          if(parseInt(b.dataset.i,10) === item.a) b.classList.add("correct");
+        });
+        setTimeout(()=>{ qIndex++; renderQuiz(); }, 1400);
+      }
+    });
+  });
+}
+function renderResult(){
+  const pct = Math.round(score / QUIZ.length * 100);
+  let word = "再想想我，我可不好糊弄哦。";
+  if(pct === 100) word = "满分！你对我的了解，就像海懂得每一朵浪。";
+  else if(pct >= 80) word = "很懂我嘛，这份了解值得一个大大的拥抱。";
+  else if(pct >= 60) word = "还不错，今晚奖励你听我说更多心事。";
+  quizBox.innerHTML =
+    '<div class="quiz-result" style="display:block">' +
+      '<div class="quiz-progress">答题完成</div>' +
+      '<div class="score">'+score+' / '+QUIZ.length+'</div>' +
+      '<div class="score-word">'+word+'</div>' +
+      '<button class="btn-ghost" id="retryQuiz">再玩一次</button>' +
+    '</div>';
+  document.getElementById("retryQuiz").addEventListener("click", ()=>{
+    qIndex = 0; score = 0; renderQuiz();
+  });
+}
+renderQuiz();
+/* ==================== 顶部导航平滑滚动 ==================== */
+document.querySelectorAll(".nav-link").forEach(link=>{
+  link.addEventListener("click", ()=>{
+    const target = document.getElementById(link.dataset.target);
+    if(!target) return;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - 58;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  });
+});
+</script>
+</body>
+</html>
