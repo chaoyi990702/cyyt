@@ -8,18 +8,19 @@
 <title>《沧澜归屿》读者客服中心</title>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
 <!-- iOS 主屏幕图标 -->
-<link rel="apple-touch-icon" href="icon.jpeg">
+<link rel="apple-touch-icon" href="icon.png">
 
 <!-- iOS 主屏幕图标（高清屏用，iOS 15+ 推荐） -->
-<link rel="apple-touch-icon" sizes="180x180" href="icon.jpeg">
+<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
 
 <!-- 告诉 Safari 以"独立 App"模式打开（去掉地址栏和工具栏） -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <!-- 状态栏样式（默认 / 黑色 / 黑色透明） -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <style>
-  /* ============ 安全区变量：var() + env() + constant() 多重降级，适配灵动岛 ============ */
+/* ============ 安全区变量：var() + env() + constant() 多重降级，适配灵动岛 ============ */
 :root{
   --sat: 0px;                                  /* 兜底：不支持安全区时 */
   --sat: constant(safe-area-inset-top, 0px);   /* 旧版 iOS */
@@ -28,8 +29,7 @@
   --sab: constant(safe-area-inset-bottom, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
 }
-
-/* ============ 默认主题: 星空海浪小熊 ============ */
+/* ============ 主题变量：默认星空海浪 + 落日玫瑰 ============ */
 :root{
   --rose:#7BA4D6;
   --rose-deep:#5C8AC2;
@@ -46,7 +46,6 @@
   --serif:"Noto Serif SC", "Songti SC", "SimSun", serif;
   --sans:"Noto Sans SC", system-ui, -apple-system, "PingFang SC", sans-serif;
 }
-/* ============ 主题1: 落日玫瑰 ============ */
 body.theme-rose {
   --rose:#e0759a;
   --rose-deep:#c85f87;
@@ -86,30 +85,18 @@ body.theme-rose {
 button{font-family:inherit}
 a{text-decoration:none;color:inherit}
 .hidden{display:none !important}
-/* 星空点缀（仅星空海浪主题显示） */
 body:not(.theme-rose)::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(2px 2px at 20px 30px, #fff, transparent),
     radial-gradient(2px 2px at 40px 70px, #fff, transparent),
     radial-gradient(2px 2px at 50px 160px, #fff, transparent),
     radial-gradient(2px 2px at 90px 40px, #fff, transparent),
     radial-gradient(2px 2px at 130px 80px, #fff, transparent);
-  background-repeat:repeat;
-  background-size:200px 200px;
-  opacity:0.5;
+  background-repeat:repeat;background-size:200px 200px;opacity:0.5;
 }
-/* 漂浮的光晕装饰（仅落日玫瑰主题） */
 body.theme-rose::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(420px 260px at 80% 30%, rgba(243,168,194,0.14), transparent 70%),
     radial-gradient(380px 240px at 12% 70%, rgba(233,186,210,0.12), transparent 70%);
@@ -117,20 +104,12 @@ body.theme-rose::before{
 /* ============ 登录页 ============ */
 #loginPage{
   min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
-  position:relative;
-  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:calc(24px + var(--sat, 0px)) 20px calc(24px + var(--sab, 0px));
+  position:relative;overflow:hidden;
 }
-#loginPage::before,
-#loginPage::after{
-  content:"";
-  position:absolute;
-  left:-20%;
-  width:140%;
-  height:46px;
+#loginPage::before,#loginPage::after{
+  content:"";position:absolute;left:-20%;width:140%;height:46px;
   background:repeating-linear-gradient(90deg, rgba(224,117,154,0.10) 0 44px, transparent 44px 88px);
   transform:rotate(-2deg);
 }
@@ -138,9 +117,7 @@ body.theme-rose::before{
 #loginPage::after{bottom:18%;animation:drift 19s ease-in-out infinite reverse}
 @keyframes drift{50%{transform:translateX(20px) rotate(-2deg)}}
 .login-card{
-  position:relative;
-  width:100%;
-  max-width:430px;
+  position:relative;width:100%;max-width:430px;
   background:var(--cream);
   border:1px solid rgba(123,164,214,0.35);
   border-radius:20px;
@@ -151,20 +128,15 @@ body.theme-rose::before{
   transition: all 0.6s ease;
 }
 body.theme-rose .login-card {
-  background: rgba(255,253,249,0.86);
-  border-color: rgba(224,117,154,0.35);
-  box-shadow: 0 18px 50px rgba(200,95,135,0.18), inset 0 1px 0 rgba(255,255,255,0.8);
+  background:rgba(255,253,249,0.86);
+  border-color:rgba(224,117,154,0.35);
+  box-shadow:0 18px 50px rgba(200,95,135,0.18), inset 0 1px 0 rgba(255,255,255,0.8);
 }
-/* ===== 登录页 Logo 方形 ===== */
 .seal{
-  width:66px;height:66px;
-  margin:0 auto 18px;
-  border-radius:14px;
+  position:relative;width:66px;height:66px;margin:0 auto 18px;border-radius:14px;
   background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
-  color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-weight:700;font-size:24px;
-  letter-spacing:2px;
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:700;font-size:24px;letter-spacing:2px;
   box-shadow:0 10px 24px rgba(123,164,214,0.35);
   transition: all 0.6s ease;
 }
@@ -173,50 +145,30 @@ body.theme-rose .seal {
   background:linear-gradient(145deg, #f6b3cb, var(--rose-deep));
   box-shadow:0 10px 24px rgba(224,117,154,0.35);
 }
-.seal::after{
-  content:"♡";
-  position:absolute;
-  font-size:11px;
-  margin-top:40px;
-  color:var(--rose-deep);
-  opacity:.55;
-}
+.seal::after{content:"♡";position:absolute;font-size:11px;margin-top:40px;color:var(--rose-deep);opacity:.55}
 .login-head{text-align:center;margin-bottom:26px}
 .login-head .book-title{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:1px;color:var(--ink)}
 .login-head .desc{margin-top:8px;font-size:12.5px;color:var(--ink-light);letter-spacing:2px}
 .field{margin-bottom:20px}
 .field label{display:block;font-size:13.5px;margin-bottom:9px;color:var(--ink)}
 #passwordInput{
-  width:100%;
-  padding:14px 15px;
-  border-radius:12px;
+  width:100%;padding:14px 15px;border-radius:12px;
   border:1px solid rgba(123,164,214,0.4);
   background:rgba(255,255,255,0.7);
-  color:var(--ink);
-  font-size:16px;
-  letter-spacing:1px;
-  outline:none;
+  color:var(--ink);font-size:16px;letter-spacing:1px;outline:none;
   transition: all 0.3s ease;
 }
-body.theme-rose #passwordInput {
-  border-color: rgba(224,117,154,0.4);
-}
+body.theme-rose #passwordInput{border-color:rgba(224,117,154,0.4)}
 #passwordInput::placeholder{color:rgba(154,140,163,0.5);letter-spacing:0}
 #passwordInput:focus{border-color:var(--rose)}
 .btn{
-  width:100%;
-  padding:14px;
-  border:none;border-radius:12px;
+  width:100%;padding:14px;border:none;border-radius:12px;
   background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
-  color:#fff;
-  font-size:15.5px;font-weight:700;letter-spacing:4px;
-  cursor:pointer;
+  color:#fff;font-size:15.5px;font-weight:700;letter-spacing:4px;cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease;
   box-shadow:0 10px 24px rgba(123,164,214,0.30);
 }
-body.theme-rose .btn {
-  box-shadow:0 10px 24px rgba(224,117,154,0.30);
-}
+body.theme-rose .btn{box-shadow:0 10px 24px rgba(224,117,154,0.30)}
 .btn:active{transform:scale(0.98)}
 #errMsg{display:none;margin-top:12px;font-size:13px;color:#d9606f;text-align:center}
 .login-foot{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-light);letter-spacing:1px}
@@ -224,118 +176,90 @@ body.theme-rose .btn {
 @keyframes pulse{50%{opacity:.45}}
 /* ============ 主站 ============ */
 #mainApp{display:none;min-height:100vh;position:relative;z-index:1}
-/* 顶部导航：左侧可滑动链接 + 右侧固定按钮组 */
+/* 顶部导航：安全区 + 左侧滚动链接 + 右侧固定按钮组 */
 .topnav{
-  position:sticky;top:0;z-index:50;
-  display:flex;align-items:center;
-  padding:8px 12px 8px 12px;
-  background:rgba(253,251,247,0.85);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(123,164,214,0.22);
-  transition: all 0.6s ease;
-  min-height:48px;
-}
-body.theme-rose .topnav {
-  background: rgba(255,253,249,0.82);
-  border-bottom-color: rgba(224,117,154,0.22);
-}
-/* 左侧：品牌 + 可横向滚动的链接 */
-.nav-left{
+  position:sticky;
+  top:0;
+  z-index:999;
+
   display:flex;
   align-items:center;
-  gap:2px;
-  flex:1 1 auto;
-  min-width:0;
-  overflow-x:auto;
+
+  padding:
+      calc(env(safe-area-inset-top,0px) + 8px)
+      12px
+      8px
+      12px;
+
+  min-height:calc(48px + env(safe-area-inset-top,0px));
+
+  background:rgba(253,251,247,.85);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+
+  border-bottom:1px solid rgba(123,164,214,.22);
+
+  transition:.6s;
+}
+
+body.theme-rose .topnav {
+  background:rgba(255,253,249,0.82);
+  border-bottom-color:rgba(224,117,154,0.22);
+}.nav-left{
+  display:flex;align-items:center;gap:2px;
+  flex:1 1 auto;min-width:0;overflow-x:auto;
   scrollbar-width:none;
 }
 .nav-left::-webkit-scrollbar{display:none}
 .topnav .brand{
-  display:flex;align-items:center;gap:8px;
-  margin-right:4px;white-space:nowrap;
-  font-family:var(--serif);font-weight:700;color:var(--rose-deep);
-  flex-shrink:0;
+  display:flex;align-items:center;gap:8px;margin-right:4px;white-space:nowrap;
+  font-family:var(--serif);font-weight:700;color:var(--rose-deep);flex-shrink:0;
 }
 .topnav .brand .seal-sm{
   width:26px;height:26px;border-radius:8px;
   background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
   color:#fff;font-size:12px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
 .nav-link{
-  white-space:nowrap;
-  padding:7px 12px;border-radius:999px;
-  font-size:13.5px;color:var(--ink-light);
-  cursor:pointer;transition:.2s;
-  flex-shrink:0;
+  white-space:nowrap;padding:7px 12px;border-radius:999px;
+  font-size:13.5px;color:var(--ink-light);cursor:pointer;transition:.2s;flex-shrink:0;
 }
 .nav-link:hover{color:var(--rose-deep);background:rgba(123,164,214,0.12)}
-body.theme-rose .nav-link:hover {
-  color:var(--rose-deep);
-  background:rgba(224,117,154,0.12);
-}
-/* 右侧：固定的按钮组（音乐 + 换色），右对齐垂直居中 */
+body.theme-rose .nav-link:hover{background:rgba(224,117,154,0.12)}
 .nav-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-shrink:0;
-  margin-left:8px;
-  padding-left:8px;
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+  margin-left:8px;padding-left:8px;
   border-left:1px solid rgba(123,164,214,0.2);
 }
-body.theme-rose .nav-actions {
-  border-left-color: rgba(224,117,154,0.2);
-}
-/* 音乐开关 */
+body.theme-rose .nav-actions{border-left-color:rgba(224,117,154,0.2)}
 #audioBtn{
   width:36px;height:36px;border-radius:50%;
   border:1px solid rgba(123,164,214,0.4);
   background:rgba(255,253,249,0.8);
-  color:var(--rose-deep);
-  font-size:16px;
+  color:var(--rose-deep);font-size:16px;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;z-index:10;
   box-shadow:0 2px 8px rgba(123,164,214,0.15);
-  transition: all 0.3s ease;
-  flex-shrink:0;
-  -webkit-appearance:none;
-  appearance:none;
+  transition: all 0.3s ease;flex-shrink:0;
+  -webkit-appearance:none;appearance:none;
 }
 body.theme-rose #audioBtn {
-  border-color: rgba(224,117,154,0.4);
-  background: rgba(255,253,249,0.8);
-  box-shadow: 0 2px 8px rgba(224,117,154,0.15);
+  border-color:rgba(224,117,154,0.4);
+  box-shadow:0 2px 8px rgba(224,117,154,0.15);
 }
 #audioBtn.mute{color:var(--ink-light);border-color:rgba(154,140,163,0.4)}
-#audioBtn.mute::after{
-  content:"";position:absolute;width:18px;height:2px;background:var(--ink-light);
-  transform:rotate(-45deg);
-}
-/* 换色按钮 */
+#audioBtn.mute::after{content:"";position:absolute;width:18px;height:2px;background:var(--ink-light);transform:rotate(-45deg)}
 .theme-toggle{
-  padding:5px 14px;
-  border-radius:999px;
-  border:1px solid var(--rose);
-  background:transparent;
-  color:var(--rose-deep);
-  font-size:12.5px;
-  cursor:pointer;
-  white-space:nowrap;
-  transition: all 0.3s ease;
-  font-family:var(--sans);
-  display:flex;align-items:center;gap:5px;
-  flex-shrink:0;
-  -webkit-appearance:none;
-  appearance:none;
+  padding:5px 14px;border-radius:999px;
+  border:1px solid var(--rose);background:transparent;color:var(--rose-deep);
+  font-size:12.5px;cursor:pointer;white-space:nowrap;
+  transition: all 0.3s ease;font-family:var(--sans);
+  display:flex;align-items:center;gap:5px;flex-shrink:0;
+  -webkit-appearance:none;appearance:none;
 }
-.theme-toggle:hover{
-  background:var(--rose);
-  color:#fff;
-}
-.theme-toggle .toggle-icon{font-size:14px;}
+.theme-toggle:hover{background:var(--rose);color:#fff}
+.theme-toggle .toggle-icon{font-size:14px}
 /* 章节通用 */
 section{position:relative;padding:52px 20px 44px;max-width:640px;margin:0 auto}
 .sec-eyebrow{font-size:12px;letter-spacing:3px;color:var(--rose-deep);margin-bottom:10px}
@@ -344,8 +268,7 @@ section{position:relative;padding:52px 20px 44px;max-width:640px;margin:0 auto}
 .card{
   background:rgba(255,253,249,0.8);
   border:1px solid rgba(123,164,214,0.22);
-  border-radius:16px;
-  padding:20px;
+  border-radius:16px;padding:20px;
   box-shadow:0 6px 22px rgba(123,164,214,0.08);
   transition: all 0.6s ease;
 }
@@ -354,12 +277,13 @@ body.theme-rose .card {
   border:1px solid rgba(224,117,154,0.22);
   box-shadow:0 6px 22px rgba(200,95,135,0.08);
 }
-/* 波峰分隔线 */
 .wave-div{display:block;width:100%;height:52px;opacity:.85}
 .wave-div svg{display:block;width:100%;height:100%}
-/* ============ Hero ============ */
-#hero{padding-top:72px;text-align:center}
-.hero-eyebrow{font-size:13px;letter-spacing:6px;color:var(--rose)}
+/* ============ Hero：致我的女孩 + 倒计时 ============ */
+#hero{
+    padding-top:24px;
+    text-align:center;
+}.hero-eyebrow{font-size:13px;letter-spacing:6px;color:var(--rose)}
 .hero-title{
   font-family:var(--serif);font-size:38px;font-weight:900;
   letter-spacing:6px;margin:18px 0 6px;
@@ -369,25 +293,48 @@ body.theme-rose .card {
 .hero-sub{font-size:13px;color:var(--ink-light);letter-spacing:3px;margin-bottom:26px}
 .day-counter{
   display:inline-block;
-  font-family:var(--serif);
-  font-size:15px;letter-spacing:1px;
+  font-family:var(--serif);font-size:15px;letter-spacing:1px;
   padding:12px 22px;border-radius:999px;
   border:1px solid rgba(123,164,214,0.5);
   background:rgba(253,251,247,0.7);
-  color:var(--ink);
-  margin-bottom:26px;
+  color:var(--ink);margin-bottom:22px;
   transition: all 0.6s ease;
 }
 body.theme-rose .day-counter {
-  border-color: rgba(224,117,154,0.5);
-  background: rgba(255,253,249,0.7);
+  border-color:rgba(224,117,154,0.5);
+  background:rgba(255,253,249,0.7);
 }
 .day-counter b{font-size:26px;color:var(--rose-deep);margin:0 4px}
+/* 倒计时三卡片 */
+.countdown-row{
+  display:flex;gap:10px;justify-content:center;
+  margin-bottom:24px;flex-wrap:wrap;
+}
+.count-chip{
+  flex:1;max-width:150px;min-width:104px;
+  background:rgba(255,253,249,0.85);
+  border:1px solid rgba(123,164,214,0.35);
+  border-radius:14px;
+  padding:12px 8px 10px;
+  box-shadow:0 6px 16px rgba(92,138,194,0.10);
+  transition: all 0.6s ease;
+}
+body.theme-rose .count-chip {
+  border-color:rgba(224,117,154,0.35);
+  box-shadow:0 6px 16px rgba(200,95,135,0.10);
+}
+.count-chip .cc-label{font-size:11px;letter-spacing:2px;color:var(--ink-light);margin-bottom:6px}
+.count-chip .cc-value{
+  font-family:var(--serif);font-size:24px;font-weight:900;
+  color:var(--rose-deep);line-height:1.1;
+}
+.count-chip .cc-sub{font-size:10.5px;color:var(--ink-light);margin-top:5px;letter-spacing:1px}
+.count-chip.today{border-color:var(--gold);background:linear-gradient(145deg, rgba(253,238,135,0.25), rgba(255,253,249,0.9))}
+.count-chip.today .cc-value{font-size:16px;color:var(--gold-deep,#b37f2c)}
 .hero-words{font-size:15.5px;line-height:2.1;color:var(--ink);max-width:480px;margin:0 auto 26px}
 .hero-words .hl{color:var(--rose-deep);font-weight:600}
 .photo-frame{
-  position:relative;
-  width:100%;max-width:420px;height:250px;margin:0 auto 14px;
+  position:relative;width:100%;max-width:420px;height:250px;margin:0 auto 14px;
   border-radius:18px;overflow:hidden;
   border:1px solid rgba(123,164,214,0.35);
   background:linear-gradient(160deg, #eef4fb, #dbeafe 55%, #FCEEF1);
@@ -395,7 +342,7 @@ body.theme-rose .day-counter {
   transition: all 0.6s ease;
 }
 body.theme-rose .photo-frame {
-  border-color: rgba(224,117,154,0.35);
+  border-color:rgba(224,117,154,0.35);
   background:linear-gradient(160deg, #fdeef2, #fbe4d6 55%, #eaf1fa);
 }
 .photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -410,17 +357,16 @@ body.theme-rose .photo-frame {
   color:var(--ink);letter-spacing:1px;
 }
 .daily-card .d-date{margin-top:16px;font-size:12px;color:var(--ink-light);letter-spacing:2px}
-/* ============ 书目录 ============ */
+/* ============ 书目录（含配乐） ============ */
 .chapter{
   border:1px solid rgba(123,164,214,0.25);
   background:rgba(255,253,249,0.8);
-  border-radius:14px;
-  margin-bottom:12px;overflow:hidden;
+  border-radius:14px;margin-bottom:12px;overflow:hidden;
   box-shadow:0 4px 14px rgba(123,164,214,0.06);
   transition: all 0.6s ease;
 }
 body.theme-rose .chapter {
-  border-color: rgba(224,117,154,0.25);
+  border-color:rgba(224,117,154,0.25);
   box-shadow:0 4px 14px rgba(200,95,135,0.06);
 }
 .chapter .ch-head{
@@ -431,53 +377,50 @@ body.theme-rose .chapter {
 .chapter .ch-num{font-size:11.5px;color:var(--rose);letter-spacing:2px;margin-top:4px}
 .chapter .ch-arrow{color:var(--rose);transition:transform .25s ease;font-size:13px}
 .chapter.open .ch-arrow{transform:rotate(180deg)}
-/* 修复：展开后高度足够容纳全部小章节，不再截断 */
 .chapter .ch-body{
   max-height:0;overflow:hidden;transition:max-height .4s ease;
   border-top:0 solid rgba(123,164,214,0.2);
 }
-body.theme-rose .chapter .ch-body {
-  border-top-color: rgba(224,117,154,0.2);
-}
+body.theme-rose .chapter .ch-body{border-top-color:rgba(224,117,154,0.2)}
 .chapter.open .ch-body{max-height:5000px;border-top-width:1px}
 .chapter .ch-quote{
   padding:16px 18px;font-family:var(--serif);font-size:14.5px;
   line-height:1.9;color:var(--rose-deep);letter-spacing:1px;
 }
+.chapter .ch-song{
+  padding:10px 18px;font-size:13px;color:var(--ink);
+  background:rgba(123,164,214,0.08);letter-spacing:.5px;
+}
+body.theme-rose .chapter .ch-song{background:rgba(224,117,154,0.08)}
 .chapter .ch-sub{
   padding:7px 18px;font-size:13.5px;color:var(--ink-light);
   line-height:1.8;border-top:1px dashed rgba(123,164,214,0.12);
 }
 .chapter .ch-sub:first-of-type{border-top:none}
-body.theme-rose .chapter .ch-sub {
-  border-top-color: rgba(224,117,154,0.12);
-}
+body.theme-rose .chapter .ch-sub{border-top-color:rgba(224,117,154,0.12)}
 /* ============ 时间线 ============ */
 .timeline{position:relative;padding-left:26px}
 .timeline::before{
   content:"";position:absolute;left:7px;top:6px;bottom:6px;
   width:2px;background:linear-gradient(180deg, var(--rose), rgba(123,164,214,0.1));
 }
-body.theme-rose .timeline::before {
-  background:linear-gradient(180deg, var(--rose), rgba(224,117,154,0.1));
-}
+body.theme-rose .timeline::before{background:linear-gradient(180deg, var(--rose), rgba(224,117,154,0.1))}
 .tl-item{position:relative;padding-bottom:26px}
 .tl-item::before{
-  content:"";
-  position:absolute;left:-26px;top:4px;
+  content:"";position:absolute;left:-26px;top:4px;
   width:14px;height:14px;border-radius:50%;
-  background:var(--cream);
-  border:2px solid var(--rose);
+  background:var(--cream);border:2px solid var(--rose);
 }
 .tl-item .tl-date{font-size:12px;letter-spacing:1.5px;color:var(--rose-deep);margin-bottom:6px}
 .tl-item .tl-title{font-family:var(--serif);font-size:16.5px;font-weight:700;margin-bottom:6px;letter-spacing:1px;color:var(--ink)}
 .tl-item .tl-desc{font-size:13.5px;line-height:1.8;color:var(--ink-light)}
 .tl-item .tl-place{display:inline-block;margin-top:8px;font-size:11.5px;color:var(--rose-deep);
   border:1px solid rgba(123,164,214,0.4);border-radius:999px;padding:3px 10px;letter-spacing:1px}
-body.theme-rose .tl-item .tl-place {
-  border-color: rgba(224,117,154,0.4);
-}
+body.theme-rose .tl-item .tl-place{border-color:rgba(224,117,154,0.4)}
 /* ============ 兑换券 ============ */
+.coupon-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cp-panel-title{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink);letter-spacing:1px}
+.cp-panel-state,.cp-panel-count{font-size:12px;color:var(--ink-light);letter-spacing:1px}
 .coupon-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .coupon{
   position:relative;border-radius:14px;overflow:hidden;cursor:pointer;
@@ -495,49 +438,20 @@ body.theme-rose .coupon {
 .coupon .cp-icon{font-size:22px;color:var(--rose)}
 .coupon .cp-name{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:1px;color:var(--ink)}
 .coupon .cp-tip{font-size:11px;color:var(--ink-light)}
+.coupon.disabled{opacity:.5;pointer-events:none}
 .coupon.used{border-style:solid;opacity:.78;background:rgba(123,164,214,0.12)}
-body.theme-rose .coupon.used {
-  background:rgba(243,168,194,0.12);
-  border-color: rgba(224,117,154,0.55);
-}
+body.theme-rose .coupon.used{background:rgba(243,168,194,0.12);border-color:rgba(224,117,154,0.55)}
 .coupon.used .cp-tip{color:var(--rose-deep)}
-.coupon .cp-code{
-  font-size:11px;color:var(--rose-deep);letter-spacing:2px;word-break:break-all;
-}
-/* ============ 兑换券 - 面板与背包 ============ */
-.coupon-panel-head{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:14px;
-}
-.cp-panel-title{
-  font-family:var(--serif);font-size:16px;font-weight:700;
-  color:var(--ink);letter-spacing:1px;
-}
-.cp-panel-state,.cp-panel-count{
-  font-size:12px;color:var(--ink-light);letter-spacing:1px;
-}
-.coupon.disabled{
-  opacity:.5;pointer-events:none;
-}
-.backpack-list{
-  min-height:20px;
-}
+.backpack-list{min-height:20px}
 .backpack-item{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 14px;
-  border:1px dashed rgba(123,164,214,0.5);
+  padding:12px 14px;border:1px dashed rgba(123,164,214,0.5);
   border-radius:12px;margin-bottom:10px;
   background:rgba(255,253,249,0.6);
   transition: opacity .4s ease, transform .4s ease;
 }
-body.theme-rose .backpack-item {
-  border-color: rgba(224,117,154,0.5);
-  background:rgba(255,253,249,0.6);
-}
-.backpack-item .bp-info{
-  display:flex;align-items:center;gap:10px;
-  min-width:0;
-}
+body.theme-rose .backpack-item{border-color:rgba(224,117,154,0.5)}
+.backpack-item .bp-info{display:flex;align-items:center;gap:10px;min-width:0}
 .backpack-item .bp-icon{font-size:20px;flex-shrink:0}
 .backpack-item .bp-name{font-size:14.5px;font-weight:700;color:var(--ink)}
 .backpack-item .bp-code{font-size:11px;color:var(--ink-light);margin-top:2px;letter-spacing:.5px}
@@ -551,9 +465,131 @@ body.theme-rose .backpack-item {
 }
 .bp-use-btn:active{transform:scale(0.94)}
 .bp-use-btn.using{opacity:.75}
-.backpack-empty{
-  text-align:center;color:var(--ink-light);
-  font-size:13px;padding:22px 0;letter-spacing:1px;
+.backpack-empty{text-align:center;color:var(--ink-light);font-size:13px;padding:22px 0;letter-spacing:1px}
+/* ============ 情书集 ============ */
+.letter-tabs{display:flex;gap:8px;margin-bottom:16px}
+.ltab{
+  flex:1;padding:10px 0;border-radius:999px;cursor:pointer;
+  background:rgba(255,253,249,0.7);
+  border:1px solid rgba(123,164,214,0.3);
+  color:var(--ink-light);font-size:13.5px;letter-spacing:1px;
+  transition:.2s;-webkit-appearance:none;appearance:none;
+}
+body.theme-rose .ltab{border-color:rgba(224,117,154,0.3)}
+.ltab.active{background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));color:#fff;border-color:transparent;font-weight:700}
+.letter-item{
+  border:1px solid rgba(123,164,214,0.22);
+  border-radius:14px;padding:16px;margin-bottom:12px;
+  background:rgba(255,253,249,0.8);
+  position:relative;transition: all 0.6s ease;
+}
+body.theme-rose .letter-item{border-color:rgba(224,117,154,0.22)}
+.letter-item .lt-head{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;padding:2px 0}
+.letter-item .lt-badge{
+  font-size:11px;padding:2px 10px;border-radius:999px;flex-shrink:0;
+}
+.lt-badge.boy{background:rgba(123,164,214,0.2);color:var(--rose-deep)}
+.lt-badge.girl{background:rgba(224,117,154,0.2);color:var(--rose-deep)}
+.letter-item .lt-title{font-family:var(--serif);font-size:15.5px;font-weight:700;color:var(--ink);letter-spacing:.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.letter-item .lt-date{font-size:11px;color:var(--ink-light);flex-shrink:0}
+.letter-item .lt-arrow{color:var(--rose);font-size:12px;transition:transform .25s ease;flex-shrink:0}
+.letter-item.open .lt-arrow{transform:rotate(180deg)}
+/* 内文默认收起，点标题展开 */
+.letter-item .lt-body{
+  font-size:14px;line-height:2;color:var(--ink);white-space:pre-line;
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .38s ease, opacity .38s ease, padding .3s ease;
+  padding-top:0;
+}
+.letter-item.open .lt-body{max-height:3000px;opacity:1;padding-top:10px}
+.letter-item .lt-del-row{
+  margin-top:12px;text-align:right;
+  border-top:1px dashed rgba(123,164,214,0.18);
+  padding-top:10px;
+}
+body.theme-rose .letter-item .lt-del-row{border-top-color:rgba(224,117,154,0.18)}
+.letter-item .lt-del{
+  border:1px solid rgba(200,95,135,0.4);
+  background:transparent;color:#c85f6f;font-size:12px;
+  padding:6px 16px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.letter-item .lt-del:active{opacity:.7}
+.letter-write-title{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.letter-write select,.letter-write input,.letter-write textarea{
+  width:100%;border-radius:12px;
+  border:1px solid rgba(123,164,214,0.35);
+  background:rgba(255,255,255,0.7);
+  color:var(--ink);font-size:14.5px;outline:none;
+  margin-bottom:12px;padding:12px 14px;
+  font-family:var(--sans);-webkit-appearance:none;appearance:none;
+}
+body.theme-rose .letter-write select,body.theme-rose .letter-write input,body.theme-rose .letter-write textarea{border-color:rgba(224,117,154,0.35)}
+.letter-write textarea{min-height:130px;resize:vertical;line-height:1.8}
+/* ============ 照片墙（LED灯条） ============ */
+.led-string{
+  position:relative;
+  display:flex;gap:16px;
+  overflow-x:auto;overflow-y:hidden;
+  padding:22px 12px 24px;
+  scrollbar-width:none;
+}
+.led-string::-webkit-scrollbar{display:none}
+.led-string::before{ /* 灯条线 */
+  content:"";position:absolute;top:7px;left:0;right:0;height:3px;
+  border-radius:3px;
+  background:rgba(123,164,214,0.35);
+}
+body.theme-rose .led-string::before{background:rgba(224,117,154,0.35)}
+.led-photo{
+  position:relative;flex-shrink:0;width:150px;
+  background:rgba(255,253,249,0.9);
+  border-radius:10px;padding:8px 8px 6px;
+  box-shadow:0 6px 18px rgba(92,138,194,0.18);
+}
+.led-photo::before{ /* 灯泡 */
+  content:"";position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+  width:13px;height:13px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #fff8d0, #f6c96b 60%, #e0a83c);
+  box-shadow:0 0 10px 2px rgba(246,201,107,0.75);
+  animation:bulbGlow 2.2s ease-in-out infinite;
+}
+.led-photo:nth-child(2n)::before{animation-delay:.4s}
+.led-photo:nth-child(3n)::before{animation-delay:.9s}
+.led-photo:nth-child(5n)::before{animation-delay:1.4s}
+@keyframes bulbGlow{50%{box-shadow:0 0 4px 1px rgba(246,201,107,0.35)}}
+.led-photo img{
+  width:100%;height:130px;object-fit:cover;
+  border-radius:6px;display:block;background:#eee;
+}
+.led-photo .photo-del{
+  position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;
+  background:rgba(0,0,0,0.5);color:#fff;border:none;font-size:11px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;
+}
+.led-empty{
+  text-align:center;color:var(--ink-light);font-size:13px;
+  padding:24px 10px;letter-spacing:1px;width:100%;
+}
+.photo-actions{
+  display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;
+}
+.photo-upload-btn{
+  padding:11px 18px;border-radius:12px;cursor:pointer;
+  background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));
+  color:#fff;font-size:14px;font-weight:700;letter-spacing:1px;
+  display:inline-block;-webkit-appearance:none;appearance:none;
+}
+.photo-url-input{
+  flex:1;min-width:140px;padding:11px 12px;border-radius:12px;
+  border:1px solid rgba(123,164,214,0.35);
+  background:rgba(255,255,255,0.7);color:var(--ink);font-size:13.5px;outline:none;
+}
+body.theme-rose .photo-url-input{border-color:rgba(224,117,154,0.35)}
+.photo-add-url{
+  padding:11px 16px;border-radius:12px;border:1px solid var(--rose);
+  background:transparent;color:var(--rose-deep);font-size:13.5px;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
 }
 /* ============ 小游戏 ============ */
 .quiz-box{text-align:center}
@@ -563,8 +599,7 @@ body.theme-rose .backpack-item {
   padding:13px;margin-bottom:10px;border-radius:12px;cursor:pointer;
   background:rgba(255,253,249,0.85);
   border:1px solid rgba(123,164,214,0.35);
-  color:var(--ink);font-size:14.5px;letter-spacing:1px;
-  transition:.18s;
+  color:var(--ink);font-size:14.5px;letter-spacing:1px;transition:.18s;
 }
 body.theme-rose .quiz-opt {
   background:rgba(255,253,249,0.85);
@@ -572,11 +607,7 @@ body.theme-rose .quiz-opt {
 }
 .quiz-opt:active{transform:scale(0.98)}
 .quiz-opt.correct{background:rgba(123,164,214,0.35);border-color:var(--rose);color:var(--rose-deep)}
-body.theme-rose .quiz-opt.correct {
-  background:rgba(243,168,194,0.35);
-  border-color:var(--rose);
-  color:var(--rose-deep);
-}
+body.theme-rose .quiz-opt.correct{background:rgba(243,168,194,0.35);border-color:var(--rose);color:var(--rose-deep)}
 .quiz-opt.wrong{background:rgba(255,110,130,0.15);border-color:#ff7a8a;color:#c85f6f}
 .quiz-progress{font-size:12px;color:var(--ink-light);letter-spacing:2px;margin-bottom:14px}
 .quiz-result{display:none;padding:18px 0}
@@ -585,169 +616,133 @@ body.theme-rose .quiz-opt.correct {
 .btn-ghost{
   margin-top:16px;padding:12px 28px;border-radius:999px;cursor:pointer;
   background:transparent;border:1px solid var(--rose);color:var(--rose-deep);
-  font-size:14px;letter-spacing:2px;
+  font-size:14px;letter-spacing:2px;-webkit-appearance:none;appearance:none;
 }
+.game-sub{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink);margin:26px 0 14px;letter-spacing:1px;text-align:center}
+.truth-card{text-align:center;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.truth-q{font-family:var(--serif);font-size:17px;font-weight:700;line-height:1.9;color:var(--ink);margin-bottom:18px;min-height:64px}
+.ideas-box{text-align:left;font-size:13.5px;line-height:2;color:var(--ink-light)}
+.ideas-box b{color:var(--rose-deep)}
 /* ============ Footer ============ */
 .footer{
-  text-align:center;padding:40px 20px calc(36px + env(safe-area-inset-bottom));
+  text-align:center;padding:40px 20px calc(36px + var(--sab, 0px));
   color:var(--ink-light);font-size:13px;line-height:2.1;
   border-top:1px solid rgba(123,164,214,0.18);
   max-width:640px;margin:0 auto;
   transition: all 0.6s ease;
 }
-body.theme-rose .footer {
-  border-top-color: rgba(224,117,154,0.18);
-}
+body.theme-rose .footer{border-top-color:rgba(224,117,154,0.18)}
 .footer .f-serif{font-family:var(--serif);font-size:15px;color:var(--rose-deep);letter-spacing:1px}
 .logout-btn{margin-top:10px;font-size:12px;color:var(--ink-light);cursor:pointer;border:none;background:none}
 .logout-btn:hover{color:var(--rose-deep)}
-/* ============ 响应式 - 手机适配 ============ */
-@media (max-width: 480px) {
-  .topnav {
-    padding: 8px 10px;
-    gap: 0;
-  }
-  .topnav .brand {
-    margin-right: 2px;
-    gap: 6px;
-  }
-  .topnav .brand .seal-sm {
-    width: 24px;
-    height: 24px;
-    font-size: 11px;
-  }
-  .nav-link {
-    padding: 6px 10px;
-    font-size: 12.5px;
-  }
-  #audioBtn {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-  }
-  .theme-toggle {
-    padding: 4px 10px;
-    font-size: 11.5px;
-  }
-  .theme-toggle .toggle-text {
-    display: none;
-  }
-  .theme-toggle .toggle-icon {
-    font-size: 16px;
-  }
-  .nav-actions {
-    gap: 6px;
-    margin-left: 4px;
-    padding-left: 6px;
-  }
-  section {
-    padding: 40px 16px 36px;
-  }
-  .hero-title {
-    font-size: 28px;
-    letter-spacing: 4px;
-  }
-  .hero-eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
-  }
-  .hero-words {
-    font-size: 14px;
-  }
-  .photo-frame {
-    height: 200px;
-  }
-  .day-counter {
-    font-size: 13px;
-    padding: 10px 18px;
-  }
-  .day-counter b {
-    font-size: 22px;
-  }
-  .sec-title {
-    font-size: 21px;
-  }
-  .login-card {
-    padding: 32px 22px 24px;
-  }
-  .login-head .book-title {
-    font-size: 18px;
-  }
-  .seal {
-    width: 58px;
-    height: 58px;
-    font-size: 22px;
-  }
-  .chapter .ch-head {
-    padding: 14px 14px;
-  }
-  .chapter .ch-title {
-    font-size: 15px;
-  }
+
+/* ============ 云端同步 UI ============ */
+.cloud-status{position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:50%;background:rgba(255,253,249,.8);border:1px solid rgba(123,164,214,.28);cursor:default}
+.cloud-status svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cloud-status.connecting{color:#d9a45c}
+.cloud-status.ok{color:#4fa66b}
+.cloud-status.error{color:#d9606f}
+.cloud-status.connecting svg{animation:cloudSpin 1.1s linear infinite}
+.cloud-status .cloud-x{display:none}
+.cloud-status.error .cloud-x{display:block}
+@keyframes cloudSpin{to{transform:rotate(360deg)}}
+.sync-count{position:absolute;right:-4px;bottom:-3px;min-width:15px;height:15px;padding:0 3px;border-radius:999px;background:var(--rose-deep);color:#fff;font:700 9px/15px var(--sans);text-align:center;display:none}
+.sync-count.show{display:block}
+.global-toast{position:fixed;top:68px;right:14px;z-index:9999;max-width:min(360px,calc(100vw - 28px));padding:10px 14px;border-radius:12px;background:rgba(40,35,48,.92);color:#fff;font:500 13px/1.5 var(--sans);box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .22s,transform .22s}
+.global-toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:480px){.cloud-status{width:32px;height:32px}.global-toast{top:62px;right:10px}}
+/* ============ 响应式 ============ */
+@media(max-width:480px){
+
+.topnav{
+
+padding:
+calc(env(safe-area-inset-top,0px) + 8px)
+10px
+8px
+10px;
+
 }
-/* 小屏幕进一步适配 */
-@media (max-width: 380px) {
-  .topnav {
-    padding: 7px 8px;
-  }
-  .nav-link {
-    padding: 5px 8px;
-    font-size: 11.5px;
-  }
-  .theme-toggle {
-    padding: 4px 8px;
-  }
-  section {
-    padding: 32px 14px 28px;
-  }
-  .hero-title {
-    font-size: 24px;
-    letter-spacing: 3px;
-  }
-  .hero-words {
-    font-size: 13px;
-  }
-  .photo-frame {
-    height: 180px;
-  }
-  .card {
-    padding: 16px;
-  }
+
+}  .topnav .brand{margin-right:2px;gap:6px}
+  .topnav .brand .seal-sm{width:24px;height:24px;font-size:11px}
+  .nav-link{padding:6px 10px;font-size:12.5px}
+  #audioBtn{width:32px;height:32px;font-size:14px}
+  .theme-toggle{padding:4px 10px;font-size:11.5px}
+  .theme-toggle .toggle-text{display:none}
+  .theme-toggle .toggle-icon{font-size:16px}
+  .nav-actions{gap:6px;margin-left:4px;padding-left:6px}
+  section{padding:40px 16px 36px}
+  .hero-title{font-size:28px;letter-spacing:4px}
+  .hero-eyebrow{font-size:11px;letter-spacing:4px}
+  .hero-words{font-size:14px}
+  .photo-frame{height:200px}
+  .day-counter{font-size:13px;padding:10px 18px}
+  .day-counter b{font-size:22px}
+  .count-chip{max-width:none}
+  .sec-title{font-size:21px}
+  .login-card{padding:32px 22px 24px}
+  .login-head .book-title{font-size:18px}
+  .seal{width:58px;height:58px;font-size:22px}
+  .chapter .ch-head{padding:14px 14px}
+  .chapter .ch-title{font-size:15px}
+  .led-photo{width:130px}
+  .led-photo img{height:112px}
 }
-/* 横屏适配 */
-@media (max-height: 500px) and (orientation: landscape) {
-  .hero-title {
-    font-size: 28px;
-  }
-  .photo-frame {
-    height: 160px;
-  }
-  section {
-    padding: 30px 20px 24px;
-  }
+@media(max-width:380px){
+
+.topnav{
+
+padding:
+calc(env(safe-area-inset-top,0px) + 7px)
+8px
+7px
+8px;
+
 }
-/* 大屏适配 */
-@media (min-width: 768px) {
-  .topnav {
-    padding: 10px 24px;
-  }
-  .hero-title {
-    font-size: 42px;
-  }
-  .hero-words {
-    font-size: 16px;
-  }
-  .sec-title {
-    font-size: 28px;
-  }
+
+}  .nav-link{padding:5px 8px;font-size:11.5px}
+  .theme-toggle{padding:4px 8px}
+  section{padding:32px 14px 28px}
+  .hero-title{font-size:24px;letter-spacing:3px}
+  .hero-words{font-size:13px}
+  .photo-frame{height:180px}
+  .card{padding:16px}
 }
-@media (min-width: 1024px) {
-  .topnav {
-    padding: 12px 40px;
-  }
-  .hero-title {
-    font-size: 48px;
-  }
+@media (max-height:500px) and (orientation:landscape){
+  .hero-title{font-size:28px}
+  .photo-frame{height:160px}
+  section{padding:30px 20px 24px}
+}
+@media(min-width:768px){
+
+.topnav{
+
+padding:
+calc(env(safe-area-inset-top,0px) + 10px)
+24px
+10px
+24px;
+
+}
+
+}  .hero-title{font-size:42px}
+  .hero-words{font-size:16px}
+  .sec-title{font-size:28px}
+}
+@media(min-width:1024px){
+
+.topnav{
+
+padding:
+calc(env(safe-area-inset-top,0px) + 12px)
+40px
+12px
+40px;
+
+}
+
+}  .hero-title{font-size:48px}
 }
 </style>
 </head>
@@ -776,12 +771,19 @@ body.theme-rose .footer {
     <div class="nav-left">
       <div class="brand"><span class="seal-sm">归</span><span>沧澜归屿</span></div>
       <span class="nav-link" data-target="hero">情话</span>
-      <span class="nav-link" data-target="book">书</span>
+      <span class="nav-link" data-target="daily">每日一句</span>
+      <span class="nav-link" data-target="book">目录</span>
       <span class="nav-link" data-target="timeline">时光</span>
       <span class="nav-link" data-target="coupon">兑换券</span>
-      <span class="nav-link" data-target="game">小游戏</span>
+      <span class="nav-link" data-target="letters">情书</span>
+      <span class="nav-link" data-target="photos">照片墙</span>
+      <span class="nav-link" data-target="game">游戏</span>
     </div>
     <div class="nav-actions">
+      <div id="cloudStatus" class="cloud-status connecting" title="云端连接状态" aria-label="云端连接状态">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18.5a4.5 4.5 0 0 1 .7-8.95A6.5 6.5 0 0 1 18.3 11a3.5 3.5 0 0 1 .2 7H5Z"/><path class="cloud-x" d="M8 8l8 8M16 8l-8 8"/></svg>
+        <span id="syncCount" class="sync-count">0</span>
+      </div>
       <button id="audioBtn" title="背景音乐">♫</button>
       <button class="theme-toggle" id="themeToggle" title="切换主题配色">
         <span class="toggle-icon">◑</span>
@@ -789,12 +791,31 @@ body.theme-rose .footer {
       </button>
     </div>
   </nav>
-  <!-- Hero -->
+  <div id="globalToast" class="global-toast" role="status" aria-live="polite"></div>
+
+  <!-- 1. 致我的女孩 + 倒计时 -->
   <section id="hero">
     <div class="hero-eyebrow">致 我 的 女 孩</div>
     <h1 class="hero-title">欢迎归屿</h1>
     <div class="hero-sub">WELCOME HOME · 沧澜归屿</div>
     <div class="day-counter">我们已在一起 <b id="daysTogether">0</b> 天</div>
+    <div class="countdown-row">
+      <div class="count-chip" id="chipAnniv">
+        <div class="cc-label">周年纪念</div>
+        <div class="cc-value" id="cdAnniv">--</div>
+        <div class="cc-sub" id="cdAnnivSub">距离周年</div>
+      </div>
+      <div class="count-chip" id="chipBoy">
+        <div class="cc-label">男生生日</div>
+        <div class="cc-value" id="cdBoy">--</div>
+        <div class="cc-sub">距离生日</div>
+      </div>
+      <div class="count-chip" id="chipGirl">
+        <div class="cc-label">女生生日</div>
+        <div class="cc-value" id="cdGirl">--</div>
+        <div class="cc-sub">距离生日</div>
+      </div>
+    </div>
     <p class="hero-words">
       跨越新山与贵阳遥遥的距离，<br>我把所有日思夜想，都写进这本书。<br>
       <span class="hl">莫比乌斯对戒</span>象征没有尽头的思念，<br>山海相隔，但我的心意不会被距离隔断。
@@ -808,7 +829,8 @@ body.theme-rose .footer {
     <div class="scroll-tip">往下滑，故事还长 ▼</div>
   </section>
   <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 10 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/><path d="M0 40 Q 100 24 200 38 T 400 38 T 640 36 V56 H0 Z" fill="#7BA4D6" opacity="0.55"/></svg></div>
-  <!-- 每日一句 -->
+
+  <!-- 2. 每日一句 -->
   <section id="daily">
     <div class="sec-eyebrow">今日潮语</div>
     <h2 class="sec-title">每天一句，想你多一点</h2>
@@ -820,15 +842,17 @@ body.theme-rose .footer {
     </div>
   </section>
   <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 26 Q 100 10 200 24 T 400 24 T 640 22 V56 H0 Z" fill="#7BA4D6" opacity="0.4"/></svg></div>
-  <!-- 书目录 -->
+
+  <!-- 3. 目录（配歌） -->
   <section id="book">
     <div class="sec-eyebrow">我们的书</div>
     <h2 class="sec-title">《沧澜归屿》目录</h2>
-    <p class="sec-sub">点击章节，展开属于那一章的心事。</p>
+    <p class="sec-sub">点击章节，展开属于那一章的心事。想给每章配一首歌？把歌单发我，我帮你填进每一章 🎵</p>
     <div id="chapterList"></div>
   </section>
   <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
-  <!-- 时间线 -->
+
+  <!-- 4. 我们的时光 -->
   <section id="timeline">
     <div class="sec-eyebrow">我们的时光</div>
     <h2 class="sec-title">从 2025.08.14 开始</h2>
@@ -836,12 +860,12 @@ body.theme-rose .footer {
     <div class="timeline" id="timelineList"></div>
   </section>
   <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 26 Q 100 10 200 24 T 400 24 T 640 22 V56 H0 Z" fill="#7BA4D6" opacity="0.4"/></svg></div>
-  <!-- 兑换券 -->
+
+  <!-- 5. 兑换券 -->
   <section id="coupon">
     <div class="sec-eyebrow">甜蜜兑换</div>
     <h2 class="sec-title">甜蜜兑换券</h2>
-    <p class="sec-sub">每天可以挑选一张喜欢的券存入背包，想兑现时再去背包里使用。</p>
-
+    <p class="sec-sub">每天可以挑选一张喜欢的券存入背包，想兑现时记得找我后再去背包里使用噢~</p>
     <div class="card">
       <div class="coupon-panel-head">
         <span class="cp-panel-title">🎀 今日领取</span>
@@ -849,7 +873,6 @@ body.theme-rose .footer {
       </div>
       <div class="coupon-grid" id="couponGrid"></div>
     </div>
-
     <div class="card">
       <div class="coupon-panel-head">
         <span class="cp-panel-title">🎒 我的背包</span>
@@ -859,24 +882,91 @@ body.theme-rose .footer {
     </div>
   </section>
   <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
-  <!-- 小游戏 -->
+
+  <!-- 6. 情书集 -->
+  <section id="letters">
+    <div class="sec-eyebrow">情书集</div>
+    <h2 class="sec-title">写给你的信</h2>
+    <p class="sec-sub">把我们往来的每一封信都收在这里，也可以直接在网页里写下新的情书。</p>
+    <div class="letter-tabs">
+      <button class="ltab active" data-who="all">全部</button>
+      <button class="ltab" data-who="boy">男生情书</button>
+      <button class="ltab" data-who="girl">女生情书</button>
+      <button class="ltab" id="letterSortBtn" style="flex:0 0 auto;padding:10px 14px">排序 · 新→旧</button>
+    </div>
+    <div id="letterList" class="letter-list"></div>
+    <div class="card letter-write">
+      <div class="letter-write-title">✍️ 写一封新情书</div>
+      <select id="letterWho">
+        <option value="boy">男生情书</option>
+        <option value="girl">女生情书</option>
+      </select>
+      <input type="date" id="letterDate" aria-label="信件日期">
+      <input id="letterTitle" placeholder="给这封信起个标题（如：第一封 / 想你的时候）">
+      <textarea id="letterBody" placeholder="在这里写下想对她说的话……"></textarea>
+      <button class="btn" id="letterSave">存入情书集</button>
+    </div>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
+
+  <!-- 7. 照片墙（LED灯条） -->
+  <section id="photos">
+    <div class="sec-eyebrow">照片墙</div>
+    <h2 class="sec-title">我们的照片墙</h2>
+    <p class="sec-sub">上传你们的照片，像一串亮着小灯泡的灯条一样，一直亮着。📸</p>
+    <div class="led-string" id="ledString"></div>
+    <div class="photo-actions">
+      <label class="photo-upload-btn">＋ 上传照片
+        <input type="file" id="photoInput" accept="image/*" multiple hidden>
+      </label>
+      <input id="photoUrlInput" class="photo-url-input" placeholder="或粘贴图片网址">
+      <button class="photo-add-url" id="photoAddUrl">添加</button>
+    </div>
+    <p class="sec-sub" style="margin-top:12px;font-size:12px">照片优先同步到云端；断网时会先保存在本地，联网后自动同步。最多约 30 张。</p>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
+
+  <!-- 8. 小游戏 -->
   <section id="game">
     <div class="sec-eyebrow">小游戏</div>
-    <h2 class="sec-title">你有多了解我</h2>
-    <p class="sec-sub">五道题，答对越多，奖励越甜。</p>
+    <h2 class="sec-title">情侣小游戏</h2>
+    <p class="sec-sub">题库会随机轮换，每次都是不一样的问题。</p>
+
     <div class="card quiz-box" id="quizBox"></div>
+
+    <div class="game-sub">🎲 真心话抽卡</div>
+    <div class="card truth-card">
+      <div class="truth-q" id="truthQ">点击下方按钮，抽一个真心话</div>
+      <button class="btn-ghost" id="truthDraw">抽一张真心话</button>
+    </div>
+
+    <div class="game-sub">💞 更多情侣玩法</div>
+    <div class="card ideas-box">
+      <p><b>① 默契测试</b>：两人各自作答，互相猜对方的选择，看看谁更懂谁。</p>
+      <p><b>② 今日心愿清单</b>：写下今天想一起做的小事，完成一件划掉一件。</p>
+      <p><b>③ 异地时钟</b>：显示新山和贵阳两地的当前时间，感觉彼此就在身边。</p>
+      <p><b>④ 每日打卡</b>：每天给对方留一句话，攒成一本只属于你们的小日记。</p>
+      <p style="margin-top:8px;color:var(--ink-light)">小提示：网页是静态的，两边各自打开时数据存在各自手机里。想要两个人<em>实时互通</em>（你写她立刻看到），需要再接一个后端，到时候可以帮你做。</p>
+    </div>
   </section>
+
   <footer class="footer">
     <div class="f-serif">属于我们的故事，还会继续往下写</div>
     <div>《沧澜归屿》 · 独家典藏版</div>
     <button class="logout-btn" id="logoutBtn">退出登录</button>
   </footer>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ==================== 可编辑配置 ==================== */
 const SECRET_PASSWORD = "990702051125";
-const ANNIVERSARY = new Date(2025, 7, 14);
+const ANNIVERSARY = new Date(2025, 7, 14);          // 2025-08-14 在一起
+/* 生日（month 月份，day 日） */
+const BOY_BIRTHDAY  = { month: 7,  day: 2 };    // 男生生日 7月2日
+const GIRL_BIRTHDAY = { month: 11, day: 25 };   // 女生生日 11月25日
+/* ↓↓↓ 背景音乐（可换链接） */
 const MUSIC_URL = "https://aka.doubaocdn.com/s/NnK3onGxN5";
+/* ↓↓↓ 首页回忆照片（填图片网址，留空则显示占位框） */
 const PHOTO_URL = "";
 /* 每日一句 */
 const DAILY_QUOTES = [
@@ -888,94 +978,34 @@ const DAILY_QUOTES = [
   "你是我的屿，我是奔你而来的潮。",
   "山海很远，心很近。"
 ];
-/* 书目录 - 完整目录（含全部子章节，可继续增补） */
+/* 书目录 - 每章可配一首歌：song 填歌名；songUrl 填mp3链接（可留空）。
+   把歌单发我，我帮你把 song 都填上 */
 const CHAPTERS = [
-  { n:"前言", t:"前言", q:"故事的序章，从这里开始。" },
-  { n:"序章", t:"序章", q:"一切的开始，都是命中注定。" },
-  {
-    n:"第一章", t:"缘起",
+  { n:"前言", t:"前言", q:"故事的序章，从这里开始。", song:"", songUrl:"" },
+  { n:"序章", t:"序章", q:"一切的开始，都是命中注定。", song:"", songUrl:"" },
+  { n:"第一章", t:"缘起", song:"", songUrl:"",
     sub:[
-      "第一次相遇",
-      "不听妈妈的话，要听神明的话",
-      "一切都是缘分",
-      "这个世界好小",
-      "我去载你吧",
-      "有趣的对话",
-      "莫比乌斯对戒",
-      "刷题刷不明白",
-      "你说你很恋爱脑的故事",
-      "瑜有情，乔有意",
-      "九州行之又是你的车",
-      "这叫智取，宝贝儿",
-      "我有一个朋友！"
-    ]
-  },
-  {
-    n:"第二章", t:"坚持到底",
+      "第一次相遇","不听妈妈的话，要听神明的话","一切都是缘分","这个世界好小",
+      "我去载你吧","有趣的对话","莫比乌斯对戒","刷题刷不明白",
+      "你说你很恋爱脑的故事","瑜有情，乔有意","九州行之又是你的车",
+      "这叫智取，宝贝儿","我有一个朋友！"
+    ] },
+  { n:"第二章", t:"坚持到底", song:"", songUrl:"",
     sub:[
-      "未曾言明的拒绝",
-      "念念不忘，必有回响",
-      "关心，总有回响",
-      "秋序与日月兮同光",
-      "有些话，还是想亲口说",
-      "第一次约会",
-      "喜欢，还是错觉？",
-      "23分15秒",
-      "等待天亮"
-    ]
-  },
-  {
-    n:"第三章", t:"山海相隔，两座城市",
+      "未曾言明的拒绝","念念不忘，必有回响","关心，总有回响","秋序与日月兮同光",
+      "有些话，还是想亲口说","第一次约会","喜欢，还是错觉？","23分15秒","等待天亮"
+    ] },
+  { n:"第三章", t:"山海相隔，两座城市", song:"", songUrl:"",
+    sub:["看不到你的45天","你不在的生日","你在贵阳，我在新山","你去新疆，我在新山","归来的那一天","没有"] },
+  { n:"第四章", t:"何其有幸", song:"", songUrl:"",
     sub:[
-      "看不到你的45天",
-      "你不在的生日",
-      "你在贵阳，我在新山",
-      "你去新疆，我在新山",
-      "归来的那一天",
-      "没有"
-    ]
-  },
-  {
-    n:"第四章", t:"何其有幸",
-    sub:[
-      "不够喜欢",
-      "七夕有你",
-      "有你陪着的我",
-      "你和我的不安",
-      "寿司烤饭",
-      "悄悄的礼物",
-      "戏里戏外皆你",
-      "婚礼",
-      "仙女的二十岁生辰",
-      "如约而至",
-      "生活趣事",
-      "重赴朝曦",
-      "你又不在的生日"
-    ]
-  },
-  {
-    n:"第五章", t:"日思夜想",
-    sub:[
-      "伤心的一天",
-      "看不到你的30天"
-    ]
-  },
-  {
-    n:"第六章", t:"潮屿长伴",
-    sub:[
-      "我很喜欢你",
-      "爱不分对错",
-      "迪士尼城堡",
-      "如果我们有争执了请看这页"
-    ]
-  },
-  {
-    n:"第七章", t:"共赴未来",
-    sub:[
-      "未来"
-    ]
-  },
-  { n:"后记", t:"后记", q:"故事的结尾，也是新的开始。" }
+      "不够喜欢","七夕有你","有你陪着的我","你和我的不安","寿司烤饭","悄悄的礼物",
+      "戏里戏外皆你","婚礼","仙女的二十岁生辰","如约而至","生活趣事","重赴朝曦","你又不在的生日"
+    ] },
+  { n:"第五章", t:"日思夜想", song:"", songUrl:"", sub:["伤心的一天","看不到你的30天"] },
+  { n:"第六章", t:"潮屿长伴", song:"", songUrl:"", sub:["我很喜欢你","爱不分对错","迪士尼城堡","如果我们有争执了请看这页"] },
+  { n:"第七章", t:"共赴未来", song:"", songUrl:"", sub:["未来"] },
+  { n:"后记", t:"后记", q:"故事的结尾，也是新的开始。", song:"", songUrl:"" }
 ];
 /* 时间线 */
 const TIMELINE = [
@@ -993,13 +1023,39 @@ const COUPONS = [
   { icon:"♡", name:"陪我看电影券", tip:"凭券指定一部电影" },
   { icon:"♡", name:"听我讲心事券", tip:"凭券交换今晚的心事" }
 ];
-/* 小游戏题目 */
-const QUIZ = [
+/* 情书集 - 默认情书（who: boy 男生 / girl 女生；date 为日期，会按日期排序）
+   之后用网页里的写信功能继续加，日期会自动填今天 */
+const DEFAULT_LETTERS = [
+  { who:"boy", title:"第一封信", date:"2025-08-14", body:"亲爱的姑娘：\n新山到贵阳，隔着两千多公里，可我总觉得自己一伸手，就能碰到你的想念。\n我把它们都收进这本书里，等你慢慢拆。" },
+  { who:"boy", title:"第二封信", date:"2025-08-20", body:"我常想，莫比乌斯环为什么让人着迷。\n大概因为它没有正面也没有背面，就像我对你的喜欢，绕来绕去，都还是你。" },
+  { who:"girl", title:"来自你的回复", date:"2025-08-25", body:"（把女生写给你的信放在这里，也可以直接在网页里写下来～）" }
+];
+/* 小游戏题库（会随机抽5题轮换）
+   a 是正确选项下标：0=第一个，1=第二个，2=第三个 —— 请核对改成真实答案！ */
+const QUIZ_BANK = [
   { q:"我最喜欢的水果是？", opts:["芒果","西瓜","榴莲"], a:0 },
   { q:"我们的纪念日是？", opts:["8月14日","2月14日","5月20日"], a:0 },
   { q:"我写这本书最想说的是？", opts:["所有风浪都有归处","海誓山盟","来日方长"], a:0 },
   { q:"异地时我最常想对你说？", opts:["我在想你","吃饭了吗","早点睡"], a:0 },
-  { q:"我们的专属暗号是？", opts:["沧澜归屿","早安晚安","520"], a:0 }
+  { q:"我们的专属暗号是？", opts:["沧澜归屿","早安晚安","520"], a:0 },
+  { q:"我最喜欢的饮品？", opts:["奶茶","咖啡","可乐"], a:0 },
+  { q:"我更喜欢哪个季节？", opts:["夏天","冬天","秋天"], a:0 },
+  { q:"我生气时最想你怎么做？", opts:["抱抱我","讲道理","给我空间"], a:0 },
+  { q:"我心情不好时最想？", opts:["听你说话","一个人待着","吃好吃的"], a:0 },
+  { q:"我的理想约会？", opts:["海边散步","看电影","游乐园"], a:0 }
+];
+/* 真心话题库 */
+const TRUTH_QUESTIONS = [
+  "你第一次心动是什么时候？",
+  "你最喜欢我身上哪一点？",
+  "如果有一天我们吵架，你最希望我怎么做？",
+  "你偷偷为我做过最用心的一件事？",
+  "你最想和我一起去哪里旅行？",
+  "你最近一次想我，是什么时候？",
+  "你心里的我，和外面的我有什么不一样？",
+  "如果时间能倒流，你最想回到哪个瞬间？",
+  "你希望我改掉的一个小毛病？",
+  "你有多喜欢我？（不许说不知道）"
 ];
 /* ==================== 核心元素 ==================== */
 const loginPage = document.getElementById("loginPage");
@@ -1017,11 +1073,8 @@ function unlock(){
 }
 submitBtn.addEventListener("click", ()=>{
   errMsg.style.display = "none";
-  if(inputEl.value.trim() === SECRET_PASSWORD){
-    unlock();
-  }else{
-    errMsg.style.display = "block";
-  }
+  if(inputEl.value.trim() === SECRET_PASSWORD){ unlock(); }
+  else { errMsg.style.display = "block"; }
 });
 inputEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter") submitBtn.click(); });
 document.getElementById("logoutBtn").addEventListener("click", ()=>{
@@ -1070,14 +1123,61 @@ audioBtn.addEventListener("click", (e)=>{
   if(audio.paused){ startMusic(); } else { audio.pause(); }
   syncIcon();
 });
-/* ==================== 在一起天数 ==================== */
+/* ==================== 在一起天数 + 三组倒计时 ==================== */
 function calcDays(){
   const now = new Date();
   const diff = Math.floor((now - ANNIVERSARY) / 86400000) + 1;
   document.getElementById("daysTogether").textContent = Math.max(1, diff);
 }
-calcDays();
-/* ==================== 照片占位 ==================== */
+/* 计算距某月某日的倒计时 */
+function daysUntil(m, d){
+  const now = new Date();
+  if(now.getMonth() === m-1 && now.getDate() === d){
+    return { days:0, today:true };
+  }
+  let next = new Date(now.getFullYear(), m-1, d);
+  if(next < now){ next = new Date(now.getFullYear()+1, m-1, d); }
+  return { days: Math.ceil((next - now)/86400000), today:false };
+}
+function renderCountdown(){
+  calcDays();
+  /* 周年纪念（8月14日） */
+  const anniv = daysUntil(8, 14);
+  const cdAnniv = document.getElementById("cdAnniv");
+  const cdAnnivSub = document.getElementById("cdAnnivSub");
+  const chipAnniv = document.getElementById("chipAnniv");
+  if(anniv.today){
+    cdAnniv.textContent = "就是今天";
+    cdAnnivSub.textContent = "我们的周年纪念日 ♥";
+    chipAnniv.classList.add("today");
+  } else {
+    cdAnniv.textContent = anniv.days;
+    cdAnnivSub.textContent = "天后 · 周年纪念";
+    chipAnniv.classList.remove("today");
+  }
+  /* 生日 */
+  renderBirthChip(BOY_BIRTHDAY, "cdBoy", "chipBoy");
+  renderBirthChip(GIRL_BIRTHDAY, "cdGirl", "chipGirl");
+}
+function renderBirthChip(cfg, valId, chipId){
+  const el = document.getElementById(valId);
+  const chip = document.getElementById(chipId);
+  if(!cfg || !cfg.month){
+    el.textContent = "待设置";
+    chip.classList.remove("today");
+    return;
+  }
+  const r = daysUntil(cfg.month, cfg.day);
+  if(r.today){
+    el.textContent = "今天!";
+    chip.classList.add("today");
+  } else {
+    el.textContent = r.days;
+    chip.classList.remove("today");
+  }
+}
+renderCountdown();
+/* ==================== 首页照片占位 ==================== */
 if(PHOTO_URL){
   const img = document.createElement("img");
   img.src = PHOTO_URL;
@@ -1094,17 +1194,19 @@ function renderDaily(){
   document.getElementById("dailyDate").textContent = now.getFullYear() + "年" + (now.getMonth()+1) + "月" + now.getDate() + "日";
 }
 renderDaily();
-/* ==================== 书目录 ==================== */
+/* ==================== 书目录（含配乐） ==================== */
 const chapterList = document.getElementById("chapterList");
 CHAPTERS.forEach((ch)=>{
   const item = document.createElement("div");
   item.className = "chapter";
-
   let subHtml = "";
-  if(ch.sub && ch.sub.length > 0) {
+  if(ch.sub && ch.sub.length > 0){
     subHtml = ch.sub.map(s => '<div class="ch-sub">· ' + s + '</div>').join('');
   }
-
+  let songHtml = "";
+  if(ch.song){
+    songHtml = '<div class="ch-song">🎵 配乐 · ' + ch.song + '</div>';
+  }
   item.innerHTML =
     '<div class="ch-head">' +
       '<div><div class="ch-num">'+ch.n+'</div><div class="ch-title">'+ch.t+'</div></div>' +
@@ -1112,9 +1214,9 @@ CHAPTERS.forEach((ch)=>{
     '</div>' +
     '<div class="ch-body">' +
       (ch.q ? '<div class="ch-quote">\u201c'+ch.q+'\u201d</div>' : '') +
+      songHtml +
       subHtml +
     '</div>';
-
   item.querySelector(".ch-head").addEventListener("click", ()=>{
     item.classList.toggle("open");
   });
@@ -1137,22 +1239,17 @@ const couponGrid = document.getElementById("couponGrid");
 const backpackList = document.getElementById("backpackList");
 const backpackCount = document.getElementById("backpackCount");
 const claimState = document.getElementById("claimState");
-
 function todayKey(){ return new Date().toISOString().slice(0,10); }
 function getBackpack(){
   try { return JSON.parse(localStorage.getItem("cgl_backpack") || "[]"); }
   catch(e){ return []; }
 }
 function saveBackpack(list){ localStorage.setItem("cgl_backpack", JSON.stringify(list)); }
-/* 今日是否已领取 */
-function claimedToday(){
-  return localStorage.getItem("cgl_claim_date") === todayKey();
-}
+function claimedToday(){ return localStorage.getItem("cgl_claim_date") === todayKey(); }
 function claimedIdxToday(){
   if(!claimedToday()) return -1;
   return parseInt(localStorage.getItem("cgl_claim_idx") || "-1", 10);
 }
-/* 今日领取区 */
 function renderCouponGrid(){
   const claimedIdx = claimedIdxToday();
   couponGrid.innerHTML = "";
@@ -1182,7 +1279,6 @@ function renderCouponGrid(){
   });
   claimState.textContent = claimedIdx >= 0 ? "今日已领取，明天再来" : "今日可领 1 张";
 }
-/* 背包区 */
 function renderBackpack(){
   const list = getBackpack();
   backpackCount.textContent = list.length + " 张";
@@ -1220,15 +1316,195 @@ function renderBackpack(){
 }
 renderCouponGrid();
 renderBackpack();
+/* ==================== 情书集 ==================== */
+function loadLetters(){
+  try{
+    const raw = localStorage.getItem("cgl_letters");
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  try{ localStorage.setItem("cgl_letters", JSON.stringify(DEFAULT_LETTERS)); }catch(e){}
+  return DEFAULT_LETTERS.slice();
+}
+function saveLetters(list){ localStorage.setItem("cgl_letters", JSON.stringify(list)); }
+let letterFilter = "all";
+let letterSort = "desc"; // desc 最新在前 / asc 最早在前
+function renderLetters(){
+  const list = loadLetters();
+  const box = document.getElementById("letterList");
+  let filtered = letterFilter === "all" ? list.slice() : list.filter(l => l.who === letterFilter);
+  /* 按日期排序 */
+  filtered.sort((a,b)=>{
+    const da = a.date || "0000-00-00";
+    const db = b.date || "0000-00-00";
+    return letterSort === "desc" ? db.localeCompare(da) : da.localeCompare(db);
+  });
+  if(filtered.length === 0){
+    box.innerHTML = '<div class="backpack-empty">这里还没有信，写一封吧 ✍️</div>';
+    return;
+  }
+  box.innerHTML = "";
+  filtered.forEach((l)=>{
+    const realIdx = list.indexOf(l);
+    const item = document.createElement("div");
+    item.className = "letter-item";
+    const whoBadge = l.who === "girl" ? '<span class="lt-badge girl">女生</span>' : '<span class="lt-badge boy">男生</span>';
+    item.innerHTML =
+      '<div class="lt-head">' +
+        whoBadge +
+        '<span class="lt-title">'+l.title+'</span>' +
+        '<span class="lt-date">'+(l.date||"")+'</span>' +
+        '<span class="lt-arrow">▼</span>' +
+      '</div>' +
+      '<div class="lt-body">'+l.body+
+        '<div class="lt-del-row"><button class="lt-del" title="删除这封信">✕ 删除这封信</button></div>' +
+      '</div>';
+    item.querySelector(".lt-head").addEventListener("click", ()=>{
+      item.classList.toggle("open");
+    });
+    item.querySelector(".lt-del").addEventListener("click", (ev)=>{
+      ev.stopPropagation();
+      const all = loadLetters();
+      all.splice(realIdx, 1);
+      saveLetters(all);
+      renderLetters();
+    });
+    box.appendChild(item);
+  });
+}
+document.querySelectorAll(".ltab[data-who]").forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    document.querySelectorAll(".ltab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    letterFilter = tab.dataset.who;
+    renderLetters();
+  });
+});
+document.getElementById("letterSortBtn").addEventListener("click", ()=>{
+  letterSort = letterSort === "desc" ? "asc" : "desc";
+  document.getElementById("letterSortBtn").textContent = letterSort === "desc" ? "排序 · 新→旧" : "排序 · 旧→新";
+  renderLetters();
+});
+document.getElementById("letterSave").addEventListener("click", ()=>{
+  const who = document.getElementById("letterWho").value;
+  const title = document.getElementById("letterTitle").value.trim();
+  const body = document.getElementById("letterBody").value.trim();
+  if(!title || !body){
+    alert("请先填写标题和内容再保存哦～");
+    return;
+  }
+  const now = new Date();
+  const todayStr = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+  const date = document.getElementById("letterDate").value || todayStr;   /* 没选日期就记今天 */
+  const all = loadLetters();
+  all.unshift({ who, title, body, date });
+  saveLetters(all);
+  document.getElementById("letterTitle").value = "";
+  document.getElementById("letterBody").value = "";
+  document.getElementById("letterDate").value = "";
+  renderLetters();
+});
+renderLetters();
+/* ==================== 照片墙（LED灯条） ==================== */
+const MAX_PHOTOS = 30;
+const ledString = document.getElementById("ledString");
+function getPhotos(){
+  try { return JSON.parse(localStorage.getItem("cgl_photos") || "[]"); }
+  catch(e){ return []; }
+}
+function savePhotos(list){ localStorage.setItem("cgl_photos", JSON.stringify(list)); }
+function renderPhotos(){
+  const list = getPhotos();
+  if(list.length === 0){
+    ledString.innerHTML = '<div class="led-empty">还没有照片，点下面的「上传照片」开始点亮灯条 ✨</div>';
+    return;
+  }
+  ledString.innerHTML = "";
+  list.forEach((src, i)=>{
+    const el = document.createElement("div");
+    el.className = "led-photo";
+    el.innerHTML =
+      '<button class="photo-del" title="删除">✕</button>' +
+      '<img src="'+src+'" alt="照片">';
+    el.querySelector(".photo-del").addEventListener("click", ()=>{
+      const l = getPhotos();
+      l.splice(i, 1);
+      savePhotos(l);
+      renderPhotos();
+    });
+    ledString.appendChild(el);
+  });
+}
+function addPhotoDataUrl(dataUrl){
+  const l = getPhotos();
+  if(l.length >= MAX_PHOTOS){
+    alert("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些再添加～");
+    return;
+  }
+  l.push(dataUrl);
+  try{
+    savePhotos(l);
+    renderPhotos();
+  }catch(e){
+    alert("照片太多存不下了，请先删除一些（手机浏览器空间有限）。");
+  }
+}
+/* 压缩图片 */
+function compressImage(file, cb){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement("canvas");
+      let w = img.width, h = img.height;
+      const maxW = 700;
+      if(w > maxW){ h = Math.round(h * maxW / w); w = maxW; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      cb(canvas.toDataURL("image/jpeg", 0.7));
+    };
+    img.onerror = function(){ alert("这张图片无法读取，换个试试～"); };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+document.getElementById("photoInput").addEventListener("change", function(){
+  const files = Array.from(this.files || []);
+  if(files.length === 0) return;
+  files.forEach(f=>{
+    compressImage(f, dataUrl => addPhotoDataUrl(dataUrl));
+  });
+  this.value = "";
+});
+document.getElementById("photoAddUrl").addEventListener("click", ()=>{
+  const input = document.getElementById("photoUrlInput");
+  const url = input.value.trim();
+  if(!url){ alert("请粘贴图片网址"); return; }
+  addPhotoDataUrl(url);
+  input.value = "";
+});
+renderPhotos();
 /* ==================== 小游戏 ==================== */
 const quizBox = document.getElementById("quizBox");
-let qIndex = 0, score = 0, answered = false;
+let quizPool = [], qIndex = 0, score = 0, answered = false;
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function newQuizRound(){
+  quizPool = shuffle(QUIZ_BANK).slice(0, 5);
+  qIndex = 0; score = 0; answered = false;
+  renderQuiz();
+}
 function renderQuiz(){
-  if(qIndex >= QUIZ.length){ renderResult(); return; }
-  const item = QUIZ[qIndex];
+  if(qIndex >= quizPool.length){ renderResult(); return; }
+  const item = quizPool[qIndex];
   answered = false;
   quizBox.innerHTML =
-    '<div class="quiz-progress">第 '+(qIndex+1)+' / '+QUIZ.length+' 题</div>' +
+    '<div class="quiz-progress">第 '+(qIndex+1)+' / '+quizPool.length+' 题（题库随机轮换）</div>' +
     '<div class="quiz-q">'+item.q+'</div>' +
     item.opts.map((o,i)=>'<button class="quiz-opt" data-i="'+i+'">'+o+'</button>').join('');
   quizBox.querySelectorAll(".quiz-opt").forEach(btn=>{
@@ -1236,8 +1512,7 @@ function renderQuiz(){
       if(answered) return; answered = true;
       const i = parseInt(btn.dataset.i, 10);
       if(i === item.a){
-        score++;
-        btn.classList.add("correct");
+        score++; btn.classList.add("correct");
         setTimeout(()=>{ qIndex++; renderQuiz(); }, 700);
       }else{
         btn.classList.add("wrong");
@@ -1250,7 +1525,7 @@ function renderQuiz(){
   });
 }
 function renderResult(){
-  const pct = Math.round(score / QUIZ.length * 100);
+  const pct = Math.round(score / quizPool.length * 100);
   let word = "再想想我，我可不好糊弄哦。";
   if(pct === 100) word = "满分！你对我的了解，就像海懂得每一朵浪。";
   else if(pct >= 80) word = "很懂我嘛，这份了解值得一个大大的拥抱。";
@@ -1258,24 +1533,260 @@ function renderResult(){
   quizBox.innerHTML =
     '<div class="quiz-result" style="display:block">' +
       '<div class="quiz-progress">答题完成</div>' +
-      '<div class="score">'+score+' / '+QUIZ.length+'</div>' +
+      '<div class="score">'+score+' / '+quizPool.length+'</div>' +
       '<div class="score-word">'+word+'</div>' +
-      '<button class="btn-ghost" id="retryQuiz">再玩一次</button>' +
+      '<button class="btn-ghost" id="retryQuiz">再抽一组新题</button>' +
     '</div>';
-  document.getElementById("retryQuiz").addEventListener("click", ()=>{
-    qIndex = 0; score = 0; renderQuiz();
-  });
+  document.getElementById("retryQuiz").addEventListener("click", ()=>{ newQuizRound(); });
 }
-renderQuiz();
+newQuizRound();
+/* 真心话抽卡 */
+const truthQ = document.getElementById("truthQ");
+const truthDraw = document.getElementById("truthDraw");
+truthDraw.addEventListener("click", ()=>{
+  const q = TRUTH_QUESTIONS[Math.floor(Math.random() * TRUTH_QUESTIONS.length)];
+  truthQ.textContent = q;
+});
 /* ==================== 顶部导航平滑滚动 ==================== */
 document.querySelectorAll(".nav-link").forEach(link=>{
   link.addEventListener("click", ()=>{
     const target = document.getElementById(link.dataset.target);
     if(!target) return;
-    const top = target.getBoundingClientRect().top + window.pageYOffset - 58;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - 60;
     window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   });
 });
+
+/* ==================== Supabase 云端 + 离线队列 ==================== */
+const SUPABASE_URL = "https://onvgmtwiokhsixcybfky.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9udmdtdHdpb2toc2l4Y3liZmt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTQ2NTYsImV4cCI6MjEwNDA3MDY1Nn0.tMavqmXKhlRKKbzX-PIYNKRGhK9DwnResvbpDMBpM5k";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const CONNECTION = Object.freeze({ CONNECTING:"CONNECTING", OK:"OK", ERROR:"ERROR" });
+let cloudState = CONNECTION.CONNECTING;
+let toastTimer = null;
+let syncBusy = false;
+let cloudReady = false;
+
+function showToast(message, ms=3500){
+  const el=document.getElementById("globalToast"); if(!el)return;
+  el.textContent=message; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),ms);
+}
+function setCloudState(state){
+  cloudState=state;
+  const el=document.getElementById("cloudStatus");
+  if(!el)return;
+  el.classList.remove("connecting","ok","error");
+  el.classList.add(state===CONNECTION.OK?"ok":state===CONNECTION.ERROR?"error":"connecting");
+  el.title=state===CONNECTION.OK?"云端在线":state===CONNECTION.ERROR?"云端离线 · 本地模式":"正在连接云端";
+}
+// 点击云朵图标手动重连
+document.getElementById("cloudStatus").addEventListener("click", async ()=>{
+  if(cloudReady){
+    showToast("✅当前已经是云端在线");
+    return;
+  }
+  showToast("🔄手动发起云端连接尝试");
+  await probeCloud();
+});
+function getQueue(){try{return JSON.parse(localStorage.getItem("cgl_sync_queue")||"[]")}catch(e){return[]}}
+function saveQueue(q){try{localStorage.setItem("cgl_sync_queue",JSON.stringify(q))}catch(e){}}
+function updateSyncCount(){
+  const n=getQueue().length,el=document.getElementById("syncCount"); if(!el)return;
+  el.textContent=n>99?"99+":String(n); el.classList.toggle("show",n>0);
+}
+function enqueue(op){
+  const q=getQueue();
+  q.push({...op,queueId:crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random()});
+  saveQueue(q);
+  updateSyncCount();
+  // 新增：如果当前已经云端在线，立刻尝试同步队列
+  if (cloudReady) {
+    flushQueue();
+  }
+}
+function localLettersCache(list){try{localStorage.setItem("cgl_letters",JSON.stringify(list))}catch(e){}}
+function localPhotosCache(list){try{localStorage.setItem("cgl_photos",JSON.stringify(list))}catch(e){}}
+function todayLocal(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+
+async function probeCloud(){
+  if(!supabaseClient){
+    setCloudState(CONNECTION.ERROR);
+    showToast("⚠️Supabase客户端初始化失败，本地模式运行");
+    return false;
+  }
+  setCloudState(CONNECTION.CONNECTING);
+  // 只重试 2次
+  const MAX_RETRY = 2;
+  for(let i=0;i<MAX_RETRY;i++){
+    if(i>0) showToast("🔄尝试连接云端...",1800);
+    try{
+      const {error}=await supabaseClient.from("letters").select("id").limit(1);
+      if(!error){
+        cloudReady=true;
+        setCloudState(CONNECTION.OK);
+        showToast("✅云端已连接");
+        await pullCloudData();
+        await flushQueue();
+        return true;
+      }else{
+        // 仅打印一次，不疯狂抛异常
+        console.log("probeCloud查询返回业务错误:",error.message);
+      }
+    }catch(e){
+      console.log("probeCloud连接异常(单次):", e.message);
+    }
+    if(i < MAX_RETRY -1){
+      await new Promise(r=>setTimeout(r,1000));
+    }
+  }
+  // 两次全部失败，直接停止自动重连
+  cloudReady=false;
+  setCloudState(CONNECTION.ERROR);
+  showToast("⚠️云端连接失败，进入本地模式。点击云朵图标手动重试",4000);
+  return false;
+}
+
+async function pullCloudData(){
+  if(!cloudReady)return;
+  try{
+    const {data,error}=await supabaseClient.from("letters").select("*").order("created_at",{ascending:false});
+    if(!error&&Array.isArray(data)){localLettersCache(data.map(x=>({id:x.id,who:x.who,title:x.title,body:x.body,date:x.date})));renderLetters()}
+  }catch(e){}
+  try{
+    const {data,error}=await supabaseClient.from("coupon_bag").select("*").order("created_at",{ascending:false});
+    if(!error&&Array.isArray(data)){
+      const list=data.filter(x=>x.code).map(x=>({id:x.id,icon:x.icon||"♡",name:x.name||"兑换券",tip:x.tip||"",code:x.code,date:x.date}));
+      localStorage.setItem("cgl_backpack",JSON.stringify(list));
+      const latest=data.filter(x=>x.claim_date).sort((a,b)=>String(b.claim_date).localeCompare(String(a.claim_date)))[0];
+      if(latest?.claim_date){localStorage.setItem("cgl_claim_date",latest.claim_date);localStorage.setItem("cgl_claim_idx",String(latest.claim_idx??-1))}
+      renderCouponGrid();renderBackpack();
+    }
+  }catch(e){}
+  try{
+    const {data,error}=await supabaseClient.from("photo_wall").select("*").order("created_at",{ascending:true});
+    if(!error&&Array.isArray(data)){localPhotosCache(data.map(x=>({id:x.id,url:x.url||x.file_url||x.image_url})).filter(x=>x.url));renderPhotos()}
+  }catch(e){}
+}
+
+async function applyQueueItem(op){
+  // 单条任务 12秒超时，防止图片上传卡死整个队列
+  const withTimeout = (promise, ms=12000) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject)=> setTimeout(()=>reject(new Error("task timeout")), ms))
+    ]);
+  }
+
+  await withTimeout((async ()=>{
+    if(op.type==="letter_add"){
+      const {data,error}=await supabaseClient.from("letters").insert([{who:op.item.who,title:op.item.title,body:op.item.body,date:op.item.date}]).select().single();
+      if(error)throw error;
+      const list=loadLetters(); const idx=list.findIndex(x=>x._localId===op.localId); if(idx>=0){list[idx]={...op.item,id:data.id};localLettersCache(list)}
+    }else if(op.type==="letter_delete"){
+      const {error}=await supabaseClient.from("letters").delete().eq("id",op.id); if(error)throw error;
+    }else if(op.type==="coupon_add"){
+      const payload={icon:op.item.icon,name:op.item.name,tip:op.item.tip,code:op.item.code,date:op.item.date,claim_date:op.claimDate||null,claim_idx:op.claimIdx??null};
+      const {data,error}=await supabaseClient.from("coupon_bag").insert([payload]).select().single(); if(error)throw error;
+      const list=getBackpack();const idx=list.findIndex(x=>x._localId===op.localId);if(idx>=0){list[idx]={...op.item,id:data.id};saveBackpack(list)}
+    }else if(op.type==="coupon_use"){
+      const {error}=await supabaseClient.from("coupon_bag").delete().eq("id",op.id);if(error)throw error;
+    }else if(op.type==="photo_add"){
+      const blob=await (await fetch(op.dataUrl)).blob();
+      const path="offline/"+Date.now()+"-"+Math.random().toString(36).slice(2)+".jpg";
+      const {error:upErr}=await supabaseClient.storage.from("photo_wall").upload(path,blob,{contentType:"image/jpeg",upsert:false});if(upErr)throw upErr;
+      const {data:urlData}=supabaseClient.storage.from("photo_wall").getPublicUrl(path);
+      const {data,error}=await supabaseClient.from("photo_wall").insert([{url:urlData.publicUrl,path:path}]).select().single();if(error)throw error;
+      const list=getPhotos();const idx=list.findIndex(x=>x._localId===op.localId);if(idx>=0){list[idx]={id:data.id,url:urlData.publicUrl,path:path};localPhotosCache(list)}
+    }else if(op.type==="photo_delete"){
+      const {error}=await supabaseClient.from("photo_wall").delete().eq("id",op.id);if(error)throw error;
+    }
+  })());
+}
+async function flushQueue(){
+  if(!cloudReady||syncBusy||!navigator.onLine)return; syncBusy=true;
+  try{
+    let q=getQueue(); let changed=false;
+    for(let i=0;i<q.length;){
+      try{
+        await applyQueueItem(q[i]);
+        q.splice(i,1);
+        changed=true;
+        saveQueue(q);
+        updateSyncCount();
+      }catch(e){
+        // 打印真实报错，方便定位问题
+        console.log("队列单条任务异常：", e);
+        i++;
+      }
+    }
+    if(changed){renderLetters();renderBackpack();renderPhotos()}
+  }finally{syncBusy=false;updateSyncCount()}
+}
+window.addEventListener("online",async()=>{
+  // 浏览器感知网络恢复，只允许尝试一次，不会循环重试
+  if(cloudReady) return;
+  showToast("🔄网络恢复，尝试一次云端连接",2200);
+  await probeCloud();
+});
+window.addEventListener("offline",()=>{
+  cloudReady=false;
+  setCloudState(CONNECTION.ERROR);
+  showToast("⚠️已离线，操作会先保存在本地",2500);
+});
+
+/* ---------- 覆盖原有情书：云端优先，本地兜底 ---------- */
+const _loadLettersLocal=loadLetters;
+loadLetters=function(){
+  try{const raw=localStorage.getItem("cgl_letters");if(raw)return JSON.parse(raw)}catch(e){}
+  return DEFAULT_LETTERS.slice();
+};
+const _renderLettersOriginal=renderLetters;
+renderLetters=function(){
+  const list=loadLetters(); const box=document.getElementById("letterList");
+  let filtered=letterFilter==="all"?list.slice():list.filter(l=>l.who===letterFilter);
+  filtered.sort((a,b)=>{const da=a.date||"0000-00-00",db=b.date||"0000-00-00";return letterSort==="desc"?db.localeCompare(da):da.localeCompare(db)});
+  if(!filtered.length){box.innerHTML='<div class="backpack-empty">这里还没有信，写一封吧 ✍️</div>';return}
+  box.innerHTML=""; filtered.forEach(l=>{
+    const realIdx=list.indexOf(l),item=document.createElement("div");item.className="letter-item";
+    const who=l.who==="girl"?'<span class="lt-badge girl">女生</span>':'<span class="lt-badge boy">男生</span>';
+    item.innerHTML='<div class="lt-head">'+who+'<span class="lt-title"></span><span class="lt-date"></span><span class="lt-arrow">▼</span></div><div class="lt-body"></div>';
+    item.querySelector(".lt-title").textContent=l.title||"";item.querySelector(".lt-date").textContent=l.date||"";item.querySelector(".lt-body").textContent=l.body||"";
+    const delRow=document.createElement("div");delRow.className="lt-del-row";delRow.innerHTML='<button class="lt-del" title="删除这封信">✕ 删除这封信</button>';item.querySelector(".lt-body").appendChild(delRow);
+    item.querySelector(".lt-head").addEventListener("click",()=>item.classList.toggle("open"));
+    item.querySelector(".lt-del").addEventListener("click",ev=>{ev.stopPropagation();const all=loadLetters(),target=all[realIdx];all.splice(realIdx,1);localLettersCache(all);if(target?.id)enqueue({type:"letter_delete",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="letter_add"&&x.localId===target._localId));saveQueue(q)}updateSyncCount();renderLetters()});
+    box.appendChild(item);
+  });
+};
+
+/* 重绑写信按钮，避免旧的纯本地 handler */
+{const old=document.getElementById("letterSave"),btn=old.cloneNode(true);old.replaceWith(btn);btn.addEventListener("click",()=>{
+  const who=document.getElementById("letterWho").value,title=document.getElementById("letterTitle").value.trim(),body=document.getElementById("letterBody").value.trim();
+  if(!title||!body){showToast("请先填写标题和内容再保存哦～");return}
+  const date=document.getElementById("letterDate").value||todayLocal(),localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2);
+  const item={_localId:localId,who,title,body,date};const all=loadLetters();all.unshift(item);localLettersCache(all);enqueue({type:"letter_add",localId,item});renderLetters();document.getElementById("letterTitle").value="";document.getElementById("letterBody").value="";document.getElementById("letterDate").value="";
+  if(cloudReady)flushQueue(); else showToast("📦已保存在本地，联网后会自动同步",2500);
+})}
+
+/* ---------- 覆盖兑换券：本地立即生效 + 云端队列 ---------- */
+{const grid=document.getElementById("couponGrid");const fresh=grid.cloneNode(false);grid.replaceWith(fresh);
+  const renderCloudCoupons=()=>{const claimed=claimedIdxToday();fresh.innerHTML="";COUPONS.forEach((cp,idx)=>{const el=document.createElement("div");el.className="coupon"+(claimed>=0?" disabled":"");el.innerHTML='<div class="cp-icon">'+cp.icon+'</div><div class="cp-name">'+cp.name+'</div><div class="cp-tip">'+cp.tip+'</div>';if(claimed===idx){el.classList.add("used");el.querySelector(".cp-tip").textContent="今天已领取这张"}el.addEventListener("click",()=>{if(claimedIdxToday()>=0)return;const code="CGL-"+Math.random().toString(36).slice(2,8).toUpperCase(),localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,icon:cp.icon,name:cp.name,tip:cp.tip,code,date:todayLocal()};const list=getBackpack();list.push(item);saveBackpack(list);localStorage.setItem("cgl_claim_date",todayLocal());localStorage.setItem("cgl_claim_idx",String(idx));enqueue({type:"coupon_add",localId,item,claimDate:todayLocal(),claimIdx:idx});renderCloudCoupons();renderBackpack();if(cloudReady)flushQueue();else showToast("📦兑换券已存入本地，联网后自动同步",2500)});fresh.appendChild(el)});claimState.textContent=claimed>=0?"今日已领取，明天再来":"今日可领 1 张"};renderCloudCoupons();}
+
+/* ---------- 覆盖背包使用 ---------- */
+const _renderBackpackOriginal=renderBackpack;
+renderBackpack=function(){const list=getBackpack();backpackCount.textContent=list.length+" 张";if(!list.length){backpackList.innerHTML='<div class="backpack-empty">背包空空的，先去领一张券吧 🎀</div>';return}backpackList.innerHTML="";list.forEach((cp,i)=>{const item=document.createElement("div");item.className="backpack-item";item.innerHTML='<div class="bp-info"><span class="bp-icon"></span><div><div class="bp-name"></div><div class="bp-code"></div></div></div><button class="bp-use-btn">使用</button>';item.querySelector(".bp-icon").textContent=cp.icon||"♡";item.querySelector(".bp-name").textContent=cp.name||"兑换券";item.querySelector(".bp-code").textContent="券号 "+(cp.code||"")+" · "+(cp.date||"");item.querySelector(".bp-use-btn").addEventListener("click",()=>{const l=getBackpack(),target=l[i];l.splice(i,1);saveBackpack(l);if(target?.id)enqueue({type:"coupon_use",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="coupon_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}renderBackpack();if(cloudReady)flushQueue();});backpackList.appendChild(item)})};renderBackpack();
+
+/* ---------- 覆盖照片墙：云端 Storage + 离线 dataURL 队列 ---------- */
+const _renderPhotosOriginal=renderPhotos;
+getPhotos=function(){try{return JSON.parse(localStorage.getItem("cgl_photos")||"[]")}catch(e){return[]}};
+renderPhotos=function(){const list=getPhotos();if(!list.length){ledString.innerHTML='<div class="led-empty">还没有照片，点下面的「上传照片」开始点亮灯条 ✨</div>';return}ledString.innerHTML="";list.forEach((p,i)=>{const src=typeof p==="string"?p:p.url||p.dataUrl;const el=document.createElement("div");el.className="led-photo";el.innerHTML='<button class="photo-del" title="删除">✕</button><img alt="照片">';el.querySelector("img").src=src;el.querySelector(".photo-del").addEventListener("click",()=>{const l=getPhotos(),target=l[i];l.splice(i,1);localPhotosCache(l);if(target?.id)enqueue({type:"photo_delete",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="photo_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}renderPhotos();if(cloudReady)flushQueue()});ledString.appendChild(el)})};
+{const input=document.getElementById("photoInput"),fresh=input.cloneNode(true);input.replaceWith(fresh);fresh.addEventListener("change",function(){Array.from(this.files||[]).forEach(f=>compressImage(f,dataUrl=>{const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url:dataUrl,dataUrl};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl});renderPhotos();if(cloudReady)flushQueue();else showToast("📦照片已保存在本地，联网后自动上传",2500)}));this.value=""})}
+{const old=document.getElementById("photoAddUrl"),btn=old.cloneNode(true);old.replaceWith(btn);btn.addEventListener("click",()=>{const input=document.getElementById("photoUrlInput"),url=input.value.trim();if(!url){showToast("请粘贴图片网址");return}const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl:url});renderPhotos();input.value="";if(cloudReady)flushQueue();else showToast("📦图片地址已保存在本地，联网后自动同步",2500)})}
+
+updateSyncCount();
+/* 启动云端探测；即使失败也不阻断页面本地功能 */
+setTimeout(()=>probeCloud(),50);
+
 </script>
 </body>
 </html>
