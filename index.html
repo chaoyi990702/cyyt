@@ -17,6 +17,16 @@
 <!-- 状态栏样式（默认 / 黑色 / 黑色透明） -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
+  /* ============ 安全区变量：var() + env() + constant() 多重降级，适配灵动岛 ============ */
+:root{
+  --sat: 0px;                                  /* 兜底：不支持安全区时 */
+  --sat: constant(safe-area-inset-top, 0px);   /* 旧版 iOS */
+  --sat: env(safe-area-inset-top, 0px);        /* 新版 iOS / 灵动岛 */
+  --sab: 0px;
+  --sab: constant(safe-area-inset-bottom, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
 /* ============ 默认主题: 星空海浪小熊 ============ */
 :root{
   --rose:#7BA4D6;
