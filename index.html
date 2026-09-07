@@ -12,6 +12,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="icon.jpeg">
 
 <!-- 告诉 Safari 以"独立 App"模式打开（去掉地址栏和工具栏） -->
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <!-- 状态栏样式（默认 / 黑色 / 黑色透明） -->
@@ -20,11 +21,7 @@
 <style>
 /* ============ 安全区变量：var() + env() + constant() 多重降级，适配灵动岛 ============ */
 :root{
-  --sat: 0px;                                  /* 兜底：不支持安全区时 */
-  --sat: constant(safe-area-inset-top, 0px);   /* 旧版 iOS */
-  --sat: env(safe-area-inset-top, 0px);        /* 新版 iOS / 灵动岛 */
-  --sab: 0px;
-  --sab: constant(safe-area-inset-bottom, 0px);
+  --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
 }
 /* ============ 主题变量：默认星空海浪 + 落日玫瑰 ============ */
@@ -149,6 +146,18 @@ body.theme-rose .seal {
 .login-head .desc{margin-top:8px;font-size:12.5px;color:var(--ink-light);letter-spacing:2px}
 .field{margin-bottom:20px}
 .field label{display:block;font-size:13.5px;margin-bottom:9px;color:var(--ink)}
+#usernameInput {
+    width: 100%;
+    padding: 14px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(123,164,214,0.4);
+    background: rgba(255,255,255,0.7);
+    color: var(--ink);
+    font-size: 16px;
+    letter-spacing: 1px;
+    outline: none;
+    transition: all 0.3s ease;
+}
 #passwordInput{
   width:100%;padding:14px 15px;border-radius:12px;
   border:1px solid rgba(123,164,214,0.4);
@@ -157,6 +166,8 @@ body.theme-rose .seal {
   transition: all 0.3s ease;
 }
 body.theme-rose #passwordInput{border-color:rgba(224,117,154,0.4)}
+#usernameInput::placeholder{color:rgba(154,140,163,0.5);letter-spacing:0}
+#usernameInput:focus{border-color:var(--rose)}
 #passwordInput::placeholder{color:rgba(154,140,163,0.5);letter-spacing:0}
 #passwordInput:focus{border-color:var(--rose)}
 .btn{
@@ -464,66 +475,6 @@ body.theme-rose .backpack-item{border-color:rgba(224,117,154,0.5)}
 .bp-use-btn:active{transform:scale(0.94)}
 .bp-use-btn.using{opacity:.75}
 .backpack-empty{text-align:center;color:var(--ink-light);font-size:13px;padding:22px 0;letter-spacing:1px}
-/* ============ 情书集 ============ */
-.letter-tabs{display:flex;gap:8px;margin-bottom:16px}
-.ltab{
-  flex:1;padding:10px 0;border-radius:999px;cursor:pointer;
-  background:rgba(255,253,249,0.7);
-  border:1px solid rgba(123,164,214,0.3);
-  color:var(--ink-light);font-size:13.5px;letter-spacing:1px;
-  transition:.2s;-webkit-appearance:none;appearance:none;
-}
-body.theme-rose .ltab{border-color:rgba(224,117,154,0.3)}
-.ltab.active{background:linear-gradient(145deg, var(--rose-light), var(--rose-deep));color:#fff;border-color:transparent;font-weight:700}
-.letter-item{
-  border:1px solid rgba(123,164,214,0.22);
-  border-radius:14px;padding:16px;margin-bottom:12px;
-  background:rgba(255,253,249,0.8);
-  position:relative;transition: all 0.6s ease;
-}
-body.theme-rose .letter-item{border-color:rgba(224,117,154,0.22)}
-.letter-item .lt-head{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;padding:2px 0}
-.letter-item .lt-badge{
-  font-size:11px;padding:2px 10px;border-radius:999px;flex-shrink:0;
-}
-.lt-badge.boy{background:rgba(123,164,214,0.2);color:var(--rose-deep)}
-.lt-badge.girl{background:rgba(224,117,154,0.2);color:var(--rose-deep)}
-.letter-item .lt-title{font-family:var(--serif);font-size:15.5px;font-weight:700;color:var(--ink);letter-spacing:.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.letter-item .lt-date{font-size:11px;color:var(--ink-light);flex-shrink:0}
-.letter-item .lt-arrow{color:var(--rose);font-size:12px;transition:transform .25s ease;flex-shrink:0}
-.letter-item.open .lt-arrow{transform:rotate(180deg)}
-/* 内文默认收起，点标题展开 */
-.letter-item .lt-body{
-  font-size:14px;line-height:2;color:var(--ink);white-space:pre-line;
-  max-height:0;overflow:hidden;opacity:0;
-  transition:max-height .38s ease, opacity .38s ease, padding .3s ease;
-  padding-top:0;
-}
-.letter-item.open .lt-body{max-height:3000px;opacity:1;padding-top:10px}
-.letter-item .lt-del-row{
-  margin-top:12px;text-align:right;
-  border-top:1px dashed rgba(123,164,214,0.18);
-  padding-top:10px;
-}
-body.theme-rose .letter-item .lt-del-row{border-top-color:rgba(224,117,154,0.18)}
-.letter-item .lt-del{
-  border:1px solid rgba(200,95,135,0.4);
-  background:transparent;color:#c85f6f;font-size:12px;
-  padding:6px 16px;border-radius:999px;cursor:pointer;
-  display:inline-flex;align-items:center;gap:5px;
-}
-.letter-item .lt-del:active{opacity:.7}
-.letter-write-title{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px}
-.letter-write select,.letter-write input,.letter-write textarea{
-  width:100%;border-radius:12px;
-  border:1px solid rgba(123,164,214,0.35);
-  background:rgba(255,255,255,0.7);
-  color:var(--ink);font-size:14.5px;outline:none;
-  margin-bottom:12px;padding:12px 14px;
-  font-family:var(--sans);-webkit-appearance:none;appearance:none;
-}
-body.theme-rose .letter-write select,body.theme-rose .letter-write input,body.theme-rose .letter-write textarea{border-color:rgba(224,117,154,0.35)}
-.letter-write textarea{min-height:130px;resize:vertical;line-height:1.8}
 /* ============ 照片墙（LED灯条） ============ */
 .led-string{
   position:relative;
@@ -550,12 +501,21 @@ body.theme-rose .led-string::before{background:rgba(224,117,154,0.35)}
   width:13px;height:13px;border-radius:50%;
   background:radial-gradient(circle at 35% 35%, #fff8d0, #f6c96b 60%, #e0a83c);
   box-shadow:0 0 10px 2px rgba(246,201,107,0.75);
-  animation:bulbGlow 2.2s ease-in-out infinite;
+  animation:bulbGlow 3.5s ease-in-out infinite;
 }
 .led-photo:nth-child(2n)::before{animation-delay:.4s}
 .led-photo:nth-child(3n)::before{animation-delay:.9s}
 .led-photo:nth-child(5n)::before{animation-delay:1.4s}
-@keyframes bulbGlow{50%{box-shadow:0 0 4px 1px rgba(246,201,107,0.35)}}
+@keyframes bulbGlow{
+  0%, 100% {
+    box-shadow: 0 0 6px 2px rgba(246,201,107,0.4);
+    opacity: 0.7;
+  }
+  50% {
+    box-shadow: 0 0 18px 6px rgba(246,201,107,0.85);
+    opacity: 1;
+  }
+}
 .led-photo img{
   width:100%;height:130px;object-fit:cover;
   border-radius:6px;display:block;background:#eee;
@@ -621,6 +581,118 @@ body.theme-rose .quiz-opt.correct{background:rgba(243,168,194,0.35);border-color
 .truth-q{font-family:var(--serif);font-size:17px;font-weight:700;line-height:1.9;color:var(--ink);margin-bottom:18px;min-height:64px}
 .ideas-box{text-align:left;font-size:13.5px;line-height:2;color:var(--ink-light)}
 .ideas-box b{color:var(--rose-deep)}
+
+/* ============ 心情日记 ============ */
+.mood-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.mood-nav button{background:none;border:1px solid rgba(123,164,214,0.4);border-radius:50%;width:36px;height:36px;cursor:pointer;color:var(--rose-deep);font-size:18px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.mood-nav button:hover{background:rgba(123,164,214,0.1)}
+body.theme-rose .mood-nav button{border-color:rgba(224,117,154,0.4)}
+.mood-month-label{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink);letter-spacing:2px}
+.mood-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.mood-cal-header{text-align:center;font-size:12px;font-weight:700;color:var(--ink-light);padding:8px 0;letter-spacing:1px}
+.mood-cal-day{
+  min-height:72px;border-radius:10px;padding:6px;cursor:pointer;
+  background:rgba(255,255,255,0.6);border:1px solid rgba(123,164,214,0.15);
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:.2s;position:relative;
+}
+body.theme-rose .mood-cal-day{border-color:rgba(224,117,154,0.15)}
+.mood-cal-day:hover{background:rgba(123,164,214,0.08);transform:scale(1.03)}
+body.theme-rose .mood-cal-day:hover{background:rgba(224,117,154,0.08)}
+.mood-cal-day.today{border-color:var(--rose);background:rgba(123,164,214,0.1)}
+body.theme-rose .mood-cal-day.today{border-color:var(--rose);background:rgba(243,168,194,0.1)}
+.mood-cal-day.has-entry{border-left:3px solid var(--gold)}
+.mood-cal-day .day-num{font-size:13px;font-weight:600;color:var(--ink)}
+.mood-cal-day .day-mood{font-size:18px;line-height:1}
+.mood-cal-day .day-preview{font-size:10px;color:var(--ink-light);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mood-cal-day.empty{background:transparent;border:none;cursor:default;pointer-events:none}
+/* -------- 日历格子：男女生心情徽章 -------- */
+.day-moods{display:flex;gap:4px;justify-content:center;margin-top:2px}
+.day-mood-badge{font-size:14px;line-height:1;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:rgba(123,164,214,0.15)}
+.day-mood-badge.girl{background:rgba(224,117,154,0.18)}
+/* -------- 心情日记弹窗 -------- */
+.mood-modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(30,26,24,0.45);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;animation:moodFadeIn .25s ease;
+}
+@keyframes moodFadeIn{from{opacity:0}to{opacity:1}}
+.mood-modal{
+  width:100%;max-width:440px;max-height:88vh;overflow-y:auto;
+  background:var(--card-bg,#fffdf9);border-radius:20px;padding:22px 20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  animation:moodPopIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes moodPopIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mood-diary-block{border-radius:14px;padding:14px;margin-bottom:14px;background:rgba(123,164,214,0.06);border:1px solid rgba(123,164,214,0.18)}
+.mood-diary-block.partner{background:rgba(224,117,154,0.06);border-color:rgba(224,117,154,0.18)}
+.mood-diary-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mood-block-label{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--ink)}
+.mood-block-label.mine::before{content:"💙 ";}
+.mood-block-label.partner::before{content:"💗 ";}
+.mood-diary-actions{display:flex;gap:6px}
+.icon-btn{background:rgba(255,255,255,0.7);border:1px solid rgba(0,0,0,0.08);border-radius:8px;width:30px;height:30px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.icon-btn:hover{transform:scale(1.08);background:#fff}
+.mood-diary-view{display:flex;gap:10px;align-items:flex-start}
+.mood-diary-view-emoji{font-size:30px;line-height:1}
+.mood-diary-view-text{font-size:14px;color:var(--ink);line-height:1.7;white-space:pre-wrap;margin:0}
+.mood-diary-view.partner-view .mood-diary-empty{color:var(--ink-light);font-size:13px;font-style:italic}
+.mood-edit-btns{display:flex;gap:10px}
+.btn-ghost{background:transparent!important;border:1px solid rgba(0,0,0,0.15)!important;color:var(--ink-light)!important;box-shadow:none!important}
+/* -------- 更好看的表情选择器 -------- */
+.mood-emoji{font-size:26px}
+.mood-selector{gap:6px}
+.mood-emoji.selected{background:linear-gradient(135deg,rgba(123,164,214,0.25),rgba(243,168,194,0.25));transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.mood-emoji:hover{transform:scale(1.15)}
+.mood-entry-card{margin-top:16px}
+.mood-entry-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.mood-entry-title span{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink)}
+.mood-close{background:none;border:none;font-size:22px;color:var(--ink-light);cursor:pointer}
+.mood-selector{display:flex;gap:8px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.mood-emoji{font-size:28px;cursor:pointer;padding:6px 10px;border-radius:10px;border:2px solid transparent;transition:.2s}
+.mood-emoji:hover{background:rgba(123,164,214,0.1)}
+.mood-emoji.selected{border-color:var(--rose);background:rgba(123,164,214,0.12)}
+body.theme-rose .mood-emoji.selected{border-color:var(--rose);background:rgba(243,168,194,0.12)}
+.mood-textarea{width:100%;min-height:100px;border-radius:12px;border:1px solid rgba(123,164,214,0.35);background:rgba(255,255,255,0.7);color:var(--ink);font-size:14px;outline:none;padding:12px;resize:vertical;line-height:1.8;margin-bottom:12px;font-family:var(--sans)}
+body.theme-rose .mood-textarea{border-color:rgba(224,117,154,0.35)}
+/* ============ 电子宠物 ============ */
+.pet-card{text-align:center}
+.pet-status{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.pet-stat{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:80px}
+.pet-stat-label{font-size:12px;color:var(--ink-light);letter-spacing:1px}
+.pet-bar{width:80px;height:10px;border-radius:999px;background:rgba(123,164,214,0.15);overflow:hidden}
+body.theme-rose .pet-bar{background:rgba(224,117,154,0.15)}
+.pet-bar-fill{height:100%;border-radius:999px;transition:width .5s ease}
+.pet-hunger{background:linear-gradient(90deg,#f6c96b,#e0a83c)}
+.pet-happy{background:linear-gradient(90deg,#f3a8c2,#e0759a)}
+.pet-energy{background:linear-gradient(90deg,#7BA4D6,#5C8AC2)}
+.pet-lvl{font-family:var(--serif);font-size:18px;font-weight:900;color:var(--rose-deep)}
+.pet-avatar{display:flex;justify-content:center;align-items:center;padding:20px 0;min-height:140px}
+.pet-body{position:relative;width:100px;height:100px}
+.pet-eyes{display:flex;justify-content:center;gap:20px;margin-top:20px}
+.pet-eye{width:12px;height:12px;border-radius:50%;background:var(--ink);display:block;transition:.3s}
+.pet-eye.blink{height:2px!important;margin-top:5px}
+.pet-mouth{width:20px;height:10px;border-radius:0 0 20px 20px;background:var(--ink);margin:8px auto 0;transition:.3s}
+.pet-mouth.happy{width:24px;height:12px}
+.pet-mouth.sleeping{width:16px;height:2px;border-radius:0;background:var(--ink);margin-top:10px}
+.pet-body-shape{width:80px;height:70px;border-radius:50% 50% 40% 40%;background:linear-gradient(145deg,var(--rose-light),var(--rose-deep));margin:0 auto;position:relative;top:-10px;transition:.3s}
+.pet-body-shape.sleeping{transform:scale(0.9);opacity:0.8}
+.pet-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.pet-btn{padding:10px 22px;border-radius:999px;border:1px solid var(--rose);background:transparent;color:var(--rose-deep);font-size:14px;cursor:pointer;transition:.2s;font-family:var(--sans)}
+.pet-btn:hover{background:var(--rose);color:#fff}
+.pet-btn:active{transform:scale(0.95)}
+.pet-log{text-align:left;font-size:12px;color:var(--ink-light);max-height:80px;overflow-y:auto;padding:8px;line-height:1.8}
+.pet-log p{margin:2px 0}
+@media(max-width:480px){
+  .pet-status{gap:8px}
+  .pet-stat{min-width:65px}
+  .pet-bar{width:60px;height:8px}
+  .pet-body{width:80px;height:80px}
+  .pet-body-shape{width:65px;height:58px}
+  .pet-eyes{gap:16px}
+  .pet-eye{width:10px;height:10px}
+}
 /* ============ Footer ============ */
 .footer{
   text-align:center;padding:40px 20px calc(36px + var(--sab, 0px));
@@ -635,6 +707,8 @@ body.theme-rose .footer{border-top-color:rgba(224,117,154,0.18)}
 .logout-btn:hover{color:var(--rose-deep)}
 
 /* ============ 云端同步 UI ============ */
+.who-am-i{font-size:12px;color:var(--ink-light);padding:5px 12px;border-radius:999px;background:rgba(123,164,214,0.12);border:1px solid rgba(123,164,214,0.3);white-space:nowrap}
+body.theme-rose .who-am-i{background:rgba(224,117,154,0.12);border-color:rgba(224,117,154,0.3)}
 .cloud-status{position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:50%;background:rgba(255,253,249,.8);border:1px solid rgba(123,164,214,.28);cursor:default}
 .cloud-status svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .cloud-status.connecting{color:#d9a45c}
@@ -662,7 +736,7 @@ calc(env(safe-area-inset-top,0px) + 8px)
 
 }
 
-}  .topnav .brand{margin-right:2px;gap:6px}
+  .topnav .brand{margin-right:2px;gap:6px}
   .topnav .brand .seal-sm{width:24px;height:24px;font-size:11px}
   .nav-link{padding:6px 10px;font-size:12.5px}
   #audioBtn{width:32px;height:32px;font-size:14px}
@@ -687,6 +761,7 @@ calc(env(safe-area-inset-top,0px) + 8px)
   .led-photo{width:130px}
   .led-photo img{height:112px}
 }
+
 @media(max-width:380px){
 
 .topnav{
@@ -699,7 +774,7 @@ calc(env(safe-area-inset-top,0px) + 7px)
 
 }
 
-}  .nav-link{padding:5px 8px;font-size:11.5px}
+ .nav-link{padding:5px 8px;font-size:11.5px}
   .theme-toggle{padding:4px 8px}
   section{padding:32px 14px 28px}
   .hero-title{font-size:24px;letter-spacing:3px}
@@ -707,6 +782,7 @@ calc(env(safe-area-inset-top,0px) + 7px)
   .photo-frame{height:180px}
   .card{padding:16px}
 }
+
 @media (max-height:500px) and (orientation:landscape){
   .hero-title{font-size:28px}
   .photo-frame{height:160px}
@@ -724,7 +800,7 @@ calc(env(safe-area-inset-top,0px) + 10px)
 
 }
 
-}  .hero-title{font-size:42px}
+  .hero-title{font-size:42px}
   .hero-words{font-size:16px}
   .sec-title{font-size:28px}
 }
@@ -740,7 +816,7 @@ calc(env(safe-area-inset-top,0px) + 12px)
 
 }
 
-}  .hero-title{font-size:48px}
+  .hero-title{font-size:48px}
 }
 </style>
 </head>
@@ -754,11 +830,15 @@ calc(env(safe-area-inset-top,0px) + 12px)
       <div class="desc">书籍序列号核验 ｜ 读者问题反馈</div>
     </div>
     <div class="field">
+    <label for="usernameInput">用户名</label>
+    <input id="usernameInput" type="text" placeholder="请输入用户名" autocomplete="username">
+    </div>
+    <div class="field">
       <label for="passwordInput">请扫描封面的条码获得书籍序列号</label>
       <input id="passwordInput" type="text" inputmode="text" placeholder="在此输入序列号" autocomplete="off">
     </div>
     <button class="btn" id="submitBtn">提交核验</button>
-    <div id="errMsg">序列号无效，请核对实体书扉页重新输入</div>
+    <div id="errMsg">用户名或序列号无效，请核对实体书扉页重新输入</div>
     <div class="music-hint">点击页面任意位置开启背景音乐</div>
     <div class="login-foot">仅正版实体书籍可完成核验 · 客服在线 10:00-22:00</div>
   </div>
@@ -773,11 +853,13 @@ calc(env(safe-area-inset-top,0px) + 12px)
       <span class="nav-link" data-target="book">目录</span>
       <span class="nav-link" data-target="timeline">时光</span>
       <span class="nav-link" data-target="coupon">兑换券</span>
-      <span class="nav-link" data-target="letters">情书</span>
       <span class="nav-link" data-target="photos">照片墙</span>
+      <span class="nav-link" data-target="mood">心情</span>
+      <span class="nav-link" data-target="pet">宠物</span>
       <span class="nav-link" data-target="game">游戏</span>
     </div>
     <div class="nav-actions">
+      <span id="whoAmI" class="who-am-i"></span>
       <div id="cloudStatus" class="cloud-status connecting" title="云端连接状态" aria-label="云端连接状态">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18.5a4.5 4.5 0 0 1 .7-8.95A6.5 6.5 0 0 1 18.3 11a3.5 3.5 0 0 1 .2 7H5Z"/><path class="cloud-x" d="M8 8l8 8M16 8l-8 8"/></svg>
         <span id="syncCount" class="sync-count">0</span>
@@ -787,6 +869,7 @@ calc(env(safe-area-inset-top,0px) + 12px)
         <span class="toggle-icon">◑</span>
         <span class="toggle-text">落日玫瑰</span>
       </button>
+      <button id="logoutBtn" class="theme-toggle" title="退出登录" style="font-size:12px;padding:5px 12px;">退出</button>
     </div>
   </nav>
   <div id="globalToast" class="global-toast" role="status" aria-live="polite"></div>
@@ -877,32 +960,10 @@ calc(env(safe-area-inset-top,0px) + 12px)
         <span class="cp-panel-count" id="backpackCount">0 张</span>
       </div>
       <div class="backpack-list" id="backpackList"></div>
-    </div>
-  </section>
-  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
-
-  <!-- 6. 情书集 -->
-  <section id="letters">
-    <div class="sec-eyebrow">情书集</div>
-    <h2 class="sec-title">写给你的信</h2>
-    <p class="sec-sub">把我们往来的每一封信都收在这里，也可以直接在网页里写下新的情书。</p>
-    <div class="letter-tabs">
-      <button class="ltab active" data-who="all">全部</button>
-      <button class="ltab" data-who="boy">男生情书</button>
-      <button class="ltab" data-who="girl">女生情书</button>
-      <button class="ltab" id="letterSortBtn" style="flex:0 0 auto;padding:10px 14px">排序 · 新→旧</button>
-    </div>
-    <div id="letterList" class="letter-list"></div>
-    <div class="card letter-write">
-      <div class="letter-write-title">✍️ 写一封新情书</div>
-      <select id="letterWho">
-        <option value="boy">男生情书</option>
-        <option value="girl">女生情书</option>
-      </select>
-      <input type="date" id="letterDate" aria-label="信件日期">
-      <input id="letterTitle" placeholder="给这封信起个标题（如：第一封 / 想你的时候）">
-      <textarea id="letterBody" placeholder="在这里写下想对她说的话……"></textarea>
-      <button class="btn" id="letterSave">存入情书集</button>
+      <div id="sendCouponPanel" style="display:none;margin-top:12px;">
+        <select id="sendCouponSelect" style="width:100%;padding:8px;border-radius:8px;margin-bottom:8px;"></select>
+        <button id="sendCouponConfirmBtn" class="bp-use-btn" style="width:100%">🎁 免费送券给彤彤</button>
+      </div>
     </div>
   </section>
   <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
@@ -923,8 +984,61 @@ calc(env(safe-area-inset-top,0px) + 12px)
     <p class="sec-sub" style="margin-top:12px;font-size:12px">照片优先同步到云端；断网时会先保存在本地，联网后自动同步。最多约 30 张。</p>
   </section>
   <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
+  <!-- 8. 心情日记 -->
+  <section id="mood">
+    <div class="sec-eyebrow">心情日记</div>
+    <h2 class="sec-title">记录每一天的心情</h2>
+    <p class="sec-sub">在日历上标记你的心情，写下当天的小故事。所有日记都会安全保存。</p>
+    <div class="card">
+      <div class="mood-nav">
+        <button class="mood-prev" id="moodPrev">&#8249;</button>
+        <span class="mood-month-label" id="moodMonthLabel"></span>
+        <button class="mood-next" id="moodNext">&#8250;</button>
+      </div>
+      <div class="mood-calendar" id="moodCalendar"></div>
+    </div>
+    <div class="mood-modal-overlay" id="moodModalOverlay" style="display:none;">
+      <div class="mood-modal">
+        <div class="mood-entry-title">
+          <span id="moodEntryDate"></span>
+          <button class="mood-close" id="moodClose">&times;</button>
+        </div>
 
-  <!-- 8. 小游戏 -->
+        <div class="mood-diary-block" id="myMoodBlock">
+          <div class="mood-diary-block-head">
+            <span id="myMoodLabel" class="mood-block-label mine"></span>
+            <span class="mood-diary-actions" id="myMoodActions" style="display:none;">
+              <button id="moodEditBtn" title="修改" class="icon-btn">✏️</button>
+              <button id="moodDeleteBtn" title="删除" class="icon-btn">🗑️</button>
+            </span>
+          </div>
+          <div id="myMoodView" class="mood-diary-view" style="display:none;">
+            <span class="mood-diary-view-emoji" id="myMoodViewEmoji"></span>
+            <p class="mood-diary-view-text" id="myMoodViewText"></p>
+          </div>
+          <div id="myMoodEdit" class="mood-diary-edit">
+            <div class="mood-selector" id="moodSelector"></div>
+            <textarea id="moodText" class="mood-textarea" placeholder="写下今天想说的话..."></textarea>
+            <div class="mood-edit-btns">
+              <button class="btn" id="moodSave">保存日记</button>
+              <button class="btn btn-ghost" id="moodCancelEdit" style="display:none;">取消</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mood-diary-block partner" id="partnerMoodBlock">
+          <div class="mood-diary-block-head">
+            <span id="partnerMoodLabel" class="mood-block-label partner"></span>
+          </div>
+          <div id="partnerMoodView" class="mood-diary-view partner-view"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
+  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
+
+  <!-- 9. 小游戏 -->
   <section id="game">
     <div class="sec-eyebrow">小游戏</div>
     <h2 class="sec-title">情侣小游戏</h2>
@@ -948,16 +1062,92 @@ calc(env(safe-area-inset-top,0px) + 12px)
     </div>
   </section>
 
+  <!-- 10. 电子宠物 -->
+  <section id="pet">
+    <div class="sec-eyebrow">电子宠物</div>
+    <h2 class="sec-title">养一只属于你的小宠物</h2>
+    <p class="sec-sub">喂食、玩耍、睡觉，照顾好它的心情和饥饿值哦！</p>
+    <div class="card pet-card">
+      <div class="pet-status">
+        <div class="pet-stat"><span class="pet-stat-label">饥饿</span><div class="pet-bar"><div class="pet-bar-fill pet-hunger" id="petHunger" style="width:70%"></div></div></div>
+        <div class="pet-stat"><span class="pet-stat-label">开心</span><div class="pet-bar"><div class="pet-bar-fill pet-happy" id="petHappy" style="width:70%"></div></div></div>
+        <div class="pet-stat"><span class="pet-stat-label">精力</span><div class="pet-bar"><div class="pet-bar-fill pet-energy" id="petEnergy" style="width:70%"></div></div></div>
+        <div class="pet-stat"><span class="pet-stat-label">等级</span><span class="pet-lvl" id="petLevel">1</span></div>
+      </div>
+      <div class="pet-avatar" id="petAvatar">
+        <div class="pet-body">
+          <div class="pet-eyes"><span class="pet-eye" id="petEyeL"></span><span class="pet-eye" id="petEyeR"></span></div>
+          <div class="pet-mouth" id="petMouth"></div>
+          <div class="pet-body-shape"></div>
+        </div>
+      </div>
+      <div class="pet-actions">
+        <button class="pet-btn" id="petFeed">喂食</button>
+        <button class="pet-btn" id="petPlay">玩耍</button>
+        <button class="pet-btn" id="petSleep">睡觉</button>
+        <button class="pet-btn" id="petNameBtn">改名</button>
+      </div>
+      <div class="pet-log" id="petLog"></div>
+    </div>
+  </section>
+
   <footer class="footer">
-    <div class="f-serif">属于我们的故事，还会继续往下写</div>
-    <div>《沧澜归屿》 · 独家典藏版</div>
-    <button class="logout-btn" id="logoutBtn">退出登录</button>
-  </footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ==================== 全局错误捕获 ==================== */
+window.onerror = function(msg, url, line, col, error) {
+  console.error("[Global Error]", msg, "at line", line, "col", col);
+  return false;
+};
+window.addEventListener('unhandledrejection', function(e) {
+  console.error("[Unhandled Promise Rejection]", e.reason);
+});
+
+/* ==================== Supabase 配置（必须在最顶部） ==================== */
+const SUPABASE_URL = "https://onvgmtwiokhsixcybfky.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9udmdtdHdpb2toc2l4Y3liZmt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTQ2NTYsImV4cCI6MjEwNDA3MDY1Nn0.tMavqmXKhlRKKbzX-PIYNKRGhK9DwnResvbpDMBpM5k";
+let sb = null;  // 全局变量，在下方初始化
+if (!window.supabase) {
+  // CDN 被拦截，显示友好提示但不崩溃
+  var cdnErrorDiv = document.createElement("div");
+  cdnErrorDiv.style.cssText = "position:fixed;inset:0;background:#fff;color:#d9606f;display:flex;align-items:center;justify-content:center;font-size:18px;font-family:sans-serif;z-index:9999;padding:20px;text-align:center;";
+  cdnErrorDiv.innerHTML = '<div><h2>Supabase CDN 被浏览器拦截</h2><p style="margin-top:12px;font-size:14px;color:#666;">请检查浏览器设置，允许第三方脚本运行。<br>建议使用 Chrome 浏览器，并在设置中关闭"严格追踪防护"。<br>或者使用本地服务器（如 VS Code Live Server）打开本文件。</p></div>';
+  document.body.appendChild(cdnErrorDiv);
+  console.error("Supabase CDN blocked - offline mode only");
+  // 不 throw，让页面继续加载（离线模式）
+} else {
+  try {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log("Supabase 初始化成功", { url: SUPABASE_URL });
+  } catch (e) {
+    console.error("Supabase 创建客户端失败:", e);
+    sb = null;
+  }
+}
+
+  // 安全访问 sb 的辅助函数
+
+  // 安全获取DOM元素的辅助函数
+  function $id(id) {
+    const el = document.getElementById(id);
+    if (!el) console.warn("Element not found: #" + id);
+    return el;
+  }
+  function requireSb() {
+    if (!sb) throw new Error("Supabase not initialized");
+    return sb;
+  }
 /* ==================== 可编辑配置 ==================== */
-const SECRET_PASSWORD = "990702051125";
+const USERNAME_MAP = {
+  "cy": "cy@site.com",
+  "tongtong": "tongtong@site.com"
+};
+// 心情日记按身份区分：cy = 男生，tongtong = 女生（如果实际相反，把下面两行互换即可）
+const IDENTITY = {
+  "cy@site.com": { label: "男生", short: "他" },
+  "tongtong@site.com": { label: "女生", short: "她" }
+};
 const ANNIVERSARY = new Date(2025, 7, 14);          // 2025-08-14 在一起
 /* 生日（month 月份，day 日） */
 const BOY_BIRTHDAY  = { month: 7,  day: 2 };    // 男生生日 7月2日
@@ -1021,8 +1211,7 @@ const COUPONS = [
   { icon:"♡", name:"陪我看电影券", tip:"凭券指定一部电影" },
   { icon:"♡", name:"听我讲心事券", tip:"凭券交换今晚的心事" }
 ];
-/* 情书集 - 默认情书（who: boy 男生 / girl 女生；date 为日期，会按日期排序）
-   之后用网页里的写信功能继续加，日期会自动填今天 */
+
 const DEFAULT_LETTERS = [
   { who:"boy", title:"第一封信", date:"2025-08-14", body:"亲爱的姑娘：\n新山到贵阳，隔着两千多公里，可我总觉得自己一伸手，就能碰到你的想念。\n我把它们都收进这本书里，等你慢慢拆。" },
   { who:"boy", title:"第二封信", date:"2025-08-20", body:"我常想，莫比乌斯环为什么让人着迷。\n大概因为它没有正面也没有背面，就像我对你的喜欢，绕来绕去，都还是你。" },
@@ -1056,45 +1245,105 @@ const TRUTH_QUESTIONS = [
   "你有多喜欢我？（不许说不知道）"
 ];
 /* ==================== 核心元素 ==================== */
-const loginPage = document.getElementById("loginPage");
-const mainApp = document.getElementById("mainApp");
-const inputEl = document.getElementById("passwordInput");
-const submitBtn = document.getElementById("submitBtn");
-const errMsg = document.getElementById("errMsg");
-const audioBtn = document.getElementById("audioBtn");
-const themeToggle = document.getElementById("themeToggle");
+const loginPage = $id("loginPage");
+const mainApp = $id("mainApp");
+const inputEl = $id("passwordInput");
+const submitBtn = $id("submitBtn");
+const errMsg = $id("errMsg");
+const audioBtn = $id("audioBtn");
+const themeToggle = $id("themeToggle");
 /* ==================== 登录 ==================== */
-function unlock(){
+let currentUsername = ""; // 当前登录用户的邮箱，登录成功后由 unlock() 设置
+async function unlock(){
   loginPage.classList.add("hidden");
   mainApp.style.display = "block";
   window.scrollTo(0,0);
+  currentUsername = await getUsername();
+  const idn = IDENTITY[currentUsername];
+  $id("whoAmI").textContent = currentUsername.split("@")[0] || currentUsername;
 }
-submitBtn.addEventListener("click", ()=>{
-  errMsg.style.display = "none";
-  if(inputEl.value.trim() === SECRET_PASSWORD){ unlock(); }
-  else { errMsg.style.display = "block"; }
+// 用户名输入框回车 → 跳到密码框
+$id("usernameInput").addEventListener("keydown", (e)=>{
+  if(e.key === "Enter") $id("passwordInput").focus();
 });
-inputEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter") submitBtn.click(); });
-document.getElementById("logoutBtn").addEventListener("click", ()=>{
+// 密码框回车 → 提交登录
+$id("passwordInput").addEventListener("keydown", (e)=>{
+  if(e.key === "Enter") submitBtn.click();
+});
+
+submitBtn.addEventListener("click", async ()=>{
+    if (!sb) { 
+      errMsg.textContent = "Supabase 未初始化！请检查：1) 是否用了 Chrome 浏览器 2) 关闭 Firefox 的“严格追踪防护” 3) 用 VS Code Live Server 打开而非直接双击"; 
+      errMsg.style.display = "block"; 
+      console.error("sb is null - Supabase not available");
+      return; 
+    }
+  errMsg.style.display = "none";
+  submitBtn.textContent = "核验中...";
+  submitBtn.disabled = true;
+  
+  const username = $id("usernameInput").value.trim();
+  const password = $id("passwordInput").value;
+  
+  if (!username) {
+    errMsg.textContent = "请输入用户名";
+    errMsg.style.display = "block";
+    return;
+  }
+  
+  const email = USERNAME_MAP[username];
+  if (!email) {
+    errMsg.textContent = "用户名不存在";
+    errMsg.style.display = "block";
+    return;
+  }
+  
+  const { data, error } = await sb.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+  
+  if (error) {
+    errMsg.textContent = (function(){
+      if(error.status === 401) return "认证失败（401）：Supabase 密钥可能已过期，请联系管理员重置 anon key";
+      if(error.status === 0 || (error.message && error.message.includes("Failed"))) return "网络请求失败：请检查网络连接，或尝试使用 Chrome 浏览器打开";
+      return "用户名或书籍序列号错误";
+    })();
+    errMsg.style.display = "block";
+    submitBtn.textContent = "提交核验";
+    submitBtn.disabled = false;
+    return;
+  }
+  await unlock();
+  setupSendCouponBtn();
+  renderMoodCalendar(); // 用当前身份刷新一次日历（区分男生/女生视角）
+  submitBtn.textContent = "提交核验";
+  submitBtn.disabled = false;
+});
+const logoutBtnEl = $id("logoutBtn");
+  if (logoutBtnEl) { logoutBtnEl.addEventListener("click", async ()=>{
+  await sb.auth.signOut();
   mainApp.style.display = "none";
   loginPage.classList.remove("hidden");
-  inputEl.value = "";
+  $id("usernameInput").value = "";
+  $id("passwordInput").value = "";
   errMsg.style.display = "none";
   window.scrollTo(0,0);
 });
+  }
 /* ==================== 主题切换 ==================== */
 const savedTheme = localStorage.getItem("cgl_theme");
 if(savedTheme === "theme-rose") {
   document.body.classList.add("theme-rose");
-  themeToggle.querySelector(".toggle-text").textContent = "星空海浪";
+  (themeToggle && themeToggle.querySelector(".toggle-text")) && (themeToggle.querySelector(".toggle-text").textContent = "星空海浪");
 } else {
-  themeToggle.querySelector(".toggle-text").textContent = "落日玫瑰";
+  (themeToggle && themeToggle.querySelector(".toggle-text")) && (themeToggle.querySelector(".toggle-text").textContent = "落日玫瑰");
 }
 themeToggle.addEventListener("click", ()=>{
   document.body.classList.toggle("theme-rose");
   const isRose = document.body.classList.contains("theme-rose");
   localStorage.setItem("cgl_theme", isRose ? "theme-rose" : "theme-sea");
-  themeToggle.querySelector(".toggle-text").textContent = isRose ? "星空海浪" : "落日玫瑰";
+  (themeToggle && themeToggle.querySelector(".toggle-text")) && (themeToggle.querySelector(".toggle-text").textContent = isRose ? "星空海浪" : "落日玫瑰");
 });
 /* ==================== 背景音乐 ==================== */
 const audio = new Audio(MUSIC_URL);
@@ -1125,7 +1374,7 @@ audioBtn.addEventListener("click", (e)=>{
 function calcDays(){
   const now = new Date();
   const diff = Math.floor((now - ANNIVERSARY) / 86400000) + 1;
-  document.getElementById("daysTogether").textContent = Math.max(1, diff);
+  $id("daysTogether").textContent = Math.max(1, diff);
 }
 /* 计算距某月某日的倒计时 */
 function daysUntil(m, d){
@@ -1141,9 +1390,9 @@ function renderCountdown(){
   calcDays();
   /* 周年纪念（8月14日） */
   const anniv = daysUntil(8, 14);
-  const cdAnniv = document.getElementById("cdAnniv");
-  const cdAnnivSub = document.getElementById("cdAnnivSub");
-  const chipAnniv = document.getElementById("chipAnniv");
+  const cdAnniv = $id("cdAnniv");
+  const cdAnnivSub = $id("cdAnnivSub");
+  const chipAnniv = $id("chipAnniv");
   if(anniv.today){
     cdAnniv.textContent = "就是今天";
     cdAnnivSub.textContent = "我们的周年纪念日 ♥";
@@ -1180,20 +1429,20 @@ if(PHOTO_URL){
   const img = document.createElement("img");
   img.src = PHOTO_URL;
   img.alt = "我们的回忆";
-  document.getElementById("heroPhoto").appendChild(img);
-  document.getElementById("photoPh").style.display = "none";
+  $id("heroPhoto").appendChild(img);
+  $id("photoPh").style.display = "none";
 }
 /* ==================== 每日一句 ==================== */
 function renderDaily(){
   const now = new Date();
   const dayOfYear = Math.floor((now - new Date(now.getFullYear(),0,0)) / 86400000);
   const quote = DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length];
-  document.getElementById("dailyQuote").textContent = "\u201c" + quote + "\u201d";
-  document.getElementById("dailyDate").textContent = now.getFullYear() + "年" + (now.getMonth()+1) + "月" + now.getDate() + "日";
+  $id("dailyQuote").textContent = "\u201c" + quote + "\u201d";
+  $id("dailyDate").textContent = now.getFullYear() + "年" + (now.getMonth()+1) + "月" + now.getDate() + "日";
 }
 renderDaily();
 /* ==================== 书目录（含配乐） ==================== */
-const chapterList = document.getElementById("chapterList");
+const chapterList = $id("chapterList");
 CHAPTERS.forEach((ch)=>{
   const item = document.createElement("div");
   item.className = "chapter";
@@ -1221,7 +1470,7 @@ CHAPTERS.forEach((ch)=>{
   chapterList.appendChild(item);
 });
 /* ==================== 时间线 ==================== */
-const timelineList = document.getElementById("timelineList");
+const timelineList = $id("timelineList");
 TIMELINE.forEach((tl)=>{
   const item = document.createElement("div");
   item.className = "tl-item";
@@ -1232,28 +1481,58 @@ TIMELINE.forEach((tl)=>{
     '<span class="tl-place">'+tl.place+'</span>';
   timelineList.appendChild(item);
 });
-/* ==================== 兑换券 - 领券 + 背包 ==================== */
-const couponGrid = document.getElementById("couponGrid");
-const backpackList = document.getElementById("backpackList");
-const backpackCount = document.getElementById("backpackCount");
-const claimState = document.getElementById("claimState");
+/* ==================== 兑换券 - 领券 + 背包（Supabase 版） ==================== */
+const couponGrid = $id("couponGrid");
+const backpackList = $id("backpackList");
+const backpackCount = $id("backpackCount");
+const claimState = $id("claimState");
+
 function todayKey(){ return new Date().toISOString().slice(0,10); }
-function getBackpack(){
-  try { return JSON.parse(localStorage.getItem("cgl_backpack") || "[]"); }
-  catch(e){ return []; }
+
+// 获取当前登录用户的邮箱（作为 username）
+async function getUsername(){
+  const { data: { session } } = await sb.auth.getSession();
+  return session?.user?.email || "";
 }
-function saveBackpack(list){ localStorage.setItem("cgl_backpack", JSON.stringify(list)); }
-function claimedToday(){ return localStorage.getItem("cgl_claim_date") === todayKey(); }
-function claimedIdxToday(){
-  if(!claimedToday()) return -1;
-  return parseInt(localStorage.getItem("cgl_claim_idx") || "-1", 10);
+
+// 从 Supabase 拉取背包数据（未使用的券 = 表里还没被删除的行）
+async function getBackpack(){
+  const username = await getUsername();
+  if(!username) return [];
+  const { data, error } = await sb
+    .from("coupon_bag")
+    .select("*")
+    .eq("username", username)
+    .order("id", { ascending: false });
+  if(error){ console.error(error); return []; }
+  return data || [];
 }
-function renderCouponGrid(){
-  const claimedIdx = claimedIdxToday();
+
+// 检查今天是否已领券
+async function claimedTodayFromDB(){
+  const username = await getUsername();
+  if(!username) return { claimed: false, idx: -1 };
+  const { data, error } = await sb
+    .from("coupon_bag")
+    .select("name")
+    .eq("username", username)
+    .eq("claim_date", todayKey());
+  if(error || !data) return { claimed: false, idx: -1 };
+  if(data.length > 0){
+    const claimedName = data[0].name;
+    const idx = COUPONS.findIndex(c => c.name === claimedName);
+    return { claimed: true, idx: idx };
+  }
+  return { claimed: false, idx: -1 };
+}
+
+// 渲染券网格
+async function renderCouponGrid(){
+  const { claimed, idx: claimedIdx } = await claimedTodayFromDB();
   couponGrid.innerHTML = "";
-  COUPONS.forEach((cp, idx)=>{
+  COUPONS.forEach((cp, idx) => {
     const el = document.createElement("div");
-    el.className = "coupon" + (claimedIdx >= 0 ? " disabled" : "");
+    el.className = "coupon" + (claimed ? " disabled" : "");
     el.innerHTML =
       '<div class="cp-icon">'+cp.icon+'</div>' +
       '<div class="cp-name">'+cp.name+'</div>' +
@@ -1262,149 +1541,132 @@ function renderCouponGrid(){
       el.classList.add("used");
       el.querySelector(".cp-tip").textContent = "今天已领取这张";
     }
-    el.addEventListener("click", ()=>{
-      if(claimedIdxToday() >= 0) return;
+    el.addEventListener("click", async () => {
+      const check = await claimedTodayFromDB();
+      if(check.claimed) return;
       const code = "CGL-" + Math.random().toString(36).slice(2,8).toUpperCase();
-      const list = getBackpack();
-      list.push({ icon:cp.icon, name:cp.name, tip:cp.tip, code:code, date:todayKey() });
-      saveBackpack(list);
-      localStorage.setItem("cgl_claim_date", todayKey());
-      localStorage.setItem("cgl_claim_idx", String(idx));
+      const username = await getUsername();
+      if(!username) return;
+      const { error } = await sb
+        .from("coupon_bag")
+        .insert({
+          username: username,
+          icon: cp.icon,
+          name: cp.name,
+          tip: cp.tip,
+          code: code,
+          date: todayKey(),
+          claim_date: todayKey(),
+          claim_idx: idx
+        });
+      if(error){ console.error(error); return; }
       renderCouponGrid();
       renderBackpack();
     });
     couponGrid.appendChild(el);
   });
-  claimState.textContent = claimedIdx >= 0 ? "今日已领取，明天再来" : "今日可领 1 张";
+  claimState.textContent = claimed ? "今日已领取，明天再来" : "今日可领 1 张";
 }
-function renderBackpack(){
-  const list = getBackpack();
+
+// 渲染背包
+async function renderBackpack(){
+  const list = await getBackpack();
   backpackCount.textContent = list.length + " 张";
   if(list.length === 0){
     backpackList.innerHTML = '<div class="backpack-empty">背包空空的，先去领一张券吧 🎀</div>';
     return;
   }
   backpackList.innerHTML = "";
-  list.forEach((cp, i)=>{
+  list.forEach((cp) => {
     const item = document.createElement("div");
     item.className = "backpack-item";
     item.innerHTML =
       '<div class="bp-info">' +
-        '<span class="bp-icon">'+cp.icon+'</span>' +
+        '<span class="bp-icon">'+(cp.icon || '♡')+'</span>' +
         '<div>' +
           '<div class="bp-name">'+cp.name+'</div>' +
-          '<div class="bp-code">券号 '+cp.code+' · '+cp.date+'</div>' +
+          '<div class="bp-code">券号 '+cp.code+' · '+(cp.claim_date||cp.date)+'</div>' +
         '</div>' +
       '</div>' +
-      '<button class="bp-use-btn" data-i="'+i+'">使用</button>';
-    item.querySelector(".bp-use-btn").addEventListener("click", (ev)=>{
+      '<button class="bp-use-btn" data-id="'+cp.id+'">使用</button>';
+    item.querySelector(".bp-use-btn").addEventListener("click", async (ev) => {
       const btn = ev.currentTarget;
       btn.classList.add("using");
       btn.textContent = "已使用 ♥";
       btn.disabled = true;
-      setTimeout(()=>{
-        const l = getBackpack();
-        l.splice(i, 1);
-        saveBackpack(l);
+      const couponId = parseInt(btn.getAttribute("data-id"), 10);
+      setTimeout(async () => {
+        // 表里没有 used 字段，用完直接删除这一行
+        const { error } = await sb
+          .from("coupon_bag")
+          .delete()
+          .eq("id", couponId);
+        if(error){ console.error(error); return; }
         renderBackpack();
       }, 600);
     });
     backpackList.appendChild(item);
   });
 }
+
 renderCouponGrid();
 renderBackpack();
-/* ==================== 情书集 ==================== */
-function loadLetters(){
-  try{
-    const raw = localStorage.getItem("cgl_letters");
-    if(raw) return JSON.parse(raw);
-  }catch(e){}
-  try{ localStorage.setItem("cgl_letters", JSON.stringify(DEFAULT_LETTERS)); }catch(e){}
-  return DEFAULT_LETTERS.slice();
-}
-function saveLetters(list){ localStorage.setItem("cgl_letters", JSON.stringify(list)); }
-let letterFilter = "all";
-let letterSort = "desc"; // desc 最新在前 / asc 最早在前
-function renderLetters(){
-  const list = loadLetters();
-  const box = document.getElementById("letterList");
-  let filtered = letterFilter === "all" ? list.slice() : list.filter(l => l.who === letterFilter);
-  /* 按日期排序 */
-  filtered.sort((a,b)=>{
-    const da = a.date || "0000-00-00";
-    const db = b.date || "0000-00-00";
-    return letterSort === "desc" ? db.localeCompare(da) : da.localeCompare(db);
-  });
-  if(filtered.length === 0){
-    box.innerHTML = '<div class="backpack-empty">这里还没有信，写一封吧 ✍️</div>';
+
+// 送券给彤彤的逻辑
+async function setupSendCouponBtn() {
+  const oldPanel = $id("sendCouponPanel");
+  const panel = oldPanel.cloneNode(true); // 防止重复登录时重复绑定click事件
+  oldPanel.replaceWith(panel);
+  const select = panel.querySelector("#sendCouponSelect");
+  const confirmBtn = panel.querySelector("#sendCouponConfirmBtn");
+  const username = await getUsername();
+
+  // 只有 cy 才能看到这个面板
+  if (username === "cy@site.com") {
+    panel.style.display = "block";
+  } else {
+    panel.style.display = "none";
     return;
   }
-  box.innerHTML = "";
-  filtered.forEach((l)=>{
-    const realIdx = list.indexOf(l);
-    const item = document.createElement("div");
-    item.className = "letter-item";
-    const whoBadge = l.who === "girl" ? '<span class="lt-badge girl">女生</span>' : '<span class="lt-badge boy">男生</span>';
-    item.innerHTML =
-      '<div class="lt-head">' +
-        whoBadge +
-        '<span class="lt-title">'+l.title+'</span>' +
-        '<span class="lt-date">'+(l.date||"")+'</span>' +
-        '<span class="lt-arrow">▼</span>' +
-      '</div>' +
-      '<div class="lt-body">'+l.body+
-        '<div class="lt-del-row"><button class="lt-del" title="删除这封信">✕ 删除这封信</button></div>' +
-      '</div>';
-    item.querySelector(".lt-head").addEventListener("click", ()=>{
-      item.classList.toggle("open");
-    });
-    item.querySelector(".lt-del").addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      const all = loadLetters();
-      all.splice(realIdx, 1);
-      saveLetters(all);
-      renderLetters();
-    });
-    box.appendChild(item);
+
+  // 填充下拉框：6 种每日兑换券模板，cy 可以任选一个送，不受自己背包限制
+  select.innerHTML = COUPONS.map((cp, i) =>
+    `<option value="${i}">${cp.icon} ${cp.name} —— ${cp.tip}</option>`
+  ).join("");
+
+  confirmBtn.addEventListener("click", async () => {
+    const chosen = COUPONS[parseInt(select.value, 10)];
+    if (!chosen) return;
+
+    const code = "CGL-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+    const { error: insertError } = await sb
+      .from("coupon_bag")
+      .insert({
+        username: "tongtong@site.com",
+        icon: chosen.icon,
+        name: chosen.name,
+        tip: chosen.tip,
+        code: code,
+        date: todayKey(),
+        claim_date: null,
+        claim_idx: null
+      });
+
+    if (insertError) {
+      console.error("送券插入失败:", insertError);
+      alert("送券失败：" + (insertError.message || "请检查数据库权限设置"));
+      return;
+    }
+
+    alert("已成功送出「" + chosen.name + "」给彤彤！🎉");
   });
 }
-document.querySelectorAll(".ltab[data-who]").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
-    document.querySelectorAll(".ltab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    letterFilter = tab.dataset.who;
-    renderLetters();
-  });
-});
-document.getElementById("letterSortBtn").addEventListener("click", ()=>{
-  letterSort = letterSort === "desc" ? "asc" : "desc";
-  document.getElementById("letterSortBtn").textContent = letterSort === "desc" ? "排序 · 新→旧" : "排序 · 旧→新";
-  renderLetters();
-});
-document.getElementById("letterSave").addEventListener("click", ()=>{
-  const who = document.getElementById("letterWho").value;
-  const title = document.getElementById("letterTitle").value.trim();
-  const body = document.getElementById("letterBody").value.trim();
-  if(!title || !body){
-    alert("请先填写标题和内容再保存哦～");
-    return;
-  }
-  const now = new Date();
-  const todayStr = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
-  const date = document.getElementById("letterDate").value || todayStr;   /* 没选日期就记今天 */
-  const all = loadLetters();
-  all.unshift({ who, title, body, date });
-  saveLetters(all);
-  document.getElementById("letterTitle").value = "";
-  document.getElementById("letterBody").value = "";
-  document.getElementById("letterDate").value = "";
-  renderLetters();
-});
-renderLetters();
+
+// 初始化送券按钮
+setupSendCouponBtn();
 /* ==================== 照片墙（LED灯条） ==================== */
 const MAX_PHOTOS = 30;
-const ledString = document.getElementById("ledString");
+const ledString = $id("ledString");
 function getPhotos(){
   try { return JSON.parse(localStorage.getItem("cgl_photos") || "[]"); }
   catch(e){ return []; }
@@ -1417,12 +1679,14 @@ function renderPhotos(){
     return;
   }
   ledString.innerHTML = "";
-  list.forEach((src, i)=>{
+  list.forEach((item, i)=>{
+    const src = typeof item === "string" ? item : (item.url || item.dataUrl || "");
     const el = document.createElement("div");
     el.className = "led-photo";
     el.innerHTML =
       '<button class="photo-del" title="删除">✕</button>' +
-      '<img src="'+src+'" alt="照片">';
+      '<img alt="照片">';
+    el.querySelector("img").src = src;
     el.querySelector(".photo-del").addEventListener("click", ()=>{
       const l = getPhotos();
       l.splice(i, 1);
@@ -1465,7 +1729,7 @@ function compressImage(file, cb){
   };
   reader.readAsDataURL(file);
 }
-document.getElementById("photoInput").addEventListener("change", function(){
+$id("photoInput").addEventListener("change", function(){
   const files = Array.from(this.files || []);
   if(files.length === 0) return;
   files.forEach(f=>{
@@ -1473,8 +1737,8 @@ document.getElementById("photoInput").addEventListener("change", function(){
   });
   this.value = "";
 });
-document.getElementById("photoAddUrl").addEventListener("click", ()=>{
-  const input = document.getElementById("photoUrlInput");
+$id("photoAddUrl").addEventListener("click", ()=>{
+  const input = $id("photoUrlInput");
   const url = input.value.trim();
   if(!url){ alert("请粘贴图片网址"); return; }
   addPhotoDataUrl(url);
@@ -1482,7 +1746,7 @@ document.getElementById("photoAddUrl").addEventListener("click", ()=>{
 });
 renderPhotos();
 /* ==================== 小游戏 ==================== */
-const quizBox = document.getElementById("quizBox");
+const quizBox = $id("quizBox");
 let quizPool = [], qIndex = 0, score = 0, answered = false;
 function shuffle(arr){
   const a = arr.slice();
@@ -1535,12 +1799,12 @@ function renderResult(){
       '<div class="score-word">'+word+'</div>' +
       '<button class="btn-ghost" id="retryQuiz">再抽一组新题</button>' +
     '</div>';
-  document.getElementById("retryQuiz").addEventListener("click", ()=>{ newQuizRound(); });
+  $id("retryQuiz").addEventListener("click", ()=>{ newQuizRound(); });
 }
 newQuizRound();
 /* 真心话抽卡 */
-const truthQ = document.getElementById("truthQ");
-const truthDraw = document.getElementById("truthDraw");
+const truthQ = $id("truthQ");
+const truthDraw = $id("truthDraw");
 truthDraw.addEventListener("click", ()=>{
   const q = TRUTH_QUESTIONS[Math.floor(Math.random() * TRUTH_QUESTIONS.length)];
   truthQ.textContent = q;
@@ -1556,9 +1820,6 @@ document.querySelectorAll(".nav-link").forEach(link=>{
 });
 
 /* ==================== Supabase 云端 + 离线队列 ==================== */
-const SUPABASE_URL = "https://onvgmtwiokhsixcybfky.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9udmdtdHdpb2toc2l4Y3liZmt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTQ2NTYsImV4cCI6MjEwNDA3MDY1Nn0.tMavqmXKhlRKKbzX-PIYNKRGhK9DwnResvbpDMBpM5k";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const CONNECTION = Object.freeze({ CONNECTING:"CONNECTING", OK:"OK", ERROR:"ERROR" });
 let cloudState = CONNECTION.CONNECTING;
 let toastTimer = null;
@@ -1566,20 +1827,20 @@ let syncBusy = false;
 let cloudReady = false;
 
 function showToast(message, ms=3500){
-  const el=document.getElementById("globalToast"); if(!el)return;
+  const el=$id("globalToast"); if(!el)return;
   el.textContent=message; el.classList.add("show");
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),ms);
 }
 function setCloudState(state){
   cloudState=state;
-  const el=document.getElementById("cloudStatus");
+  const el=$id("cloudStatus");
   if(!el)return;
   el.classList.remove("connecting","ok","error");
   el.classList.add(state===CONNECTION.OK?"ok":state===CONNECTION.ERROR?"error":"connecting");
   el.title=state===CONNECTION.OK?"云端在线":state===CONNECTION.ERROR?"云端离线 · 本地模式":"正在连接云端";
 }
 // 点击云朵图标手动重连
-document.getElementById("cloudStatus").addEventListener("click", async ()=>{
+$id("cloudStatus").addEventListener("click", async ()=>{
   if(cloudReady){
     showToast("✅当前已经是云端在线");
     return;
@@ -1590,7 +1851,7 @@ document.getElementById("cloudStatus").addEventListener("click", async ()=>{
 function getQueue(){try{return JSON.parse(localStorage.getItem("cgl_sync_queue")||"[]")}catch(e){return[]}}
 function saveQueue(q){try{localStorage.setItem("cgl_sync_queue",JSON.stringify(q))}catch(e){}}
 function updateSyncCount(){
-  const n=getQueue().length,el=document.getElementById("syncCount"); if(!el)return;
+  const n=getQueue().length,el=$id("syncCount"); if(!el)return;
   el.textContent=n>99?"99+":String(n); el.classList.toggle("show",n>0);
 }
 function enqueue(op){
@@ -1603,12 +1864,12 @@ function enqueue(op){
     flushQueue();
   }
 }
-function localLettersCache(list){try{localStorage.setItem("cgl_letters",JSON.stringify(list))}catch(e){}}
+// localLettersCache removed
 function localPhotosCache(list){try{localStorage.setItem("cgl_photos",JSON.stringify(list))}catch(e){}}
 function todayLocal(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 
 async function probeCloud(){
-  if(!supabaseClient){
+  if(!sb){
     setCloudState(CONNECTION.ERROR);
     showToast("⚠️Supabase客户端初始化失败，本地模式运行");
     return false;
@@ -1619,7 +1880,7 @@ async function probeCloud(){
   for(let i=0;i<MAX_RETRY;i++){
     if(i>0) showToast("🔄尝试连接云端...",1800);
     try{
-      const {error}=await supabaseClient.from("letters").select("id").limit(1);
+      const {error}=await sb.from("photo_wall").select("id").limit(1);
       if(!error){
         cloudReady=true;
         setCloudState(CONNECTION.OK);
@@ -1647,22 +1908,19 @@ async function probeCloud(){
 
 async function pullCloudData(){
   if(!cloudReady)return;
+  // 情书集已删除，不再拉取 letters 表
   try{
-    const {data,error}=await supabaseClient.from("letters").select("*").order("created_at",{ascending:false});
-    if(!error&&Array.isArray(data)){localLettersCache(data.map(x=>({id:x.id,who:x.who,title:x.title,body:x.body,date:x.date})));renderLetters()}
-  }catch(e){}
-  try{
-    const {data,error}=await supabaseClient.from("coupon_bag").select("*").order("created_at",{ascending:false});
+    const {data,error}=await sb.from("coupon_bag").select("*").order("created_at",{ascending:false});
     if(!error&&Array.isArray(data)){
-      const list=data.filter(x=>x.code).map(x=>({id:x.id,icon:x.icon||"♡",name:x.name||"兑换券",tip:x.tip||"",code:x.code,date:x.date}));
+      const list=data.filter(x=>x.code).map(x=>({id:x.id,icon:x.icon||"♡",name:x.name||"兑换券",tip:x.tip||"",code:x.code,date:x.claim_date||x.date}));
       localStorage.setItem("cgl_backpack",JSON.stringify(list));
       const latest=data.filter(x=>x.claim_date).sort((a,b)=>String(b.claim_date).localeCompare(String(a.claim_date)))[0];
       if(latest?.claim_date){localStorage.setItem("cgl_claim_date",latest.claim_date);localStorage.setItem("cgl_claim_idx",String(latest.claim_idx??-1))}
-      renderCouponGrid();renderBackpack();
+      renderCouponGrid().catch(e=>console.error("pull render error:",e));renderBackpack().catch(e=>console.error("pull render error:",e));
     }
   }catch(e){}
   try{
-    const {data,error}=await supabaseClient.from("photo_wall").select("*").order("created_at",{ascending:true});
+    const {data,error}=await sb.from("photo_wall").select("*").order("created_at",{ascending:true});
     if(!error&&Array.isArray(data)){localPhotosCache(data.map(x=>({id:x.id,url:x.url||x.file_url||x.image_url})).filter(x=>x.url));renderPhotos()}
   }catch(e){}
 }
@@ -1676,31 +1934,57 @@ async function applyQueueItem(op){
     ]);
   }
 
-  await withTimeout((async ()=>{
-    if(op.type==="letter_add"){
-      const {data,error}=await supabaseClient.from("letters").insert([{who:op.item.who,title:op.item.title,body:op.item.body,date:op.item.date}]).select().single();
-      if(error)throw error;
-      const list=loadLetters(); const idx=list.findIndex(x=>x._localId===op.localId); if(idx>=0){list[idx]={...op.item,id:data.id};localLettersCache(list)}
-    }else if(op.type==="letter_delete"){
-      const {error}=await supabaseClient.from("letters").delete().eq("id",op.id); if(error)throw error;
+    await withTimeout((async ()=>{
+    if(op.type==="letter_delete"){
+      // 情书集已删除，跳过
     }else if(op.type==="coupon_add"){
-      const payload={icon:op.item.icon,name:op.item.name,tip:op.item.tip,code:op.item.code,date:op.item.date,claim_date:op.claimDate||null,claim_idx:op.claimIdx??null};
-      const {data,error}=await supabaseClient.from("coupon_bag").insert([payload]).select().single(); if(error)throw error;
-      const list=getBackpack();const idx=list.findIndex(x=>x._localId===op.localId);if(idx>=0){list[idx]={...op.item,id:data.id};saveBackpack(list)}
+      const payload={
+        icon:op.item.icon,
+        name:op.item.name,
+        tip:op.item.tip,
+        code:op.item.code,
+        date:op.item.date,
+        claim_date:op.claimDate||null,
+        claim_idx:op.claimIdx??null,
+        username:await getUsername()
+      };
+      const {data,error}=await sb.from("coupon_bag").insert([payload]).select().single(); if(error)throw error;
+      const raw=localStorage.getItem("cgl_backpack");const list=raw?JSON.parse(raw):[];const idx=list.findIndex(x=>x._localId===op.localId);if(idx>=0){list[idx]={...op.item,id:data.id};localStorage.setItem("cgl_backpack",JSON.stringify(list))}
     }else if(op.type==="coupon_use"){
-      const {error}=await supabaseClient.from("coupon_bag").delete().eq("id",op.id);if(error)throw error;
+      const {error}=await sb.from("coupon_bag").delete().eq("id",op.id);if(error)throw error;
     }else if(op.type==="photo_add"){
       const blob=await (await fetch(op.dataUrl)).blob();
       const path="offline/"+Date.now()+"-"+Math.random().toString(36).slice(2)+".jpg";
-      const {error:upErr}=await supabaseClient.storage.from("photo_wall").upload(path,blob,{contentType:"image/jpeg",upsert:false});if(upErr)throw upErr;
-      const {data:urlData}=supabaseClient.storage.from("photo_wall").getPublicUrl(path);
-      const {data,error}=await supabaseClient.from("photo_wall").insert([{url:urlData.publicUrl,path:path}]).select().single();if(error)throw error;
+      const {error:upErr}=await sb.storage.from("photo_wall").upload(path,blob,{contentType:"image/jpeg",upsert:false});if(upErr)throw upErr;
+      const {data:urlData}=await sb.storage.from("photo_wall").getPublicUrl(path);
+      const {data,error}=await sb.from("photo_wall").insert([{url:urlData.publicUrl,path:path}]).select().single();if(error)throw error;
       const list=getPhotos();const idx=list.findIndex(x=>x._localId===op.localId);if(idx>=0){list[idx]={id:data.id,url:urlData.publicUrl,path:path};localPhotosCache(list)}
     }else if(op.type==="photo_delete"){
-      const {error}=await supabaseClient.from("photo_wall").delete().eq("id",op.id);if(error)throw error;
+      const {error:storageErr}=await sb.storage.from("photo_wall").remove([op.path]);
+      if(storageErr) console.warn("storage delete failed",storageErr);
+      const {error}=await sb.from("photo_wall").delete().eq("id",op.id);if(error)throw error;
+    }else if(op.type==="mood_diary_add"){
+      const {data,error}=await sb.from("mood_diary").insert([{date:op.date,mood:op.mood,text:op.text}]).select().single();
+      if(error)throw error;
+      const raw=localStorage.getItem("cgl_mood_diary");
+      const diaryList=raw?JSON.parse(raw):[];
+      const idx=diaryList.findIndex(x=>x._localId===op.localId);
+      if(idx>=0){diaryList[idx]={...op,id:data.id};localStorage.setItem("cgl_mood_diary",JSON.stringify(diaryList))}
+    }else if(op.type==="pet_save"){
+      const payload={name:op.name,hunger:op.hunger,happy:op.happy,energy:op.energy,level:op.level,exp:op.exp,is_sleeping:op.isSleeping};
+      const {data:existing}=await sb.from("pet_state").select().single();
+      if(existing){
+        const {error}=await sb.from("pet_state").update(payload).eq("id",existing.id);
+        if(error)throw error;
+      }else{
+        const {error}=await sb.from("pet_state").insert([payload]);
+        if(error)throw error;
+      }
+      localStorage.setItem("cgl_pet_state",JSON.stringify(payload));
     }
   })());
 }
+
 async function flushQueue(){
   if(!cloudReady||syncBusy||!navigator.onLine)return; syncBusy=true;
   try{
@@ -1718,7 +2002,7 @@ async function flushQueue(){
         i++;
       }
     }
-    if(changed){renderLetters();renderBackpack();renderPhotos()}
+    if(changed){renderBackpack();renderPhotos()}
   }finally{syncBusy=false;updateSyncCount()}
 }
 window.addEventListener("online",async()=>{
@@ -1733,58 +2017,490 @@ window.addEventListener("offline",()=>{
   showToast("⚠️已离线，操作会先保存在本地",2500);
 });
 
-/* ---------- 覆盖原有情书：云端优先，本地兜底 ---------- */
-const _loadLettersLocal=loadLetters;
-loadLetters=function(){
-  try{const raw=localStorage.getItem("cgl_letters");if(raw)return JSON.parse(raw)}catch(e){}
-  return DEFAULT_LETTERS.slice();
-};
-const _renderLettersOriginal=renderLetters;
-renderLetters=function(){
-  const list=loadLetters(); const box=document.getElementById("letterList");
-  let filtered=letterFilter==="all"?list.slice():list.filter(l=>l.who===letterFilter);
-  filtered.sort((a,b)=>{const da=a.date||"0000-00-00",db=b.date||"0000-00-00";return letterSort==="desc"?db.localeCompare(da):da.localeCompare(db)});
-  if(!filtered.length){box.innerHTML='<div class="backpack-empty">这里还没有信，写一封吧 ✍️</div>';return}
-  box.innerHTML=""; filtered.forEach(l=>{
-    const realIdx=list.indexOf(l),item=document.createElement("div");item.className="letter-item";
-    const who=l.who==="girl"?'<span class="lt-badge girl">女生</span>':'<span class="lt-badge boy">男生</span>';
-    item.innerHTML='<div class="lt-head">'+who+'<span class="lt-title"></span><span class="lt-date"></span><span class="lt-arrow">▼</span></div><div class="lt-body"></div>';
-    item.querySelector(".lt-title").textContent=l.title||"";item.querySelector(".lt-date").textContent=l.date||"";item.querySelector(".lt-body").textContent=l.body||"";
-    const delRow=document.createElement("div");delRow.className="lt-del-row";delRow.innerHTML='<button class="lt-del" title="删除这封信">✕ 删除这封信</button>';item.querySelector(".lt-body").appendChild(delRow);
-    item.querySelector(".lt-head").addEventListener("click",()=>item.classList.toggle("open"));
-    item.querySelector(".lt-del").addEventListener("click",ev=>{ev.stopPropagation();const all=loadLetters(),target=all[realIdx];all.splice(realIdx,1);localLettersCache(all);if(target?.id)enqueue({type:"letter_delete",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="letter_add"&&x.localId===target._localId));saveQueue(q)}updateSyncCount();renderLetters()});
-    box.appendChild(item);
-  });
-};
-
-/* 重绑写信按钮，避免旧的纯本地 handler */
-{const old=document.getElementById("letterSave"),btn=old.cloneNode(true);old.replaceWith(btn);btn.addEventListener("click",()=>{
-  const who=document.getElementById("letterWho").value,title=document.getElementById("letterTitle").value.trim(),body=document.getElementById("letterBody").value.trim();
-  if(!title||!body){showToast("请先填写标题和内容再保存哦～");return}
-  const date=document.getElementById("letterDate").value||todayLocal(),localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2);
-  const item={_localId:localId,who,title,body,date};const all=loadLetters();all.unshift(item);localLettersCache(all);enqueue({type:"letter_add",localId,item});renderLetters();document.getElementById("letterTitle").value="";document.getElementById("letterBody").value="";document.getElementById("letterDate").value="";
-  if(cloudReady)flushQueue(); else showToast("📦已保存在本地，联网后会自动同步",2500);
-})}
-
-/* ---------- 覆盖兑换券：本地立即生效 + 云端队列 ---------- */
-{const grid=document.getElementById("couponGrid");const fresh=grid.cloneNode(false);grid.replaceWith(fresh);
-  const renderCloudCoupons=()=>{const claimed=claimedIdxToday();fresh.innerHTML="";COUPONS.forEach((cp,idx)=>{const el=document.createElement("div");el.className="coupon"+(claimed>=0?" disabled":"");el.innerHTML='<div class="cp-icon">'+cp.icon+'</div><div class="cp-name">'+cp.name+'</div><div class="cp-tip">'+cp.tip+'</div>';if(claimed===idx){el.classList.add("used");el.querySelector(".cp-tip").textContent="今天已领取这张"}el.addEventListener("click",()=>{if(claimedIdxToday()>=0)return;const code="CGL-"+Math.random().toString(36).slice(2,8).toUpperCase(),localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,icon:cp.icon,name:cp.name,tip:cp.tip,code,date:todayLocal()};const list=getBackpack();list.push(item);saveBackpack(list);localStorage.setItem("cgl_claim_date",todayLocal());localStorage.setItem("cgl_claim_idx",String(idx));enqueue({type:"coupon_add",localId,item,claimDate:todayLocal(),claimIdx:idx});renderCloudCoupons();renderBackpack();if(cloudReady)flushQueue();else showToast("📦兑换券已存入本地，联网后自动同步",2500)});fresh.appendChild(el)});claimState.textContent=claimed>=0?"今日已领取，明天再来":"今日可领 1 张"};renderCloudCoupons();}
-
-/* ---------- 覆盖背包使用 ---------- */
-const _renderBackpackOriginal=renderBackpack;
-renderBackpack=function(){const list=getBackpack();backpackCount.textContent=list.length+" 张";if(!list.length){backpackList.innerHTML='<div class="backpack-empty">背包空空的，先去领一张券吧 🎀</div>';return}backpackList.innerHTML="";list.forEach((cp,i)=>{const item=document.createElement("div");item.className="backpack-item";item.innerHTML='<div class="bp-info"><span class="bp-icon"></span><div><div class="bp-name"></div><div class="bp-code"></div></div></div><button class="bp-use-btn">使用</button>';item.querySelector(".bp-icon").textContent=cp.icon||"♡";item.querySelector(".bp-name").textContent=cp.name||"兑换券";item.querySelector(".bp-code").textContent="券号 "+(cp.code||"")+" · "+(cp.date||"");item.querySelector(".bp-use-btn").addEventListener("click",()=>{const l=getBackpack(),target=l[i];l.splice(i,1);saveBackpack(l);if(target?.id)enqueue({type:"coupon_use",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="coupon_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}renderBackpack();if(cloudReady)flushQueue();});backpackList.appendChild(item)})};renderBackpack();
-
 /* ---------- 覆盖照片墙：云端 Storage + 离线 dataURL 队列 ---------- */
 const _renderPhotosOriginal=renderPhotos;
 getPhotos=function(){try{return JSON.parse(localStorage.getItem("cgl_photos")||"[]")}catch(e){return[]}};
 renderPhotos=function(){const list=getPhotos();if(!list.length){ledString.innerHTML='<div class="led-empty">还没有照片，点下面的「上传照片」开始点亮灯条 ✨</div>';return}ledString.innerHTML="";list.forEach((p,i)=>{const src=typeof p==="string"?p:p.url||p.dataUrl;const el=document.createElement("div");el.className="led-photo";el.innerHTML='<button class="photo-del" title="删除">✕</button><img alt="照片">';el.querySelector("img").src=src;el.querySelector(".photo-del").addEventListener("click",()=>{const l=getPhotos(),target=l[i];l.splice(i,1);localPhotosCache(l);if(target?.id)enqueue({type:"photo_delete",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="photo_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}renderPhotos();if(cloudReady)flushQueue()});ledString.appendChild(el)})};
-{const input=document.getElementById("photoInput"),fresh=input.cloneNode(true);input.replaceWith(fresh);fresh.addEventListener("change",function(){Array.from(this.files||[]).forEach(f=>compressImage(f,dataUrl=>{const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url:dataUrl,dataUrl};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl});renderPhotos();if(cloudReady)flushQueue();else showToast("📦照片已保存在本地，联网后自动上传",2500)}));this.value=""})}
-{const old=document.getElementById("photoAddUrl"),btn=old.cloneNode(true);old.replaceWith(btn);btn.addEventListener("click",()=>{const input=document.getElementById("photoUrlInput"),url=input.value.trim();if(!url){showToast("请粘贴图片网址");return}const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl:url});renderPhotos();input.value="";if(cloudReady)flushQueue();else showToast("📦图片地址已保存在本地，联网后自动同步",2500)})}
+{const input=$id("photoInput"),fresh=input.cloneNode(true);input.replaceWith(fresh);fresh.addEventListener("change",function(){Array.from(this.files||[]).forEach(f=>compressImage(f,dataUrl=>{const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url:dataUrl,dataUrl};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl});renderPhotos();if(cloudReady)flushQueue();else showToast("📦照片已保存在本地，联网后自动上传",2500)}));this.value=""})}
+{const old=$id("photoAddUrl"),btn=old.cloneNode(true);old.replaceWith(btn);btn.addEventListener("click",()=>{const input=$id("photoUrlInput"),url=input.value.trim();if(!url){showToast("请粘贴图片网址");return}const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl:url});renderPhotos();input.value="";if(cloudReady)flushQueue();else showToast("📦图片地址已保存在本地，联网后自动同步",2500)})}
 
 updateSyncCount();
 /* 启动云端探测；即使失败也不阻断页面本地功能 */
 setTimeout(()=>probeCloud(),50);
 
+
+  // 初始化券和背包
+  renderCouponGrid().catch(e=>console.error("renderCouponGrid error:",e));
+  renderBackpack().catch(e=>console.error("renderBackpack error:",e));
+
+
+/* ==================== 心情日记 ==================== */
+const MOOD_EMOJIS = ['😍','🥰','😊','😄','🤗','😌','😴','😢','😭','😤','😱','🤔','🥳','💖'];
+let moodYear = new Date().getFullYear();
+let moodMonth = new Date().getMonth();
+let selectedMood = '';
+let selectedDate = '';
+
+// entries 以 "date|username" 为 key，这样同一天男生/女生可以各写各的，互不影响
+function getMoodEntries(){
+  try{ return JSON.parse(localStorage.getItem("cgl_moods") || "{}") }
+  catch(e){ return {} }
+}
+function saveMoodEntries(entries){
+  localStorage.setItem("cgl_moods", JSON.stringify(entries));
+}
+function moodKey(date, username){ return date + "|" + username; }
+function getMoodEntry(date, username){
+  return getMoodEntries()[moodKey(date, username)] || null;
+}
+function setMoodEntry(date, username, data){
+  const entries = getMoodEntries();
+  entries[moodKey(date, username)] = data;
+  saveMoodEntries(entries);
+}
+function removeMoodEntry(date, username){
+  const entries = getMoodEntries();
+  delete entries[moodKey(date, username)];
+  saveMoodEntries(entries);
+}
+function partnerOf(username){
+  return Object.keys(IDENTITY).find(u => u !== username) || "";
+}
+
+function renderMoodCalendar(){
+  const cal = $id("moodCalendar");
+  const label = $id("moodMonthLabel");
+  label.textContent = moodYear + "年" + (moodMonth + 1) + "月";
+
+  const entries = getMoodEntries();
+  const today = new Date();
+  const firstDay = new Date(moodYear, moodMonth, 1).getDay();
+  const daysInMonth = new Date(moodYear, moodMonth + 1, 0).getDate();
+  const allUsers = Object.keys(IDENTITY);
+
+  let html = '<div class="mood-cal-header">日</div><div class="mood-cal-header">一</div><div class="mood-cal-header">二</div><div class="mood-cal-header">三</div><div class="mood-cal-header">四</div><div class="mood-cal-header">五</div><div class="mood-cal-header">六</div>';
+
+  for(let i = 0; i < firstDay; i++){
+    html += '<div class="mood-cal-day empty"></div>';
+  }
+
+  for(let d = 1; d <= daysInMonth; d++){
+    const dateKey = moodYear + "-" + String(moodMonth + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+    const dayEntries = allUsers.map(u => ({ user: u, entry: entries[moodKey(dateKey, u)] })).filter(x => x.entry);
+    const isToday = (d === today.getDate() && moodMonth === today.getMonth() && moodYear === today.getFullYear());
+    let cls = "mood-cal-day";
+    if(isToday) cls += " today";
+    if(dayEntries.length) cls += " has-entry";
+
+    const badges = dayEntries.map(x => {
+      const idn = IDENTITY[x.user] || {};
+      const genderCls = idn.label === "女生" ? "girl" : "boy";
+      return '<span class="day-mood-badge ' + genderCls + '" title="' + (idn.label||'') + '">' + x.entry.mood + '</span>';
+    }).join('');
+
+    html += '<div class="' + cls + '" data-date="' + dateKey + '">' +
+      '<span class="day-num">' + d + '</span>' +
+      (badges ? '<div class="day-moods">' + badges + '</div>' : '') +
+      '</div>';
+  }
+
+  cal.innerHTML = html;
+
+  cal.querySelectorAll(".mood-cal-day:not(.empty)").forEach(day => {
+    day.addEventListener("click", () => openMoodModal(day.dataset.date));
+  });
+}
+
+function initMoodSelector(){
+  const sel = $id("moodSelector");
+  sel.innerHTML = MOOD_EMOJIS.map(e =>
+    '<span class="mood-emoji" data-mood="' + e + '">' + e + '</span>'
+  ).join('');
+
+  sel.querySelectorAll(".mood-emoji").forEach(btn => {
+    btn.addEventListener("click", () => {
+      sel.querySelectorAll(".mood-emoji").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedMood = btn.dataset.mood;
+    });
+  });
+}
+
+// 打开某一天的日记弹窗：我的（可编辑）+ 对方的（只读）
+function openMoodModal(date){
+  selectedDate = date;
+  const myUser = currentUsername;
+  const partnerUser = partnerOf(myUser);
+  const myIdn = IDENTITY[myUser] || { label: "我" };
+  const partnerIdn = IDENTITY[partnerUser] || { label: "TA" };
+
+  $id("moodEntryDate").textContent = date;
+  $id("myMoodLabel").textContent = myIdn.label + "的心情（你）";
+  $id("partnerMoodLabel").textContent = partnerIdn.label + "的心情";
+
+  renderMyMoodBlock();
+
+  // 对方的日记：只读展示，绝对不给编辑按钮
+  const partnerEntry = getMoodEntry(date, partnerUser);
+  const partnerView = $id("partnerMoodView");
+  if(partnerEntry){
+    partnerView.innerHTML =
+      '<span class="mood-diary-view-emoji">' + partnerEntry.mood + '</span>' +
+      '<p class="mood-diary-view-text">' + (partnerEntry.text || '').replace(/</g,"&lt;") + '</p>';
+  }else{
+    partnerView.innerHTML = '<span class="mood-diary-empty">TA今天还没有写呢～</span>';
+  }
+
+  $id("moodModalOverlay").style.display = "flex";
+}
+
+// 渲染"我的心情"这个区块：有记录就显示只读卡片+编辑/删除按钮，没有就直接显示编辑表单
+function renderMyMoodBlock(){
+  const entry = getMoodEntry(selectedDate, currentUsername);
+  const viewEl = $id("myMoodView");
+  const editEl = $id("myMoodEdit");
+  const actionsEl = $id("myMoodActions");
+  const cancelBtn = $id("moodCancelEdit");
+
+  if(entry){
+    viewEl.style.display = "flex";
+    editEl.style.display = "none";
+    actionsEl.style.display = "flex";
+    $id("myMoodViewEmoji").textContent = entry.mood;
+    $id("myMoodViewText").textContent = entry.text || "";
+  }else{
+    viewEl.style.display = "none";
+    editEl.style.display = "block";
+    actionsEl.style.display = "none";
+    cancelBtn.style.display = "none";
+    selectedMood = "";
+    $id("moodText").value = "";
+    document.querySelectorAll(".mood-emoji").forEach(e => e.classList.remove("selected"));
+  }
+}
+
+$id("moodPrev").addEventListener("click", () => {
+  moodMonth--;
+  if(moodMonth < 0){ moodMonth = 11; moodYear--; }
+  renderMoodCalendar();
+});
+
+$id("moodNext").addEventListener("click", () => {
+  moodMonth++;
+  if(moodMonth > 11){ moodMonth = 0; moodYear++; }
+  renderMoodCalendar();
+});
+
+$id("moodClose").addEventListener("click", () => {
+  $id("moodModalOverlay").style.display = "none";
+});
+$id("moodModalOverlay").addEventListener("click", (e) => {
+  if(e.target.id === "moodModalOverlay") $id("moodModalOverlay").style.display = "none";
+});
+
+// 点铅笔 → 进入修改模式，把已有内容填回表单
+$id("moodEditBtn").addEventListener("click", () => {
+  const entry = getMoodEntry(selectedDate, currentUsername);
+  $id("myMoodView").style.display = "none";
+  $id("myMoodEdit").style.display = "block";
+  $id("moodCancelEdit").style.display = "inline-block";
+  selectedMood = entry ? entry.mood : "";
+  $id("moodText").value = entry ? (entry.text || "") : "";
+  document.querySelectorAll(".mood-emoji").forEach(e => e.classList.remove("selected"));
+  if(selectedMood){
+    const btn = document.querySelector('.mood-emoji[data-mood="' + selectedMood + '"]');
+    if(btn) btn.classList.add("selected");
+  }
+});
+
+$id("moodCancelEdit").addEventListener("click", () => {
+  renderMyMoodBlock();
+});
+
+$id("moodDeleteBtn").addEventListener("click", async () => {
+  if(!confirm("确定要删除这篇日记吗？删除后不能恢复噢")) return;
+  const entry = getMoodEntry(selectedDate, currentUsername);
+  if(entry && entry.id && cloudReady){
+    try{
+      const { error } = await sb.from("mood_diary").delete().eq("id", entry.id);
+      if(error){ alert("删除失败：" + error.message); return; }
+    }catch(e){ alert("删除失败，请检查网络"); return; }
+  }
+  removeMoodEntry(selectedDate, currentUsername);
+  renderMoodCalendar();
+  renderMyMoodBlock();
+  showToast("已删除");
+});
+
+$id("moodSave").addEventListener("click", async () => {
+  const text = $id("moodText").value.trim();
+  if(!selectedMood){
+    alert("请选择一个心情表情");
+    return;
+  }
+  const existing = getMoodEntry(selectedDate, currentUsername);
+  const record = {
+    mood: selectedMood,
+    text: text,
+    username: currentUsername,
+    id: existing ? existing.id : undefined,
+    createdAt: existing ? existing.createdAt : new Date().toISOString()
+  };
+
+  if(cloudReady){
+    try{
+      if(existing && existing.id){
+        const { error } = await sb.from("mood_diary")
+          .update({ mood: selectedMood, text: text })
+          .eq("id", existing.id);
+        if(error){ alert("保存失败：" + error.message); return; }
+      }else{
+        const { data, error } = await sb.from("mood_diary")
+          .insert([{ date: selectedDate, mood: selectedMood, text: text, username: currentUsername }])
+          .select().single();
+        if(error){ alert("保存失败：" + error.message); return; }
+        if(data) record.id = data.id;
+      }
+    }catch(e){
+      alert("保存失败，请检查网络");
+      return;
+    }
+  }
+
+  setMoodEntry(selectedDate, currentUsername, record);
+  renderMoodCalendar();
+  renderMyMoodBlock();
+  showToast("日记已保存");
+});
+
+renderMoodCalendar();
+initMoodSelector();
+
+/* ==================== 电子宠物 ==================== */
+const PET_NAMES = ["小屿", "小澜", "星星", "海浪", "月亮"];
+let petState = {
+  name: PET_NAMES[Math.floor(Math.random() * PET_NAMES.length)],
+  hunger: 70,
+  happy: 70,
+  energy: 70,
+  level: 1,
+  exp: 0,
+  lastFeed: Date.now(),
+  lastPlay: Date.now(),
+  lastSleep: Date.now(),
+  isSleeping: false
+};
+
+function loadPet(){
+  try{
+    const saved = localStorage.getItem("cgl_pet");
+    if(saved){
+      petState = JSON.parse(saved);
+      const now = Date.now();
+      const hoursOff = (now - petState.lastSleep) / 3600000;
+      if(hoursOff > 2 && !petState.isSleeping){
+        petState.hunger = Math.max(0, petState.hunger - hoursOff * 3);
+        petState.happy = Math.max(0, petState.happy - hoursOff * 2);
+        petState.energy = Math.max(0, petState.energy - hoursOff * 4);
+      }
+    }
+  }catch(e){}
+  updatePetUI();
+}
+
+function savePet(){
+  petState.lastSleep = Date.now();
+  localStorage.setItem("cgl_pet", JSON.stringify(petState));
+}
+
+function updatePetUI(){
+  $id("petHunger").style.width = petState.hunger + "%";
+  $id("petHappy").style.width = petState.happy + "%";
+  $id("petEnergy").style.width = petState.energy + "%";
+  $id("petLevel").textContent = petState.level;
+  
+  const eyeL = $id("petEyeL");
+  const eyeR = $id("petEyeR");
+  const mouth = $id("petMouth");
+  const body = document.querySelector(".pet-body-shape");
+  
+  if(petState.isSleeping){
+    eyeL.style.background = "#999";
+    eyeR.style.background = "#999";
+    mouth.className = "pet-mouth sleeping";
+    body.className = "pet-body-shape sleeping";
+  } else if(petState.happy > 60){
+    eyeL.style.background = "var(--ink)";
+    eyeR.style.background = "var(--ink)";
+    mouth.className = "pet-mouth happy";
+    body.className = "pet-body-shape";
+  } else if(petState.hunger < 30){
+    eyeL.style.background = "#d9606f";
+    eyeR.style.background = "#d9606f";
+    mouth.className = "pet-mouth";
+    body.className = "pet-body-shape";
+  } else {
+    eyeL.style.background = "var(--ink)";
+    eyeR.style.background = "var(--ink)";
+    mouth.className = "pet-mouth";
+    body.className = "pet-body-shape";
+  }
+}
+
+function addPetLog(msg){
+  const log = $id("petLog");
+  const p = document.createElement("p");
+  p.textContent = "[" + new Date().toLocaleTimeString("zh-CN", {hour:"2-digit",minute:"2-digit"}) + "] " + msg;
+  log.prepend(p);
+  if(log.children.length > 8) log.removeChild(log.lastChild);
+}
+
+function checkLevelUp(){
+  const needed = petState.level * 20;
+  if(petState.exp >= needed){
+    petState.exp -= needed;
+    petState.level++;
+    addPetLog("升级了！现在是 Lv." + petState.level + "！");
+    showToast("宠物升级了！Lv." + petState.level);
+  }
+}
+
+function decayStats(){
+  setInterval(() => {
+    if(!petState.isSleeping){
+      petState.hunger = Math.max(0, petState.hunger - 1);
+      petState.happy = Math.max(0, petState.happy - 0.5);
+      petState.energy = Math.max(0, petState.energy - 0.8);
+      savePet();
+      updatePetUI();
+    }
+  }, 30000);
+}
+
+$id("petFeed").addEventListener("click", () => {
+  if(petState.isSleeping){
+    addPetLog("宠物正在睡觉，别吵它~");
+    return;
+  }
+  petState.hunger = Math.min(100, petState.hunger + 20);
+  petState.energy = Math.min(100, petState.energy + 5);
+  petState.exp += 5;
+  addPetLog("喂了" + petState.name + "好吃的！饥饿+20");
+  savePet();
+  updatePetUI();
+  checkLevelUp();
+});
+
+$id("petPlay").addEventListener("click", () => {
+  if(petState.isSleeping){
+    addPetLog("宠物正在睡觉，让它好好休息吧~");
+    return;
+  }
+  if(petState.energy < 10){
+    addPetLog(petState.name + "太累了，不想玩...");
+    return;
+  }
+  petState.happy = Math.min(100, petState.happy + 20);
+  petState.energy = Math.max(0, petState.energy - 15);
+  petState.hunger = Math.max(0, petState.hunger - 10);
+  petState.exp += 8;
+  addPetLog("和" + petState.name + "玩得好开心！开心+20");
+  savePet();
+  updatePetUI();
+  checkLevelUp();
+});
+
+$id("petSleep").addEventListener("click", () => {
+  petState.isSleeping = !petState.isSleeping;
+  if(petState.isSleeping){
+    addPetLog(petState.name + "去睡觉了...zzz");
+    $id("petSleep").textContent = "叫醒";
+  } else {
+    addPetLog(petState.name + "醒来了！精神满满！");
+    petState.energy = Math.min(100, petState.energy + 40);
+    petState.hunger = Math.max(0, petState.hunger - 15);
+    $id("petSleep").textContent = "睡觉";
+  }
+  savePet();
+  updatePetUI();
+});
+
+$id("petNameBtn").addEventListener("click", () => {
+  const newName = prompt("给宠物取个新名字：", petState.name);
+  if(newName && newName.trim()){
+    petState.name = newName.trim();
+    addPetLog("改名成功！");
+    savePet();
+    updatePetUI();
+  }
+});
+
+setInterval(() => {
+  if(!petState.isSleeping){
+    const eyeL = $id("petEyeL");
+    const eyeR = $id("petEyeR");
+    eyeL.classList.add("blink");
+    eyeR.classList.add("blink");
+    setTimeout(() => {
+      eyeL.classList.remove("blink");
+      eyeR.classList.remove("blink");
+    }, 200);
+  }
+}, 3000 + Math.random() * 4000);
+
+loadPet();
+decayStats();
+
+/* ==================== 心情日记云端同步 ==================== */
+async function syncMoodsFromCloud(){
+  if(!cloudReady) return;
+  try{
+    const { data, error } = await sb.from("mood_diary").select("*").order("date", { ascending: false });
+    if(!error && Array.isArray(data)){
+      const entries = getMoodEntries();
+      data.forEach(item => {
+        if(item.date && item.mood && item.username){
+          entries[moodKey(item.date, item.username)] = {
+            id: item.id,
+            mood: item.mood,
+            text: item.text || "",
+            username: item.username,
+            createdAt: item.created_at || new Date().toISOString()
+          };
+        }
+      });
+      saveMoodEntries(entries);
+      renderMoodCalendar();
+    }
+  }catch(e){ console.error("mood cloud sync error:", e); }
+}
+
+const _origFlush = flushQueue;
+flushQueue = async function(){
+  await _origFlush();
+  syncMoodsFromCloud();
+};
+
+/* ==================== 宠物云端同步 ==================== */
+ async function syncPetToCloud(){
+  if(!cloudReady) return;
+  try{
+    await sb.from("pet_state").upsert({
+      username: "global",
+      name: petState.name,
+      hunger: petState.hunger,
+      happy: petState.happy,
+      energy: petState.energy,
+      level: petState.level,
+      exp: petState.exp,
+      is_sleeping: petState.isSleeping,
+      updated_at: new Date().toISOString()
+    });
+  }catch(e){ console.error("pet cloud sync error:", e); }
+ }
+
+  setInterval(syncPetToCloud, 30000);
+console.log("心情日记和电子宠物初始化完成");
 </script>
 </body>
 </html>
