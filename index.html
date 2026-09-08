@@ -818,6 +818,134 @@ calc(env(safe-area-inset-top,0px) + 12px)
 
   .hero-title{font-size:48px}
 }
+
+/* ===== 汉堡按钮：手机端显示，PC端隐藏 ===== */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #7b93c4;
+  padding: 4px 8px;
+}
+
+/* ===== 抽屉遮罩 ===== */
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 998;
+}
+.drawer-overlay.active {
+  display: block;
+}
+
+/* ===== 抽屉面板 ===== */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 260px;
+  height: 100%;
+  background: #fff;
+  z-index: 999;
+  transition: left 0.3s ease;
+  padding: 50px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+  overflow-y: auto;
+}
+.drawer.open {
+  left: 0;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+.drawer-link {
+  display: block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.drawer-link:hover {
+  background: #f0f0f5;
+}
+
+/* ===== 手机端适配 ===== */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: inline-block;
+  }
+  .nav-left .nav-link {
+    display: none !important;
+  }
+  .brand-text {
+    display: none;
+  }
+}
+
+/* ===== 手机端自适应（屏幕宽度小于 900px 时生效） ===== */
+@media (max-width: 900px) {
+  /* 电脑端显示汉堡按钮 */
+  .hamburger-btn {
+    display: block;
+  }
+
+  /* 隐藏电脑端的右侧操作区，避免太挤（根据你自己需要调整） */
+  .nav-actions {
+    display: none;
+  }
+
+  /* 隐藏导航栏中间的链接，只在抽屉里显示 */
+  .nav-left .nav-link {
+    display: none;
+  }
+}
+
+/* ===== 抽屉内部链接样式 ===== */
+.drawer-link {
+  display: block;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  transition: background 0.2s;
+}
+.drawer-link:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+/* 抽屉关闭按钮 */
+.drawer-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
 </style>
 </head>
 <body>
@@ -847,7 +975,8 @@ calc(env(safe-area-inset-top,0px) + 12px)
 <div id="mainApp">
   <nav class="topnav">
     <div class="nav-left">
-      <div class="brand"><span class="seal-sm">归</span><span>沧澜归屿</span></div>
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="菜单">☰</button>
+      <div class="brand"><span class="seal-sm">归</span><span class="brand-text">沧澜归屿</span></div>
       <span class="nav-link" data-target="hero">首页</span>
       <span class="nav-link" data-target="daily">每日一句</span>
       <span class="nav-link" data-target="book">目录</span>
@@ -857,7 +986,7 @@ calc(env(safe-area-inset-top,0px) + 12px)
       <span class="nav-link" data-target="mood">日记</span>
       <span class="nav-link" data-target="game">游戏</span>
       <span class="nav-link" data-target="pet">宠物</span>
-      </div>
+    </div>
     <div class="nav-actions">
       <span id="whoAmI" class="who-am-i"></span>
       <div id="cloudStatus" class="cloud-status connecting" title="云端连接状态" aria-label="云端连接状态">
@@ -872,6 +1001,22 @@ calc(env(safe-area-inset-top,0px) + 12px)
       <button id="logoutBtn" class="theme-toggle" title="退出登录" style="font-size:12px;padding:5px 12px;">退出</button>
     </div>
   </nav>
+
+ <!-- 侧边抽屉（手机端） -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" id="drawerClose">✕</button>
+    <div class="drawer-title"><span class="seal-sm">归</span> 沧澜归屿</div>
+    <span class="drawer-item" data-target="hero">🏠 首页</span>
+    <span class="drawer-item" data-target="daily">📖 每日一句</span>
+    <span class="drawer-item" data-target="book">📚 目录</span>
+    <span class="drawer-item" data-target="timeline">⏳ 时光</span>
+    <span class="drawer-item" data-target="coupon">🎫 兑换券</span>
+    <span class="drawer-item" data-target="photos">🖼️ 照片墙</span>
+    <span class="drawer-item" data-target="mood">📝 日记</span>
+    <span class="drawer-item" data-target="game">🎮 游戏</span>
+    <span class="drawer-item" data-target="pet">🐾 宠物</span>
+  </div>
   <div id="globalToast" class="global-toast" role="status" aria-live="polite"></div>
 
   <!-- 1. 致我的女孩 + 倒计时 -->
@@ -903,7 +1048,7 @@ calc(env(safe-area-inset-top,0px) + 12px)
       <br>属于我们的故事，还会继续往下写。
     </p>
     <div class="photo-frame" id="heroPhoto">
-      <img src="mygirl.jpg" alt="我们的照片" 
+      <img src="hero.JPG" alt="我们的照片" 
        style="width:100%;height:100%;object-fit:cover;"
        onerror="this.style.display='none';document.getElementById('photoPh').style.display='flex';">
       <div class="photo-placeholder" id="photoPh"style="display:none;">
@@ -1891,6 +2036,7 @@ async function probeCloud(){
         showToast("✅云端已连接");
         await pullCloudData();
         await flushQueue();
+        startRealtime();
         return true;
       }else{
         // 仅打印一次，不疯狂抛异常
@@ -1975,10 +2121,10 @@ async function applyQueueItem(op){
       const idx=diaryList.findIndex(x=>x._localId===op.localId);
       if(idx>=0){diaryList[idx]={...op,id:data.id};localStorage.setItem("cgl_mood_diary",JSON.stringify(diaryList))}
     }else if(op.type==="pet_save"){
-      const payload={name:op.name,hunger:op.hunger,happy:op.happy,energy:op.energy,level:op.level,exp:op.exp,is_sleeping:op.isSleeping};
-      const {data:existing}=await sb.from("pet_state").select().single();
-      if(existing){
-        const {error}=await sb.from("pet_state").update(payload).eq("id",existing.id);
+      const payload={username:"global",name:op.name,hunger:op.hunger,happy:op.happy,energy:op.energy,level:op.level,exp:op.exp,is_sleeping:op.isSleeping,updated_at:new Date().toISOString()};
+      const {data:ex}=await sb.from("pet_state").select("id").eq("username","global").limit(1);
+      if(ex&&ex[0]){
+        const {error}=await sb.from("pet_state").update(payload).eq("id",ex[0].id);
         if(error)throw error;
       }else{
         const {error}=await sb.from("pet_state").insert([payload]);
@@ -2386,6 +2532,7 @@ $id("petFeed").addEventListener("click", () => {
     addPetLog("宠物正在睡觉，别吵它~");
     return;
   }
+  petState.updatedAt = Date.now();
   petState.hunger = Math.min(100, petState.hunger + 20);
   petState.energy = Math.min(100, petState.energy + 5);
   petState.exp += 5;
@@ -2393,6 +2540,7 @@ $id("petFeed").addEventListener("click", () => {
   savePet();
   updatePetUI();
   checkLevelUp();
+  syncPetToCloud();
 });
 
 $id("petPlay").addEventListener("click", () => {
@@ -2407,14 +2555,17 @@ $id("petPlay").addEventListener("click", () => {
   petState.happy = Math.min(100, petState.happy + 20);
   petState.energy = Math.max(0, petState.energy - 15);
   petState.hunger = Math.max(0, petState.hunger - 10);
+  petState.updatedAt = Date.now();
   petState.exp += 8;
   addPetLog("和" + petState.name + "玩得好开心！开心+20");
   savePet();
   updatePetUI();
   checkLevelUp();
+  syncPetToCloud();
 });
 
 $id("petSleep").addEventListener("click", () => {
+  petState.updatedAt = Date.now();
   petState.isSleeping = !petState.isSleeping;
   if(petState.isSleeping){
     addPetLog(petState.name + "去睡觉了...zzz");
@@ -2432,7 +2583,8 @@ $id("petSleep").addEventListener("click", () => {
 $id("petNameBtn").addEventListener("click", () => {
   const newName = prompt("给宠物取个新名字：", petState.name);
   if(newName && newName.trim()){
-    petState.name = newName.trim();
+    petState.updatedAt = Date.now();
+  petState.name = newName.trim();
     addPetLog("改名成功！");
     savePet();
     updatePetUI();
@@ -2486,10 +2638,37 @@ flushQueue = async function(){
 };
 
 /* ==================== 宠物云端同步 ==================== */
- async function syncPetToCloud(){
+ /* 共享宠物状态：本地时间戳 petState.updatedAt 记录最后一次本地改动；
+   推送前先比对云端 updated_at，云端更新就先吸收云端、绝不把本地旧值写回去（修复喂食/等级被回退） */
+function applyPetState(p){
+  if(p.name!=null) petState.name=p.name;
+  if(p.hunger!=null) petState.hunger=p.hunger;
+  if(p.happy!=null) petState.happy=p.happy;
+  if(p.energy!=null) petState.energy=p.energy;
+  if(p.level!=null) petState.level=p.level;
+  if(p.exp!=null) petState.exp=p.exp;
+  if(p.is_sleeping!=null) petState.isSleeping=!!p.is_sleeping;
+  var cloudTs=Date.parse(p.updated_at)||0;
+  petState.updatedAt=cloudTs;
+  if(typeof savePet==="function") savePet();
+  petState.updatedAt=cloudTs;
+  try{localStorage.setItem("cgl_pet",JSON.stringify(petState))}catch(e){}
+  if(typeof updatePetUI==="function") updatePetUI();
+}
+
+async function syncPetToCloud(){
   if(!cloudReady) return;
   try{
-    await sb.from("pet_state").upsert({
+    const {data, error} = await sb.from("pet_state").select("*").eq("username","global").limit(1);
+    if(error) throw error;
+    const cloud = data && data[0];
+    const localTs = petState.updatedAt || 0;
+    const cloudTs = cloud ? (Date.parse(cloud.updated_at)||0) : 0;
+    if(cloud && cloudTs > localTs){
+      applyPetState(cloud);
+      return;
+    }
+    const payload = {
       username: "global",
       name: petState.name,
       hunger: petState.hunger,
@@ -2498,13 +2677,88 @@ flushQueue = async function(){
       level: petState.level,
       exp: petState.exp,
       is_sleeping: petState.isSleeping,
-      updated_at: new Date().toISOString()
-    });
+      updated_at: new Date(localTs || Date.now()).toISOString()
+    };
+    if(cloud){
+      await sb.from("pet_state").update(payload).eq("id", cloud.id);
+    }else{
+      await sb.from("pet_state").insert([payload]);
+    }
   }catch(e){ console.error("pet cloud sync error:", e); }
- }
+}
 
   setInterval(syncPetToCloud, 30000);
 console.log("心情日记和电子宠物初始化完成");
+
+/* ==================== 实时同步 Realtime（新增） ==================== */
+// 从云端拉回共享宠物状态并刷新界面
+async function pullPetFromCloud(){
+  if(!cloudReady) return;
+  try{
+    const {data, error} = await sb.from("pet_state").select("*").eq("username","global").limit(1);
+    if(error || !data || !data[0]) return;
+    const p = data[0];
+    const cloudTs = Date.parse(p.updated_at)||0;
+    if((petState.updatedAt||0) > cloudTs) return;
+    applyPetState(p);
+  }catch(e){ console.error("pullPetFromCloud error:", e); }
+}
+
+let rtChannels = [];
+function startRealtime(){
+  if(!sb) return;
+  rtChannels.forEach(function(c){ try{ sb.removeChannel(c); }catch(e){} });
+  rtChannels = [];
+  // 表名 -> 该表变化时要调用的刷新函数
+  const refreshMap = {
+    coupon_bag: function(){ pullCloudData(); },
+    photo_wall: function(){ pullCloudData(); },
+    mood_diary: function(){ syncMoodsFromCloud(); },
+    pet_state:  function(){ pullPetFromCloud(); }
+  };
+  Object.keys(refreshMap).forEach(function(t){
+    var ch = sb.channel("rt_" + t)
+      .on("postgres_changes", { event:"*", schema:"public", table:t }, function(){ refreshMap[t](); })
+      .subscribe();
+    rtChannels.push(ch);
+  });
+  console.log("Realtime 实时订阅已启动:", Object.keys(refreshMap).join(", "));
+}
+// 鉴权变化（登录/恢复会话）后，带 token 重新订阅，确保 RLS 下的实时推送能到达，并补拉一次数据
+try{ sb.auth.onAuthStateChange(function(_e,session){
+    try{ if(session && sb.realtime){ sb.realtime.setAuth(session.access_token); startRealtime(); pullCloudData(); pullPetFromCloud(); syncPetToCloud(); } }catch(e){}
+  }); }catch(e){}
+startRealtime();
+/* ==================== 实时同步 Realtime（新增结束） ==================== */
+// ===== 汉堡按钮 & 抽屉交互 =====
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const drawer = document.getElementById('drawer');
+const drawerOverlay = document.getElementById('drawerOverlay');
+const drawerClose = document.getElementById('drawerClose');
+
+function openDrawer() {
+  drawer.classList.add('open');
+  drawerOverlay.classList.add('active');
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  drawerOverlay.classList.remove('active');
+}
+
+hamburgerBtn?.addEventListener('click', openDrawer);
+drawerClose?.addEventListener('click', closeDrawer);
+drawerOverlay?.addEventListener('click', closeDrawer);
+
+// 点击抽屉里的链接后自动收起
+document.querySelectorAll('.drawer-link').forEach(link => {
+  link.addEventListener('click', function() {
+    const target = this.dataset.target;
+    closeDrawer();
+    // 触发原有的导航切换逻辑（模拟点击顶部对应的 nav-link）
+    const topLink = document.querySelector(`.nav-link[data-target="${target}"]`);
+    if (topLink) topLink.click();
+  });
+});
 </script>
 </body>
 </html>
