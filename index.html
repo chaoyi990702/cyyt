@@ -824,74 +824,19 @@ calc(env(safe-area-inset-top,0px) + 12px)
   display: none;
   background: none;
   border: none;
-  font-size: 22px;
-  cursor: pointer;
-  color: #7b93c4;
-  padding: 4px 8px;
-}
-
-/* ===== 抽屉遮罩 ===== */
-.drawer-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 998;
-}
-.drawer-overlay.active {
-  display: block;
-}
-
-/* ===== 抽屉面板 ===== */
-.drawer {
-  position: fixed;
-  top: 0;
-  left: -300px;
-  width: 260px;
-  height: 100%;
-  background: #fff;
-  z-index: 999;
-  transition: left 0.3s ease;
-  padding: 50px 20px 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  box-shadow: 2px 0 12px rgba(0,0,0,0.15);
-  overflow-y: auto;
-}
-.drawer.open {
-  left: 0;
-}
-
-.drawer-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  background: none;
-  border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #666;
+  color: var(--rose-deep);
+  padding: 4px 8px;
+  flex-shrink: 0;
 }
 
-.drawer-link {
-  display: block;
-  padding: 10px 12px;
-  text-decoration: none;
-  color: #333;
-  font-size: 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.drawer-link:hover {
-  background: #f0f0f5;
-}
-
-/* ===== 手机端适配 ===== */
-@media (max-width: 768px) {
+/* ===== 手机端适配：导航链接收进汉堡菜单，右侧功能按钮照常显示 ===== */
+@media (max-width: 900px) {
   .hamburger-btn {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .nav-left .nav-link {
     display: none !important;
@@ -901,51 +846,97 @@ calc(env(safe-area-inset-top,0px) + 12px)
   }
 }
 
-/* ===== 手机端自适应（屏幕宽度小于 900px 时生效） ===== */
-@media (max-width: 900px) {
-  /* 电脑端显示汉堡按钮 */
-  .hamburger-btn {
-    display: block;
-  }
-
-  /* 隐藏电脑端的右侧操作区，避免太挤（根据你自己需要调整） */
-  .nav-actions {
-    display: none;
-  }
-
-  /* 隐藏导航栏中间的链接，只在抽屉里显示 */
-  .nav-left .nav-link {
-    display: none;
-  }
+/* ===== 抽屉遮罩：淡淡的毛玻璃，盖住下面的内容，但绝不遮住顶部导航栏 ===== */
+.drawer-overlay {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  top: calc(env(safe-area-inset-top,0px) + 50px); /* 从导航栏下方开始，导航栏本身永远露在外面 */
+  background: rgba(253, 251, 247, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 900; /* 明确低于 .topnav 的 999，绝不会盖住导航栏按钮 */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
-/* ===== 抽屉内部链接样式 ===== */
-.drawer-link {
-  display: block;
-  padding: 12px 16px;
-  color: #333;
-  text-decoration: none;
+/* ===== 抽屉面板：从导航栏正下方滑出，跟站内配色一致，圆润柔和 ===== */
+.drawer {
+  position: fixed;
+  top: calc(env(safe-area-inset-top,0px) + 50px);
+  left: -280px;
+  width: 250px;
+  height: calc(100% - env(safe-area-inset-top,0px) - 50px);
+  background: var(--card-bg, #fffdf9);
+  z-index: 900; /* 跟遮罩同级、都在导航栏下方，绝不会盖住顶部按钮 */
+  padding: 18px 14px;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.08);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  border-right: 1px solid rgba(123,164,214,0.18);
+  border-bottom-right-radius: 20px;
+}
+.drawer.open {
+  left: 0;
+}
+.drawer-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--rose-deep);
   font-size: 15px;
-  border-radius: 6px;
-  margin-bottom: 4px;
-  transition: background 0.2s;
+  padding: 4px 6px 14px 10px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(123,164,214,0.15);
 }
-.drawer-link:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-/* 抽屉关闭按钮 */
 .drawer-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: none;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
   border: none;
-  font-size: 24px;
+  background: rgba(123,164,214,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  color: #666;
+  color: var(--ink-light);
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.drawer-close:hover {
+  background: rgba(123,164,214,0.2);
+  color: var(--rose-deep);
 }
 
+/* 抽屉内的导航项：跟顶部 nav-link 悬浮效果统一 */
+.drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  color: var(--ink);
+  font-size: 14.5px;
+  border-radius: 12px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.drawer-item:hover,
+.drawer-item:active {
+  background: rgba(123,164,214,0.12);
+  color: var(--rose-deep);
+}
+body.theme-rose .drawer-item:hover,
+body.theme-rose .drawer-item:active {
+  background: rgba(224,117,154,0.12);
+}
 </style>
 </head>
 <body>
@@ -1005,8 +996,10 @@ calc(env(safe-area-inset-top,0px) + 12px)
  <!-- 侧边抽屉（手机端） -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <div class="drawer" id="drawer">
-    <button class="drawer-close" id="drawerClose">✕</button>
-    <div class="drawer-title"><span class="seal-sm">归</span> 沧澜归屿</div>
+    <div class="drawer-title">
+      <span class="seal-sm">归</span> 沧澜归屿
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
     <span class="drawer-item" data-target="hero">🏠 首页</span>
     <span class="drawer-item" data-target="daily">📖 每日一句</span>
     <span class="drawer-item" data-target="book">📚 目录</span>
@@ -2750,7 +2743,7 @@ drawerClose?.addEventListener('click', closeDrawer);
 drawerOverlay?.addEventListener('click', closeDrawer);
 
 // 点击抽屉里的链接后自动收起
-document.querySelectorAll('.drawer-link').forEach(link => {
+document.querySelectorAll('.drawer-item').forEach(link => {
   link.addEventListener('click', function() {
     const target = this.dataset.target;
     closeDrawer();
