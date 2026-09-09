@@ -401,6 +401,51 @@ body.theme-rose .chapter .ch-body{border-top-color:rgba(224,117,154,0.2)}
   background:rgba(123,164,214,0.08);letter-spacing:.5px;
 }
 body.theme-rose .chapter .ch-song{background:rgba(224,117,154,0.08)}
+/* ==================== 章节配乐播放器 ==================== */
+.ch-player{
+  padding:12px 18px 14px;background:rgba(123,164,214,0.06);
+  border-radius:12px;margin:0 12px 4px;
+}
+body.theme-rose .ch-player{background:rgba(224,117,154,0.06)}
+.ch-song-label{font-size:13px;color:var(--ink);letter-spacing:.5px;margin-bottom:4px}
+.ch-song-note{font-size:11.5px;color:var(--ink-light);font-style:italic;margin-bottom:8px}
+.ch-song-options{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.ch-song-opt{
+  font-size:12.5px;padding:6px 12px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(123,164,214,0.3);background:#fff;color:var(--ink);transition:.2s;
+}
+.ch-song-opt:hover{background:rgba(123,164,214,0.12)}
+.ch-song-opt.selected{background:var(--rose-deep);border-color:var(--rose-deep);color:#fff}
+.ch-player-controls{display:flex;align-items:center;gap:8px}
+.ch-play-btn,.ch-vol-btn{
+  flex-shrink:0;width:30px;height:30px;border-radius:50%;border:none;
+  background:var(--rose-deep);color:#fff;font-size:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.ch-vol-btn{background:rgba(123,164,214,0.15);color:var(--ink)}
+.ch-play-btn:hover{transform:scale(1.08)}
+.ch-time-cur,.ch-time-dur{font-size:11px;color:var(--ink-light);flex-shrink:0;min-width:28px}
+.ch-progress{
+  flex:1 1 auto;min-width:0;height:4px;-webkit-appearance:none;appearance:none;
+  background:rgba(123,164,214,0.25);border-radius:999px;outline:none;cursor:pointer;
+}
+.ch-progress::-webkit-slider-thumb{
+  -webkit-appearance:none;width:13px;height:13px;border-radius:50%;
+  background:var(--rose-deep);cursor:pointer;
+}
+.ch-progress::-moz-range-thumb{
+  width:13px;height:13px;border-radius:50%;background:var(--rose-deep);border:none;cursor:pointer;
+}
+.ch-lyric-line{
+  margin-top:8px;font-size:12.5px;color:var(--rose-deep);text-align:center;
+  font-family:var(--serif);letter-spacing:.5px;min-height:16px;
+}
+.ch-playing-dot{
+  display:none;width:7px;height:7px;border-radius:50%;background:var(--rose-deep);
+  margin-left:6px;vertical-align:middle;animation:chDotPulse 1s ease-in-out infinite;
+}
+.ch-playing-dot.active{display:inline-block}
+@keyframes chDotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
 .chapter .ch-sub{
   padding:7px 18px;font-size:13.5px;color:var(--ink-light);
   line-height:1.8;border-top:1px dashed rgba(123,164,214,0.12);
@@ -475,51 +520,73 @@ body.theme-rose .backpack-item{border-color:rgba(224,117,154,0.5)}
 .bp-use-btn:active{transform:scale(0.94)}
 .bp-use-btn.using{opacity:.75}
 .backpack-empty{text-align:center;color:var(--ink-light);font-size:13px;padding:22px 0;letter-spacing:1px}
-/* ============ 照片墙（LED灯条） ============ */
-.led-string{
+/* ============ 照片墙（Ins风网格布告板 + 缠绕LED灯线 + 拍立得图钉/木夹） ============ */
+.cork-board{
   position:relative;
-  display:flex;gap:16px;
-  overflow-x:auto;overflow-y:hidden;
-  padding:22px 12px 24px;
-  scrollbar-width:none;
+  padding:26px 14px 30px;
+  border-radius:18px;
+  border:10px solid #c89b6d;                 /* 木质相框 */
+  box-shadow:0 10px 30px rgba(92,138,194,.18), inset 0 0 60px rgba(120,90,50,.12);
+  background-color:#e9eef2;                   /* 网格布底 */
+  background-image:
+    repeating-linear-gradient(0deg, rgba(123,164,214,.13) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(123,164,214,.13) 0 1px, transparent 1px 22px);
 }
-.led-string::-webkit-scrollbar{display:none}
-.led-string::before{ /* 灯条线 */
-  content:"";position:absolute;top:7px;left:0;right:0;height:3px;
-  border-radius:3px;
-  background:rgba(123,164,214,0.35);
+body.theme-rose .cork-board{
+  border-color:#d8a07f;background-color:#f2e8ec;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(224,117,154,.13) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(224,117,154,.13) 0 1px, transparent 1px 22px);
 }
-body.theme-rose .led-string::before{background:rgba(224,117,154,0.35)}
-.led-photo{
-  position:relative;flex-shrink:0;width:150px;
-  background:rgba(255,253,249,0.9);
-  border-radius:10px;padding:8px 8px 6px;
-  box-shadow:0 6px 18px rgba(92,138,194,0.18);
-}
-.led-photo::before{ /* 灯泡 */
-  content:"";position:absolute;top:-15px;left:50%;transform:translateX(-50%);
-  width:13px;height:13px;border-radius:50%;
+/* 缠绕在布告板上的灯线 */
+.cork-lights{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.cork-lights .wire{fill:none;stroke:#c79a3f;stroke-width:2;opacity:.5;stroke-linecap:round}
+body.theme-rose .cork-lights .wire{stroke:#cf8aa6}
+/* 缠绕灯线上交替闪烁的小灯泡（一半亮一半暗，每秒轮换一次） */
+.bulb{position:absolute;width:15px;height:15px;border-radius:50%;z-index:1;pointer-events:none;
   background:radial-gradient(circle at 35% 35%, #fff8d0, #f6c96b 60%, #e0a83c);
-  box-shadow:0 0 10px 2px rgba(246,201,107,0.75);
-  animation:bulbGlow 3.5s ease-in-out infinite;
+  box-shadow:0 0 18px #ffd76a, 0 0 30px rgba(255,220,100,.85);
+  animation:bulbBlink 2s steps(1,end) infinite}
+/* 第一组：先亮后暗 */
+.bulb.g1{animation-delay:0s}
+/* 第二组：先暗后亮（与第一组相差 1 秒，实现轮流交换） */
+.bulb.g2{animation-delay:-1s}
+/* 灯泡位置：上排沿上方灯线，下排沿下方灯线 */
+.bulb.b1{top:18%;left:6%}.bulb.b2{top:11%;left:22%}
+.bulb.b3{top:20%;left:40%}.bulb.b4{top:15%;left:55%}
+.bulb.b5{top:23%;left:73%}.bulb.b6{top:13%;left:90%}
+.bulb.b7{top:78%;left:8%}.bulb.b8{top:86%;left:25%}
+.bulb.b9{top:76%;left:43%}.bulb.b10{top:82%;left:60%}
+.bulb.b11{top:79%;left:78%}.bulb.b12{top:76%;left:92%}
+@keyframes bulbBlink{
+  0%{opacity:1;box-shadow:0 0 18px #ffd76a,0 0 30px rgba(255,220,100,.85)}
+  50%{opacity:.2;box-shadow:0 0 4px rgba(255,215,106,.25)}
+  100%{opacity:1;box-shadow:0 0 18px #ffd76a,0 0 30px rgba(255,220,100,.85)}
 }
-.led-photo:nth-child(2n)::before{animation-delay:.4s}
-.led-photo:nth-child(3n)::before{animation-delay:.9s}
-.led-photo:nth-child(5n)::before{animation-delay:1.4s}
-@keyframes bulbGlow{
-  0%, 100% {
-    box-shadow: 0 0 6px 2px rgba(246,201,107,0.4);
-    opacity: 0.7;
-  }
-  50% {
-    box-shadow: 0 0 18px 6px rgba(246,201,107,0.85);
-    opacity: 1;
-  }
-}
-.led-photo img{
-  width:100%;height:130px;object-fit:cover;
-  border-radius:6px;display:block;background:#eee;
-}
+/* 照片容器：不规则错落的拍立得墙 */
+.led-string{position:relative;z-index:2;display:flex;flex-wrap:wrap;
+  gap:30px 20px;justify-content:center;align-items:flex-start;padding:16px 4px 10px}
+.led-photo{position:relative;width:158px;background:#fffdf7;
+  padding:9px 9px 30px;border-radius:3px;
+  box-shadow:0 8px 20px rgba(60,80,110,.22);
+  transition:transform .18s ease, box-shadow .18s ease}
+.led-photo:nth-child(4n+1){transform:rotate(-3deg)}
+.led-photo:nth-child(4n+2){transform:rotate(2.5deg)}
+.led-photo:nth-child(4n+3){transform:rotate(-1.5deg)}
+.led-photo:nth-child(4n){transform:rotate(3deg)}
+.led-photo:hover{transform:rotate(0deg) translateY(-5px);box-shadow:0 14px 28px rgba(60,80,110,.32);z-index:5}
+.led-photo img{width:100%;height:150px;object-fit:cover;display:block;background:#eee;border-radius:2px}
+/* 奇数张 = 红色图钉；偶数张 = 木质夹子 */
+.led-photo::before{content:"";position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  width:20px;height:20px;border-radius:50%;z-index:3;
+  background:radial-gradient(circle at 35% 30%, #ff8a8a, #e03131 70%);
+  box-shadow:0 3px 6px rgba(0,0,0,.3), inset 0 -2px 3px rgba(0,0,0,.25)}
+.led-photo:nth-child(2n)::before{
+  width:26px;height:15px;border-radius:3px;top:-8px;
+  background:linear-gradient(180deg,#d9a86c,#b5824a);
+  box-shadow:0 2px 5px rgba(0,0,0,.3)}
+.led-photo:nth-child(2n)::after{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  width:14px;height:7px;border:2px solid #8a5a2b;border-bottom:none;border-radius:6px 6px 0 0;z-index:4}
 .led-photo .photo-del{
   position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;
   background:rgba(0,0,0,0.5);color:#fff;border:none;font-size:11px;
@@ -1114,8 +1181,15 @@ body.theme-rose .drawer-item:active {
   <section id="photos">
     <div class="sec-eyebrow">照片墙</div>
     <h2 class="sec-title">我们的照片墙</h2>
-    <p class="sec-sub">上传你们的照片，像一串亮着小灯泡的灯条一样，一直亮着。📸</p>
-    <div class="led-string" id="ledString"></div>
+    <p class="sec-sub">把回忆一张张贴上布告板，用小图钉和木夹子固定，灯线绕在上面一直亮着。📸</p>
+    <div class="cork-board">
+      <svg class="cork-lights" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wire" d="M0 42 Q 120 12 240 46 T 500 40 T 760 54 T 1000 34"/>
+        <path class="wire" d="M0 150 Q 170 186 340 146 T 690 162 T 1000 148"/>
+      </svg>
+      <span class="bulb b1 g1"></span><span class="bulb b2 g2"></span><span class="bulb b3 g1"></span><span class="bulb b4 g2"></span><span class="bulb b5 g1"></span><span class="bulb b6 g2"></span><span class="bulb b7 g1"></span><span class="bulb b8 g2"></span><span class="bulb b9 g1"></span><span class="bulb b10 g2"></span><span class="bulb b11 g1"></span><span class="bulb b12 g2"></span>
+      <div class="led-string" id="ledString"></div>
+    </div>
     <div class="photo-actions">
       <label class="photo-upload-btn">＋ 上传照片
         <input type="file" id="photoInput" accept="image/*" multiple hidden>
@@ -1194,13 +1268,12 @@ body.theme-rose .drawer-item:active {
       <button class="btn-ghost" id="truthDraw">抽一张真心话</button>
     </div>
 
-    <div class="game-sub">💞 更多情侣玩法</div>
+    <div class="game-sub">💞 更多情侣玩法还没解锁，有意见可以随时联系客服人员。</div>
     <div class="card ideas-box">
       <p><b>① 默契测试</b>：两人各自作答，互相猜对方的选择，看看谁更懂谁。</p>
       <p><b>② 今日心愿清单</b>：写下今天想一起做的小事，完成一件划掉一件。</p>
-      <p><b>③ 异地时钟</b>：显示新山和贵阳两地的当前时间，感觉彼此就在身边。</p>
       <p><b>④ 每日打卡</b>：每天给对方留一句话，攒成一本只属于你们的小日记。</p>
-      <p style="margin-top:8px;color:var(--ink-light)">小提示：网页是静态的，两边各自打开时数据存在各自手机里。想要两个人<em>实时互通</em>（你写她立刻看到），需要再接一个后端，到时候可以帮你做。</p>
+      <p style="margin-top:8px;color:var(--ink-light)">小提示：以上的玩法都还没确定随时更改，有任何意见可以联系客服人员。</p>
     </div>
   </section>
 
@@ -1260,7 +1333,7 @@ if (!window.supabase) {
   // 不 throw，让页面继续加载（离线模式）
 } else {
   try {
-    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: 'cgl-auth-token' } });
     console.log("Supabase 初始化成功", { url: SUPABASE_URL });
   } catch (e) {
     console.error("Supabase 创建客户端失败:", e);
@@ -1295,7 +1368,7 @@ const ANNIVERSARY = new Date(2025, 7, 14);          // 2025-08-14 在一起
 const BOY_BIRTHDAY  = { month: 7,  day: 2 };    // 男生生日 7月2日
 const GIRL_BIRTHDAY = { month: 11, day: 25 };   // 女生生日 11月25日
 /* ↓↓↓ 背景音乐（可换链接） */
-const MUSIC_URL = "https://aka.doubaocdn.com/s/NnK3onGxN5";
+const MUSIC_URL = "bgm.mp3";
 /* ↓↓↓ 首页回忆照片（填图片网址，留空则显示占位框） */
 const PHOTO_URL = "";
 /* 每日一句 */
@@ -1311,37 +1384,45 @@ const DAILY_QUOTES = [
 /* 书目录 - 每章可配一首歌：song 填歌名；songUrl 填mp3链接（可留空）。
    把歌单发我，我帮你把 song 都填上 */
 const CHAPTERS = [
-  { n:"前言", t:"前言", q:"故事的序章，从这里开始。", song:"", songUrl:"" },
-  { n:"序章", t:"序章", q:"一切的开始，都是命中注定。", song:"", songUrl:"" },
-  { n:"第一章", t:"缘起", song:"", songUrl:"",
+  { n:"前言", t:"前言", q:"故事的序章，从这里开始。", song:"Enchanted - Taylor Swift", songNote:"前言与序幕使用同一首歌", audioUrl:"audio/ch0.mp3", lrcUrl:"audio/ch0.lrc" },
+  { n:"序章", t:"序章", q:"一切的开始，都是命中注定。", song:"Enchanted - Taylor Swift", audioUrl:"audio/ch0.mp3", lrcUrl:"audio/ch0.lrc" },
+  { n:"第一章", t:"缘起", song:"好喜欢你 - 颜人中", audioUrl:"audio/ch1.mp3", lrcUrl:"audio/ch1.lrc",
     sub:[
       "第一次相遇","不听妈妈的话，要听神明的话","一切都是缘分","这个世界好小",
       "我去载你吧","有趣的对话","莫比乌斯对戒","刷题刷不明白",
       "你说你很恋爱脑的故事","瑜有情，乔有意","九州行之又是你的车",
       "这叫智取，宝贝儿","我有一个朋友！"
     ] },
-  { n:"第二章", t:"坚持到底", song:"", songUrl:"",
+  { n:"第二章", t:"坚持到底", song:"喜欢你 - 苡慧", audioUrl:"audio/ch2.mp3", lrcUrl:"audio/ch2.lrc",
     sub:[
       "未曾言明的拒绝","念念不忘，必有回响","关心，总有回响","秋序与日月兮同光",
       "有些话，还是想亲口说","第一次约会","喜欢，还是错觉？","23分15秒","等待天亮"
     ] },
-  { n:"第三章", t:"山海相隔，两座城市", song:"", songUrl:"",
+  { n:"第三章", t:"山海相隔，两座城市", song:"如果可以 - 韦礼安", audioUrl:"audio/ch3.mp3", lrcUrl:"audio/ch3.lrc",
     sub:["看不到你的45天","你不在的生日","你在贵阳，我在新山","你去新疆，我在新山","归来的那一天","没有"] },
-  { n:"第四章", t:"何其有幸", song:"", songUrl:"",
+  { n:"第四章", t:"何其有幸", song:"像晴天像雨天 - 汪苏泷", audioUrl:"audio/ch4.mp3", lrcUrl:"audio/ch4.lrc",
     sub:[
       "不够喜欢","七夕有你","有你陪着的我","你和我的不安","寿司烤饭","悄悄的礼物",
       "戏里戏外皆你","婚礼","仙女的二十岁生辰","如约而至","生活趣事","重赴朝曦","你又不在的生日"
     ] },
-  { n:"第五章", t:"日思夜想", song:"", songUrl:"", sub:["伤心的一天","看不到你的30天"] },
-  { n:"第六章", t:"潮屿长伴", song:"", songUrl:"", sub:["我很喜欢你","爱不分对错","迪士尼城堡","如果我们有争执了请看这页"] },
-  { n:"第七章", t:"共赴未来", song:"", songUrl:"", sub:["未来"] },
-  { n:"后记", t:"后记", q:"故事的结尾，也是新的开始。", song:"", songUrl:"" }
+  { n:"第五章", t:"日思夜想", song:"给我的crush - 大颖", audioUrl:"audio/ch5.mp3", lrcUrl:"audio/ch5.lrc", sub:["伤心的一天","看不到你的30天"] },
+  { n:"第六章", t:"潮屿长伴", song:"爱，存在 - 王静雯", audioUrl:"audio/ch6.mp3", lrcUrl:"audio/ch6.lrc", sub:["我很喜欢你","爱不分对错","迪士尼城堡","如果我们有争执了请看这页"] },
+  { n:"第七章", t:"共赴未来", song:"宠坏 - 小潘潘、李俊佑", audioUrl:"audio/ch7.mp3", lrcUrl:"audio/ch7.lrc", sub:["未来"] },
+  { n:"后记", t:"后记", q:"书本的结尾，但不是故事的结局。",
+    songOptions:[
+      { label:"Love Story - Taylor Swift", audioUrl:"audio/ch8a.mp3", lrcUrl:"audio/ch8a.lrc" },
+      { label:"a thousand years - Christina Perri", audioUrl:"audio/ch8b.mp3", lrcUrl:"audio/ch8b.lrc" }
+    ] }
 ];
 /* 时间线 */
 const TIMELINE = [
-  { date:"2025.08.14", title:"我们在一起了", place:"起点", desc:"故事的第一页，从这里翻开。" },
-  { date:"2025.08", title:"隔着新山与贵阳", place:"异地", desc:"思念从这里开始涨潮，也从此学会了等待。" },
-  { date:"2025.09", title:"《沧澜归屿》动笔", place:"我们的书", desc:"想把我们的故事，写成一本只属于你的书。" },
+  { date:"2025.03.07", title:"我们第一次相识", place:"起点", desc:"某个不经意的瞬间，两个人开始有了交集。" },
+  { date:"2025.06", title:"隔着新山与贵阳", place:"异地", desc:"暧昧期的离别，最后会是我们还是我和你。" },
+  { date:"2025.08.14", title:"我们在一起了", place:"开花结果", desc:"故事的第n页，从这里翻开。" },
+  { date:"2026.06", title:"再隔着新山与贵阳", place:"异地恋", desc:"思念从这里开始涨潮，也从此学会了等待。" },
+  { date:"2026.06.24", title:"《沧澜归屿》动笔", place:"我们的书", desc:"想把我们的故事，写成一本只属于你的书。" },
+  { date:"2026.08.14", title:"一周年快乐", place:"第一年", desc:"终于在你的怀疑中，告诉你我的真心，我们的第一个周年。" },
+  { date:"2026.09.02", title:"《沧澜归屿》完结", place:"出版", desc:"把记忆编制成书，容我们细水长流。" },
   { date:"2026 · 未完待续", title:"我们的故事", place:"归途", desc:"属于我们的故事，还会继续往下写。" }
 ];
 /* 兑换券 */
@@ -1362,16 +1443,41 @@ const DEFAULT_LETTERS = [
 /* 小游戏题库（会随机抽5题轮换）
    a 是正确选项下标：0=第一个，1=第二个，2=第三个 —— 请核对改成真实答案！ */
 const QUIZ_BANK = [
-  { q:"我最喜欢的水果是？", opts:["芒果","西瓜","榴莲"], a:0 },
+  { q:"我会吃的水果是？", opts:["芒果","西瓜","榴莲"], a:1 },
   { q:"我们的纪念日是？", opts:["8月14日","2月14日","5月20日"], a:0 },
-  { q:"我写这本书最想说的是？", opts:["所有风浪都有归处","海誓山盟","来日方长"], a:0 },
+  { q:"我写这本书最想说的是？", opts:["所有风浪都有归处","海誓山盟","一周年快乐，宝宝！"], a:2 },
   { q:"异地时我最常想对你说？", opts:["我在想你","吃饭了吗","早点睡"], a:0 },
-  { q:"我们的专属暗号是？", opts:["沧澜归屿","早安晚安","520"], a:0 },
-  { q:"我最喜欢的饮品？", opts:["奶茶","咖啡","可乐"], a:0 },
-  { q:"我更喜欢哪个季节？", opts:["夏天","冬天","秋天"], a:0 },
+  { q:"我们的专属暗号是？", opts:["沧澜归屿","宝宝","520"], a:1 },
+  { q:"我最喜欢的饮品？", opts:["奶茶","百事","可乐"], a:2 },
+  { q:"我更喜欢哪个季节？", opts:["夏天","冬天","秋天"], a:1 },
   { q:"我生气时最想你怎么做？", opts:["抱抱我","讲道理","给我空间"], a:0 },
-  { q:"我心情不好时最想？", opts:["听你说话","一个人待着","吃好吃的"], a:0 },
-  { q:"我的理想约会？", opts:["海边散步","看电影","游乐园"], a:0 }
+  { q:"我心情不好时最想？", opts:["听你说话","一个人待着","吃好吃的"], a:2 },
+  { q:"我的理想约会？", opts:["海边散步","看电影","游乐园"], a:0 },
+  { q:"我最喜欢的肉类？", opts:["牛肉","猪肉","鸡肉"], a:1 },
+  { q:"我讨厌的天气是？", opts:["晴天","雨天","阴天"], a:1 },
+  { q:"我最喜欢火锅、烧烤还是串串？", opts:["火锅","烧烤","串串"], a:0 },
+  { q:"我喜欢什么歌曲？", opts:["中文歌","英文歌","广东歌"], a:0 },
+  { q:"我喜欢吃什么口味的冰淇淋？", opts:["薄荷巧克力味","草莓味","巧克力味"], a:2 },
+  { q:"我的出生日期？", opts:["1998年7月2号","1999年7月2号","1997年7月2号"], a:1 },
+  { q:"我最讨厌做的家务？", opts:["捡屎","晒衣","煮饭"], a:0 },
+  { q:"我喜欢海洋还是森林？", opts:["海洋","森林","都还好"], a:2 },
+  { q:"我最喜欢吃的快餐？", opts:["KFC","MCD","Pizza Hut"], a:2 },
+  { q:"我喜欢的怎么样的鸡蛋？", opts:["炒蛋","煎蛋","水煮蛋"], a:1 },
+  { q:"我最喜欢的年货？", opts:["咸蛋薯片","炸蟹柳","肉干"], a:2 },
+  { q:"我最喜欢什么的运动？", opts:["羽球","足球","篮球"], a:1 },
+  { q:"我最会下什么棋？", opts:["中国象棋","西洋象棋","围棋"], a:0 },
+  { q:"我读书时最喜欢的科目？", opts:["历史","地理","华文"], a:0 },
+  { q:"我最喜欢吻你什么部位？", opts:["嘴唇","胸部","脖子"], a:2 },
+  { q:"以下哪三种是我喜欢的颜色？", opts:["蓝，黄，绿","蓝，黑，白","蓝，绿，红"], a:1 },
+  { q:"我喜欢纸质书还是电子书？", opts:["纸质书","电子书","都喜欢"], a:0 },
+  { q:"我最喜欢的零食？", opts:["薯片","Super Ring","虾条"], a:1 },
+  { q:"我最喜欢的动漫电影？", opts:["鬼灭之刃","进击的巨人","多啦A梦"], a:0 },
+  { q:"我的身高是多少？", opts:["170cm","171cm","172cm"], a:2 },
+  { q:"我喜欢亲亲还是抱抱？", opts:["亲亲","抱抱","都喜欢"], a:2 },
+  { q:"我最喜欢哪个汉堡类的快餐？", opts:["MCD","KFC","Burger King"], a:0 },
+  { q:"我最想跟你讲的一句话是？", opts:["宝宝，我喜欢你。","宝宝，我爱你。","宝宝，我很喜欢很喜欢很喜欢你。"], a:2 }
+
+
 ];
 /* 真心话题库 */
 const TRUTH_QUESTIONS = [
@@ -1384,7 +1490,56 @@ const TRUTH_QUESTIONS = [
   "你心里的我，和外面的我有什么不一样？",
   "如果时间能倒流，你最想回到哪个瞬间？",
   "你希望我改掉的一个小毛病？",
-  "你有多喜欢我？（不许说不知道）"
+  "有什么事想做很久了？",
+  "你有多喜欢我？（不许说不知道）",
+  "哪一个瞬间，让你感觉自己被治愈了？",
+  "什么样的情况，会让你瞬间安心下来？",
+  "“家”对你而言以为这什么？",
+  "对未来最大的期待是什么？",
+  "具体哪件事让你觉得“被爱者”？",
+  "什么时刻让你你觉得自己“被需要”？",
+  "第一次和我聊天是，你心里偷偷给我打了多少分？",
+  "有没有某一个瞬间，你突然确定自己喜欢上我了？",
+  "有没有藏过一句想早点对我说的话，一直憋了很久？",
+  "和我待在一起的时候，你最喜欢的放松状态是什么样子？",
+  "我平时哪些小习惯，其实你嘴上不说但一直看不惯？",
+  "我做过哪件小事，看似不起眼却悄悄暖到了你心里？",
+  "你有没有因为顾忌我的情绪，委屈过自己迁就我？",
+  "在所有人里面，我在你心里的偏爱位置排第几？",
+  "你会不会偷偷拿我和别人的对象做过私下对比？",
+  "你觉得我懂你的情绪，还是你更懂我的小心思？",
+  "有没有明明你很生气，却因为怕我难过主动低头过？",
+  "我和你朋友有分歧时，你会下意识偏向谁？",
+  "年少时对爱情的幻想，和现在跟我在一起的感觉一样吗？",
+  "你心里有没有一个秘密，从来没打算告诉任何人包括我？",
+  "你认为好的感情，是互相改变还是互相包容原本的样子？",
+  "未来的生活里，你最想和我一起完成哪三件小事？",
+  "你认真想过和我走到结婚、过完一辈子这件事吗？",
+  "未来相处中，你最想改掉自己哪个毛病好好对待我？",
+  "坦白一句，你这辈子最幸运的遇见，是不是我？",
+  "如果有一天我消失了，你会找我多久？",
+  "你觉得我为你改变过什么吗？",
+  "你觉得我们的关系是平等的吗？",
+  "你觉得我们之间最大的问题是什么？",
+  "如果没有遇见我，你现在会怎样？",
+  "你觉得我是真的懂你吗？",
+  "你有没有因为害怕失去我，所以忍着不说？",
+  "你觉得我足够尊重你吗？",
+  "你有没有想过跟我分开？",
+  "你有没有觉得我对你不够好？",
+  "你有没有因为我的玩笑，当真难过？",
+  "你觉得我们之间的沟通够吗？",
+  "你有没有觉得我太强势了？",
+  "你有没有觉得我不够主动？",
+  "你有没有觉得我太自我了？",
+  "你希望我用什么方式依赖你？",
+  "我问你的瞬间，你脑子里在想什么？",
+  "你想对我说一句超肉麻的话是什么？",
+  "你窝在我怀里时，让你安心的话是什么？",
+  "你有没有因为我，心跳快到停不下来？",
+  "你想和我去哪个只属于我们的地方？",
+  "你想让我用什么方式哄你开心？",
+
 ];
 /* ==================== 核心元素 ==================== */
 const loginPage = $id("loginPage");
@@ -1585,32 +1740,244 @@ function renderDaily(){
 renderDaily();
 /* ==================== 书目录（含配乐） ==================== */
 const chapterList = $id("chapterList");
-CHAPTERS.forEach((ch)=>{
+CHAPTERS.forEach((ch, chIdx)=>{
   const item = document.createElement("div");
   item.className = "chapter";
   let subHtml = "";
   if(ch.sub && ch.sub.length > 0){
     subHtml = ch.sub.map(s => '<div class="ch-sub">· ' + s + '</div>').join('');
   }
-  let songHtml = "";
-  if(ch.song){
-    songHtml = '<div class="ch-song">🎵 配乐 · ' + ch.song + '</div>';
+
+  // 后记有两首可选，其他章节固定一首
+  let playerHtml = "";
+  if(ch.songOptions){
+    playerHtml =
+      '<div class="ch-player" data-chapter="'+chIdx+'">' +
+        '<div class="ch-song-label">🎵 请选择一首：</div>' +
+        '<div class="ch-song-options">' +
+          ch.songOptions.map((op,i) =>
+            '<button class="ch-song-opt" data-audio="'+op.audioUrl+'" data-lrc="'+(op.lrcUrl||'')+'" data-idx="'+i+'">'+op.label+'</button>'
+          ).join('') +
+        '</div>' +
+        renderPlayerControlsHtml() +
+      '</div>';
+  }else if(ch.audioUrl){
+    playerHtml =
+      '<div class="ch-player" data-chapter="'+chIdx+'" data-audio="'+ch.audioUrl+'" data-lrc="'+(ch.lrcUrl||'')+'">' +
+        '<div class="ch-song-label">🎵 配乐 · '+ch.song+'</div>' +
+        (ch.songNote ? '<div class="ch-song-note">'+ch.songNote+'</div>' : '') +
+        renderPlayerControlsHtml() +
+      '</div>';
   }
+
   item.innerHTML =
     '<div class="ch-head">' +
-      '<div><div class="ch-num">'+ch.n+'</div><div class="ch-title">'+ch.t+'</div></div>' +
+      '<div><div class="ch-num">'+ch.n+'<span class="ch-playing-dot"></span></div><div class="ch-title">'+ch.t+'</div></div>' +
       '<span class="ch-arrow">▼</span>' +
     '</div>' +
     '<div class="ch-body">' +
       (ch.q ? '<div class="ch-quote">\u201c'+ch.q+'\u201d</div>' : '') +
-      songHtml +
+      playerHtml +
       subHtml +
     '</div>';
   item.querySelector(".ch-head").addEventListener("click", ()=>{
     item.classList.toggle("open");
   });
   chapterList.appendChild(item);
+  initChapterPlayer(item, ch);
 });
+
+function renderPlayerControlsHtml(){
+  return (
+    '<div class="ch-player-controls">' +
+      '<button class="ch-play-btn" title="播放/暂停">▶</button>' +
+      '<span class="ch-time-cur">0:00</span>' +
+      '<input type="range" class="ch-progress" min="0" max="100" value="0" step="0.1">' +
+      '<span class="ch-time-dur">0:00</span>' +
+      '<button class="ch-vol-btn" title="静音/取消静音">🔊</button>' +
+    '</div>' +
+    '<div class="ch-lyric-line" style="display:none;"></div>'
+  );
+}
+
+// ==================== 章节音乐播放器 ====================
+// 同一时间只允许一首在播放；每章的 audio 元素懒加载（第一次点播放才创建）
+let currentPlayingAudio = null;
+let currentPlayingDot = null;
+
+function formatTime(sec){
+  if(!isFinite(sec) || sec < 0) sec = 0;
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+// 解析标准 LRC 歌词格式：[mm:ss.xx]歌词内容
+function parseLRC(text){
+  const lines = text.split(/\r?\n/);
+  const timeExp = /\[(\d{2}):(\d{2})(?:\.(\d{1,3}))?\]/g;
+  const result = [];
+  lines.forEach(line => {
+    timeExp.lastIndex = 0;
+    let match, times = [];
+    while((match = timeExp.exec(line))){
+      const min = parseInt(match[1], 10);
+      const sec = parseInt(match[2], 10);
+      const ms = match[3] ? parseInt(match[3].padEnd(3, "0"), 10) : 0;
+      times.push(min * 60 + sec + ms / 1000);
+    }
+    if(times.length){
+      const lyricText = line.replace(timeExp, "").trim();
+      times.forEach(t => result.push({ time: t, text: lyricText }));
+    }
+  });
+  result.sort((a, b) => a.time - b.time);
+  return result;
+}
+
+function findActiveLyric(lyrics, currentTime){
+  let active = "";
+  for(let i = 0; i < lyrics.length; i++){
+    if(lyrics[i].time <= currentTime) active = lyrics[i].text;
+    else break;
+  }
+  return active;
+}
+
+function initChapterPlayer(itemEl, ch){
+  const playerEl = itemEl.querySelector(".ch-player");
+  if(!playerEl) return;
+
+  const playBtn = playerEl.querySelector(".ch-play-btn");
+  const progress = playerEl.querySelector(".ch-progress");
+  const curTimeEl = playerEl.querySelector(".ch-time-cur");
+  const durTimeEl = playerEl.querySelector(".ch-time-dur");
+  const volBtn = playerEl.querySelector(".ch-vol-btn");
+  const lyricEl = playerEl.querySelector(".ch-lyric-line");
+  const dot = itemEl.querySelector(".ch-playing-dot");
+
+  let audio = null;
+  let lyrics = [];
+  let currentAudioUrl = playerEl.dataset.audio || "";
+  let currentLrcUrl = playerEl.dataset.lrc || "";
+  let seeking = false;
+
+  // 后记：点选项按钮决定播哪一首
+  const optBtns = playerEl.querySelectorAll(".ch-song-opt");
+  if(optBtns.length){
+    optBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        optBtns.forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        stopAudio();
+        currentAudioUrl = btn.dataset.audio;
+        currentLrcUrl = btn.dataset.lrc;
+        lyrics = [];
+        audio = null;
+        resetControls();
+      });
+    });
+  }
+
+  function resetControls(){
+    playBtn.textContent = "▶";
+    progress.value = 0;
+    curTimeEl.textContent = "0:00";
+    durTimeEl.textContent = "0:00";
+    lyricEl.style.display = "none";
+    lyricEl.textContent = "";
+  }
+
+  function stopAudio(){
+    if(audio){
+      audio.pause();
+    }
+    if(currentPlayingAudio === audio){
+      currentPlayingAudio = null;
+      if(currentPlayingDot) currentPlayingDot.classList.remove("active");
+      currentPlayingDot = null;
+    }
+    playBtn.textContent = "▶";
+  }
+
+  async function ensureAudio(){
+    if(audio) return audio;
+    if(!currentAudioUrl){
+      showToast("这一章还没有配置音乐文件");
+      return null;
+    }
+    audio = new Audio(currentAudioUrl);
+    audio.loop = true; // 播完自动重播，直到手动暂停
+    audio.preload = "none";
+
+    audio.addEventListener("loadedmetadata", () => {
+      durTimeEl.textContent = formatTime(audio.duration);
+    });
+    audio.addEventListener("timeupdate", () => {
+      if(!seeking && audio.duration){
+        progress.value = (audio.currentTime / audio.duration) * 100;
+      }
+      curTimeEl.textContent = formatTime(audio.currentTime);
+      if(lyrics.length){
+        const line = findActiveLyric(lyrics, audio.currentTime);
+        lyricEl.textContent = line || "";
+      }
+    });
+    audio.addEventListener("error", () => {
+      showToast("音乐文件加载失败，检查一下文件路径对不对～");
+    });
+
+    // 歌词是可选的：文件不存在就直接不显示这一行，不报错打扰用户
+    if(currentLrcUrl){
+      try{
+        const res = await fetch(currentLrcUrl);
+        if(res.ok){
+          const text = await res.text();
+          lyrics = parseLRC(text);
+          if(lyrics.length) lyricEl.style.display = "block";
+        }
+      }catch(e){ /* 没有歌词文件就静默跳过 */ }
+    }
+    return audio;
+  }
+
+  playBtn.addEventListener("click", async () => {
+    const a = await ensureAudio();
+    if(!a) return;
+
+    if(a.paused){
+      a.currentTime = 0; // 每次开始播放都从头播，切歌/暂停后再点不再停在上次位置
+      // 全站只允许一首同时播放
+      if(currentPlayingAudio && currentPlayingAudio !== a){
+        currentPlayingAudio.pause();
+        if(currentPlayingDot) currentPlayingDot.classList.remove("active");
+      }
+      a.play().catch(()=>{ showToast("播放失败，可能是文件路径不对"); });
+      playBtn.textContent = "❚❚";
+      currentPlayingAudio = a;
+      currentPlayingDot = dot;
+      dot.classList.add("active");
+    }else{
+      a.pause();
+      playBtn.textContent = "▶";
+      dot.classList.remove("active");
+    }
+  });
+
+  progress.addEventListener("input", () => { seeking = true; });
+  progress.addEventListener("change", () => {
+    if(audio && audio.duration){
+      audio.currentTime = (progress.value / 100) * audio.duration;
+    }
+    seeking = false;
+  });
+
+  volBtn.addEventListener("click", () => {
+    if(!audio) return;
+    audio.muted = !audio.muted;
+    volBtn.textContent = audio.muted ? "🔇" : "🔊";
+  });
+}
 /* ==================== 时间线 ==================== */
 const timelineList = $id("timelineList");
 TIMELINE.forEach((tl)=>{
@@ -1817,7 +2184,7 @@ function savePhotos(list){ localStorage.setItem("cgl_photos", JSON.stringify(lis
 function renderPhotos(){
   const list = getPhotos();
   if(list.length === 0){
-    ledString.innerHTML = '<div class="led-empty">还没有照片，点下面的「上传照片」开始点亮灯条 ✨</div>';
+    ledString.innerHTML = '<div class="led-empty">布告板还空着，点下面的「上传照片」贴上第一张回忆 ✨</div>';
     return;
   }
   ledString.innerHTML = "";
@@ -2163,7 +2530,7 @@ window.addEventListener("offline",()=>{
 /* ---------- 覆盖照片墙：云端 Storage + 离线 dataURL 队列 ---------- */
 const _renderPhotosOriginal=renderPhotos;
 getPhotos=function(){try{return JSON.parse(localStorage.getItem("cgl_photos")||"[]")}catch(e){return[]}};
-renderPhotos=function(){const list=getPhotos();if(!list.length){ledString.innerHTML='<div class="led-empty">还没有照片，点下面的「上传照片」开始点亮灯条 ✨</div>';return}ledString.innerHTML="";list.forEach((p,i)=>{const src=typeof p==="string"?p:p.url||p.dataUrl;const el=document.createElement("div");el.className="led-photo";el.innerHTML='<button class="photo-del" title="删除">✕</button><img alt="照片">';el.querySelector("img").src=src;el.querySelector(".photo-del").addEventListener("click",()=>{const l=getPhotos(),target=l[i];l.splice(i,1);localPhotosCache(l);if(target?.id)enqueue({type:"photo_delete",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="photo_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}renderPhotos();if(cloudReady)flushQueue()});ledString.appendChild(el)})};
+renderPhotos=function(){const list=getPhotos();if(!list.length){ledString.innerHTML='<div class="led-empty">布告板还空着，点下面的「上传照片」贴上第一张回忆 ✨</div>';return}ledString.innerHTML="";list.forEach((p,i)=>{const src=typeof p==="string"?p:p.url||p.dataUrl;const el=document.createElement("div");el.className="led-photo";el.innerHTML='<button class="photo-del" title="删除">✕</button><img alt="照片">';el.querySelector("img").src=src;el.querySelector(".photo-del").addEventListener("click",()=>{const l=getPhotos(),target=l[i];l.splice(i,1);localPhotosCache(l);if(target?.id)enqueue({type:"photo_delete",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="photo_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}renderPhotos();if(cloudReady)flushQueue()});ledString.appendChild(el)})};
 {const input=$id("photoInput"),fresh=input.cloneNode(true);input.replaceWith(fresh);fresh.addEventListener("change",function(){Array.from(this.files||[]).forEach(f=>compressImage(f,dataUrl=>{const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url:dataUrl,dataUrl};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl});renderPhotos();if(cloudReady)flushQueue();else showToast("📦照片已保存在本地，联网后自动上传",2500)}));this.value=""})}
 {const old=$id("photoAddUrl"),btn=old.cloneNode(true);old.replaceWith(btn);btn.addEventListener("click",()=>{const input=$id("photoUrlInput"),url=input.value.trim();if(!url){showToast("请粘贴图片网址");return}const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl:url});renderPhotos();input.value="";if(cloudReady)flushQueue();else showToast("📦图片地址已保存在本地，联网后自动同步",2500)})}
 
@@ -2722,6 +3089,8 @@ try{ sb.auth.onAuthStateChange(function(_e,session){
     try{ if(session && sb.realtime){ sb.realtime.setAuth(session.access_token); startRealtime(); pullCloudData(); pullPetFromCloud(); syncPetToCloud(); } }catch(e){}
   }); }catch(e){}
 startRealtime();
+// 永久登录：启动时若本地仍有有效会话，自动进入主站，无需重新输入（除非手动点退出）
+try{ if(sb){ sb.auth.getSession().then(async ({data})=>{ const sess = data && data.session; if(sess && loginPage && !loginPage.classList.contains('hidden')){ await unlock(); setupSendCouponBtn(); renderMoodCalendar(); } }).catch(()=>{}); } }catch(e){}
 /* ==================== 实时同步 Realtime（新增结束） ==================== */
 // ===== 汉堡按钮 & 抽屉交互 =====
 const hamburgerBtn = document.getElementById('hamburgerBtn');
