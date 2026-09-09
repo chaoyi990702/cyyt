@@ -1647,13 +1647,40 @@ const audio = new Audio(MUSIC_URL);
 audio.loop = true;
 audio.preload = "none";
 audio.addEventListener("timeupdate", ()=>{ localStorage.setItem("bgmTime", String(audio.currentTime)); });
+/* --- 章节音乐 <-> 背景音乐 互斥控制 --- */
+/* 章节专属歌在播时，背景音乐暂停；章节歌暂停/停止后，背景音乐恢复 */
+let bgmPausedByChapter = false;
+function chapterAudioPlaying(){
+  return !!(currentPlayingAudio && !currentPlayingAudio.paused);
+}
+function bgmPauseForChapter(){
+  if(!audio.paused){
+    bgmPausedByChapter = true;
+    audio.pause();
+    syncIcon();
+  }
+}
+function bgmResumeFromChapter(){
+  if(bgmPausedByChapter){
+    bgmPausedByChapter = false;
+    if(audio.preload === "none") audio.load();
+    audio.play().catch(()=>{});
+    syncIcon();
+  }
+}
 function syncIcon(){
   if(audio.paused){ audioBtn.classList.add("mute"); }
   else{ audioBtn.classList.remove("mute"); }
 }
 function startMusic(){
+  if(chapterAudioPlaying()){
+    bgmPausedByChapter = true;  // 章节歌正在播：先记下"想听背景乐"，等它暂停后再放
+    syncIcon();
+    return;
+  }
   if(audio.preload === "none") audio.load();
   audio.play().catch(()=>{});
+  bgmPausedByChapter = false;
   syncIcon();
 }
 document.body.addEventListener("click", function firstTap(){
@@ -1664,7 +1691,19 @@ document.body.addEventListener("click", function firstTap(){
 },{ once:true });
 audioBtn.addEventListener("click", (e)=>{
   e.stopPropagation();
-  if(audio.paused){ startMusic(); } else { audio.pause(); }
+  if(audio.paused){
+    if(chapterAudioPlaying()){
+      if(bgmPausedByChapter){ bgmPausedByChapter = false; syncIcon(); return; }
+      bgmPausedByChapter = true;
+      syncIcon();
+      showToast("章节目录的歌停下后，背景音乐会自动播放回来");
+      return;
+    }
+    startMusic();
+  } else {
+    audio.pause();
+    bgmPausedByChapter = false;
+  }
   syncIcon();
 });
 /* ==================== 在一起天数 + 三组倒计时 ==================== */
@@ -1898,6 +1937,7 @@ function initChapterPlayer(itemEl, ch){
       currentPlayingDot = null;
     }
     playBtn.textContent = "▶";
+    bgmResumeFromChapter(); // 停掉章节歌（后记换曲等）→ 背景音乐恢复
   }
 
   async function ensureAudio(){
@@ -1952,6 +1992,7 @@ function initChapterPlayer(itemEl, ch){
         currentPlayingAudio.pause();
         if(currentPlayingDot) currentPlayingDot.classList.remove("active");
       }
+      bgmPauseForChapter(); // 章节目录的歌开播 → 背景音乐暂停
       a.play().catch(()=>{ showToast("播放失败，可能是文件路径不对"); });
       playBtn.textContent = "❚❚";
       currentPlayingAudio = a;
@@ -1961,6 +2002,7 @@ function initChapterPlayer(itemEl, ch){
       a.pause();
       playBtn.textContent = "▶";
       dot.classList.remove("active");
+      bgmResumeFromChapter(); // 章节目录的歌暂停 → 背景音乐恢复
     }
   });
 
