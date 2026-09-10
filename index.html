@@ -523,41 +523,52 @@ body.theme-rose .backpack-item{border-color:rgba(224,117,154,0.5)}
 /* ============ 照片墙（Ins风网格布告板 + 缠绕LED灯线 + 拍立得图钉/木夹） ============ */
 .cork-board{
   position:relative;
-  padding:26px 14px 30px;
-  border-radius:18px;
-  border:10px solid #c89b6d;                 /* 木质相框 */
-  box-shadow:0 10px 30px rgba(92,138,194,.18), inset 0 0 60px rgba(120,90,50,.12);
+  padding:32px 18px 36px;
+  border-radius:20px;
+  border:14px solid #c89b6d;                 /* 木质相框(加粗) */
+  box-shadow:0 12px 40px rgba(92,138,194,.22), inset 0 0 80px rgba(120,90,50,.15);
   background-color:#e9eef2;                   /* 网格布底 */
   background-image:
-    repeating-linear-gradient(0deg, rgba(123,164,214,.13) 0 1px, transparent 1px 22px),
-    repeating-linear-gradient(90deg, rgba(123,164,214,.13) 0 1px, transparent 1px 22px);
+    repeating-linear-gradient(0deg, rgba(123,164,214,.22) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(123,164,214,.22) 0 1px, transparent 1px 22px);
+  margin:0 auto;
+  display:block;
+  max-width:100%;
 }
 body.theme-rose .cork-board{
   border-color:#d8a07f;background-color:#f2e8ec;
   background-image:
-    repeating-linear-gradient(0deg, rgba(224,117,154,.13) 0 1px, transparent 1px 22px),
-    repeating-linear-gradient(90deg, rgba(224,117,154,.13) 0 1px, transparent 1px 22px);
+    repeating-linear-gradient(0deg, rgba(224,117,154,.22) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(224,117,154,.22) 0 1px, transparent 1px 22px);
 }
 /* 缠绕在布告板上的灯线 */
 .cork-lights{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .cork-lights .wire{fill:none;stroke:#c79a3f;stroke-width:2;opacity:.5;stroke-linecap:round}
 body.theme-rose .cork-lights .wire{stroke:#cf8aa6}
-/* 缠绕灯线上交替闪烁的小灯泡（一半亮一半暗，每秒轮换一次） */
+/* 缠绕灯线上交替闪烁的小灯泡（一半亮一半暗，每0.5秒轮换一次） */
 .bulb{position:absolute;width:15px;height:15px;border-radius:50%;z-index:1;pointer-events:none;
   background:radial-gradient(circle at 35% 35%, #fff8d0, #f6c96b 60%, #e0a83c);
   box-shadow:0 0 18px #ffd76a, 0 0 30px rgba(255,220,100,.85);
-  animation:bulbBlink 2s steps(1,end) infinite}
+  animation:bulbBlink 1s steps(1,end) infinite}
 /* 第一组：先亮后暗 */
 .bulb.g1{animation-delay:0s}
 /* 第二组：先暗后亮（与第一组相差 1 秒，实现轮流交换） */
-.bulb.g2{animation-delay:-1s}
+.bulb.g2{animation-delay:-0.5s}
 /* 灯泡位置：上排沿上方灯线，下排沿下方灯线 */
-.bulb.b1{top:18%;left:6%}.bulb.b2{top:11%;left:22%}
-.bulb.b3{top:20%;left:40%}.bulb.b4{top:15%;left:55%}
-.bulb.b5{top:23%;left:73%}.bulb.b6{top:13%;left:90%}
-.bulb.b7{top:78%;left:8%}.bulb.b8{top:86%;left:25%}
-.bulb.b9{top:76%;left:43%}.bulb.b10{top:82%;left:60%}
-.bulb.b11{top:79%;left:78%}.bulb.b12{top:76%;left:92%}
+.bulb.b1{top:20%;left:5%}.bulb.b2{top:12%;left:14%}
+.bulb.b3{top:22%;left:23%}.bulb.b4{top:16%;left:32%}
+.bulb.b5{top:24%;left:41%}.bulb.b6{top:14%;left:50%}
+.bulb.b7{top:22%;left:59%}.bulb.b8{top:18%;left:68%}
+.bulb.b9{top:25%;left:77%}.bulb.b10{top:15%;left:85%}
+.bulb.b11{top:21%;left:91%}.bulb.b12{top:13%;left:96%}
+.bulb.b13{top:19%;left:99%}
+.bulb.b14{top:80%;left:5%}.bulb.b15{top:88%;left:13%}
+.bulb.b16{top:78%;left:22%}.bulb.b17{top:85%;left:31%}
+.bulb.b18{top:80%;left:40%}.bulb.b19{top:87%;left:49%}
+.bulb.b20{top:79%;left:58%}.bulb.b21{top:84%;left:67%}
+.bulb.b22{top:81%;left:76%}.bulb.b23{top:86%;left:84%}
+.bulb.b24{top:78%;left:90%}.bulb.b25{top:83%;left:94%}
+.bulb.b26{top:80%;left:98%}
 @keyframes bulbBlink{
   0%{opacity:1;box-shadow:0 0 18px #ffd76a,0 0 30px rgba(255,220,100,.85)}
   50%{opacity:.2;box-shadow:0 0 4px rgba(255,215,106,.25)}
@@ -1145,7 +1156,7 @@ body.theme-rose .drawer-item:active {
   <!-- 4. 我们的时光 -->
   <section id="timeline">
     <div class="sec-eyebrow">我们的时光</div>
-    <h2 class="sec-title">从 2025.08.14 开始</h2>
+    <h2 class="sec-title">从 2025.03.07 开始</h2>
     <p class="sec-sub">故事的第一页，从这里翻开。回忆会随着时间越来越长。</p>
     <div class="timeline" id="timelineList"></div>
   </section>
@@ -1187,7 +1198,7 @@ body.theme-rose .drawer-item:active {
         <path class="wire" d="M0 42 Q 120 12 240 46 T 500 40 T 760 54 T 1000 34"/>
         <path class="wire" d="M0 150 Q 170 186 340 146 T 690 162 T 1000 148"/>
       </svg>
-      <span class="bulb b1 g1"></span><span class="bulb b2 g2"></span><span class="bulb b3 g1"></span><span class="bulb b4 g2"></span><span class="bulb b5 g1"></span><span class="bulb b6 g2"></span><span class="bulb b7 g1"></span><span class="bulb b8 g2"></span><span class="bulb b9 g1"></span><span class="bulb b10 g2"></span><span class="bulb b11 g1"></span><span class="bulb b12 g2"></span>
+      <span class="bulb b1 g1"></span><span class="bulb b2 g2"></span><span class="bulb b3 g1"></span><span class="bulb b4 g2"></span><span class="bulb b5 g1"></span><span class="bulb b6 g2"></span><span class="bulb b7 g1"></span><span class="bulb b8 g2"></span><span class="bulb b9 g1"></span><span class="bulb b10 g2"></span><span class="bulb b11 g1"></span><span class="bulb b12 g2"></span><span class="bulb b13 g1"></span><span class="bulb b14 g2"></span><span class="bulb b15 g1"></span><span class="bulb b16 g2"></span><span class="bulb b17 g1"></span><span class="bulb b18 g2"></span><span class="bulb b19 g1"></span><span class="bulb b20 g2"></span><span class="bulb b21 g1"></span><span class="bulb b22 g2"></span><span class="bulb b23 g1"></span><span class="bulb b24 g2"></span><span class="bulb b25 g1"></span><span class="bulb b26 g2"></span>
       <div class="led-string" id="ledString"></div>
     </div>
     <div class="photo-actions">
@@ -1986,7 +1997,7 @@ function initChapterPlayer(itemEl, ch){
     if(!a) return;
 
     if(a.paused){
-      a.currentTime = 0; // 每次开始播放都从头播，切歌/暂停后再点不再停在上次位置
+      // 不再强制从头播：暂停后再点播放从暂停处继续；换歌时因创建新Audio对象自然从头播
       // 全站只允许一首同时播放
       if(currentPlayingAudio && currentPlayingAudio !== a){
         currentPlayingAudio.pause();
