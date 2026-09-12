@@ -639,20 +639,27 @@ body.theme-rose .cork-lights .wire{stroke:#cf8aa6}
   50%{opacity:.2;box-shadow:0 0 4px rgba(255,215,106,.25)}
   100%{opacity:1;box-shadow:0 0 18px #ffd76a,0 0 30px rgba(255,220,100,.85)}
 }
-/* 照片容器：不规则错落的拍立得墙 */
-.led-string{position:relative;z-index:3;display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:20px;justify-items:center;align-items:start;padding:16px 4px 10px;max-width:82%;margin:0 auto}
-.led-photo{position:relative;width:100%;max-width:250px;background:#fffdf7;
+/* 照片容器：拍立得墙（支持自由排版：JS自动排布 + 手动拖动） */
+.led-string{position:relative;z-index:3;display:block;padding:22px 4px 10px;max-width:82%;margin:0 auto;min-height:240px}
+.led-photo{position:absolute;left:0;top:0;width:220px;background:#fffdf7;
   padding:9px 9px 30px;border-radius:3px;
   box-shadow:0 8px 20px rgba(60,80,110,.22);
-  transition:transform .18s ease, box-shadow .18s ease}
-.led-photo:nth-child(4n+1){transform:rotate(-3deg)}
-.led-photo:nth-child(4n+2){transform:rotate(2.5deg)}
-.led-photo:nth-child(4n+3){transform:rotate(-1.5deg)}
-.led-photo:nth-child(4n){transform:rotate(3deg)}
-.led-photo:hover{transform:rotate(0deg) translateY(-5px);box-shadow:0 14px 28px rgba(60,80,110,.32);z-index:5}
-.led-photo img{width:100%;height:210px;object-fit:cover;display:block;background:#eee;border-radius:2px}
-.photo-frame-inner{position:relative;overflow:hidden;width:100%;height:210px;border-radius:2px;touch-action:none}
-.photo-frame-inner img{width:100%;height:100%;object-fit:cover;display:block;background:#eee;transform-origin:center center;user-select:none;-webkit-user-drag:none}
+  transform:rotate(var(--r,0deg));
+  transition:box-shadow .18s ease}
+.led-photo:hover{transform:rotate(var(--r,0deg)) translateY(-4px);box-shadow:0 14px 28px rgba(60,80,110,.32);z-index:5}
+/* 自由排版模式：拖动整张相纸 */
+.led-string.layout-mode .led-photo{transition:none;cursor:grab;box-shadow:0 0 0 2px var(--rose-deep)}
+.led-string.layout-mode .led-photo:hover{transform:rotate(var(--r,0deg))}
+.led-string.layout-mode .led-photo:active{cursor:grabbing}
+.photo-add-url.active{background:var(--rose-deep);color:#fff;border-color:var(--rose-deep)}
+/* 排版模式下相纸底部控制条：旋转(↺↻) / 放大缩小(−＋) */
+.led-photo .layout-controls{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);display:none;gap:5px;z-index:6}
+.led-string.layout-mode .layout-controls{display:flex}
+.layout-controls button{width:22px;height:22px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;font-size:12px;line-height:1;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
+.layout-controls button:active{background:var(--rose-deep)}
+/* 拍立得照片区：正方形(1:1)，照片完整显示不自动裁剪，由用户自己调整 */
+.photo-frame-inner{position:relative;overflow:hidden;width:100%;aspect-ratio:1/1;border-radius:2px;touch-action:none;background:#eee}
+.photo-frame-inner img{width:100%;height:100%;object-fit:contain;display:block;background:#eee;transform-origin:center center;user-select:none;-webkit-user-drag:none}
 .led-photo.adjust-mode .photo-frame-inner{outline:2px dashed var(--rose-deep);outline-offset:-2px;cursor:grab}
 .led-photo.adjust-mode .photo-frame-inner:active{cursor:grabbing}
 .photo-hand-btn{
@@ -917,9 +924,7 @@ calc(env(safe-area-inset-top,0px) + 8px)
   .seal{width:58px;height:58px;font-size:22px}
   .chapter .ch-head{padding:14px 14px}
   .chapter .ch-title{font-size:15px}
-  .led-photo{max-width:100%}
-  .led-photo img{height:140px}
-  .photo-frame-inner{height:140px}
+  .led-photo{width:190px}
   /* 照片墙手机端适配 */
   .cork-board{padding:24px 12px 28px;height:100%;min-height:400px;border-width:12px}
   .bulb{width:10px;height:10px}
@@ -970,10 +975,8 @@ calc(env(safe-area-inset-top,0px) + 10px)
   .sec-title{font-size:28px}
   /* 照片墙平板端适配 */
   .cork-board{padding:44px 20px 50px;height:100%;min-height:650px}
-  .led-string{gap:22px;padding:18px 6px 11px}
-  .led-photo{max-width:260px;padding:9px 9px 32px}
-  .led-photo img{height:220px}
-  .photo-frame-inner{height:220px}
+  .led-string{padding:22px 6px 11px}
+  .led-photo{width:240px;padding:9px 9px 32px}
 }
 @media(min-width:1024px){
 
@@ -990,10 +993,8 @@ calc(env(safe-area-inset-top,0px) + 12px)
   .hero-title{font-size:48px}
   /* 照片墙桌面端加大 */
   .cork-board{padding:50px 30px 56px;height:100%;min-height:700px}
-  .led-string{gap:24px;padding:20px 8px 12px}
-  .led-photo{max-width:280px;padding:10px 10px 34px}
-  .led-photo img{height:240px}
-  .photo-frame-inner{height:240px}
+  .led-string{padding:24px 8px 12px}
+  .led-photo{width:260px;padding:10px 10px 34px}
 }
 
 /* ===== 汉堡按钮：手机端显示，PC端隐藏 ===== */
@@ -1402,6 +1403,8 @@ body.theme-rose .drawer-item:active {
       </label>
       <input id="photoUrlInput" class="photo-url-input" placeholder="或粘贴图片网址">
       <button class="photo-add-url" id="photoAddUrl">添加</button>
+      <button class="photo-add-url" id="layoutToggle" title="拖动相纸自由摆放">📐 自由排版</button>
+      <button class="photo-add-url" id="layoutReset" title="恢复自动排版">↺ 重置排版</button>
     </div>
     <p class="sec-sub" style="margin-top:12px;font-size:12px">照片优先同步到云端；断网时会先保存在本地，联网后自动同步。最多约 30 张。</p>
   </section>
@@ -2721,6 +2724,16 @@ async function pullCloudData(){
     const {data,error}=await sb.from("photo_wall").select("*").order("created_at",{ascending:true});
     if(!error&&Array.isArray(data)){localPhotosCache(data.map(x=>({id:x.id,url:x.url||x.file_url||x.image_url})).filter(x=>x.url));renderPhotos()}
   }catch(e){}
+  // 拉取云端排版并应用（photo_layout 表）
+  try{
+    const {data:lData,error:lErr}=await sb.from("photo_layout").select("photo_key,x,y,rotate,width");
+    if(!lErr&&Array.isArray(lData)){
+      const merged={};
+      lData.forEach(r=>{ if(r.photo_key) merged[r.photo_key]={x:r.x||0,y:r.y||0,r:r.rotate||0,w:r.width||0}; });
+      localStorage.setItem("cgl_photo_layout",JSON.stringify(merged));
+      renderPhotos();
+    }
+  }catch(e){}
 }
 
 async function applyQueueItem(op){
@@ -2757,6 +2770,12 @@ async function applyQueueItem(op){
       const {data:urlData}=await sb.storage.from("photo_wall").getPublicUrl(path);
       const {data,error}=await sb.from("photo_wall").insert([{url:urlData.publicUrl,path:path}]).select().single();if(error)throw error;
       const list=getPhotos();const idx=list.findIndex(x=>x._localId===op.localId);if(idx>=0){list[idx]={id:data.id,url:urlData.publicUrl,path:path};localPhotosCache(list)}
+      // 照片上传成功后，把排版/调整数据的 key 从本地标识迁移到云端 id，避免排版丢失
+      const oldKey="local:"+op.localId, newKey="id:"+data.id;
+      const lay=getPhotoLayout();
+      if(lay[oldKey]){lay[newKey]=lay[oldKey];delete lay[oldKey];localStorage.setItem("cgl_photo_layout",JSON.stringify(lay));}
+      const tr=getPhotoTransforms();
+      if(tr[oldKey]){tr[newKey]=tr[oldKey];delete tr[oldKey];localStorage.setItem("cgl_photo_transforms",JSON.stringify(tr));}
     }else if(op.type==="photo_delete"){
       const {error:storageErr}=await sb.storage.from("photo_wall").remove([op.path]);
       if(storageErr) console.warn("storage delete failed",storageErr);
@@ -2779,6 +2798,20 @@ async function applyQueueItem(op){
         if(error)throw error;
       }
       localStorage.setItem("cgl_pet_state",JSON.stringify(payload));
+    }else if(op.type==="photo_layout_set"){
+      // 相纸排版位置同步：按 photo_key 更新或插入（含旋转角度 rotate、相纸宽度 width）
+      const {error}=await sb.from("photo_layout").upsert(
+        {photo_key:op.key,x:op.x,y:op.y,rotate:op.r||0,width:op.w||0,updated_at:new Date().toISOString()},
+        {onConflict:"photo_key"}
+      );
+      if(error)throw error;
+    }else if(op.type==="photo_layout_delete"){
+      const {error}=await sb.from("photo_layout").delete().eq("photo_key",op.key);
+      if(error)throw error;
+    }else if(op.type==="photo_layout_clear"){
+      // 清空云端所有排版（重置排版时用）
+      const {error}=await sb.from("photo_layout").delete().gte("id","00000000-0000-0000-0000-000000000000");
+      if(error)throw error;
     }
   })());
 }
@@ -2850,6 +2883,7 @@ function setupPhotoAdjust(photoEl, frameEl, imgEl, key){
 
   frameEl.addEventListener("pointerdown", (e) => {
     if(!photoEl.classList.contains("adjust-mode")) return;
+    if(ledString.classList.contains("layout-mode")) return; // 自由排版模式下禁用照片内调整，避免手势冲突
     frameEl.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if(pointers.size === 1){
@@ -2894,6 +2928,119 @@ function setupPhotoAdjust(photoEl, frameEl, imgEl, key){
   });
 }
 
+/* ==================== 相纸自由排版（拖动整张拍立得） ==================== */
+// 每张相纸的手动摆放位置存在本地，key 与照片调整数据一致
+function getPhotoLayout(){
+  try{ return JSON.parse(localStorage.getItem("cgl_photo_layout") || "{}"); }
+  catch(e){ return {}; }
+}
+function savePhotoLayout(l){ localStorage.setItem("cgl_photo_layout", JSON.stringify(l)); }
+function updateLedHeight(){
+  let mb = 0;
+  ledString.querySelectorAll(".led-photo").forEach(x=>{ mb = Math.max(mb, x.offsetTop + x.offsetHeight); });
+  ledString.style.height = Math.max(240, mb + 18) + "px";
+}
+// 给一张相纸装上"整卡拖动"：只有在自由排版模式（layout-mode）下生效，位置自动保存
+function setupPhotoDrag(el, key){
+  let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+  el.addEventListener("pointerdown", (e) => {
+    if(!ledString.classList.contains("layout-mode")) return;
+    if(e.target.closest("button")) return; // 按钮点击不触发拖动
+    dragging = true;
+    el.setPointerCapture(e.pointerId);
+    sx = e.clientX; sy = e.clientY;
+    ox = parseInt(el.style.left, 10) || 0; oy = parseInt(el.style.top, 10) || 0;
+    el.style.zIndex = 20;
+    e.preventDefault();
+  });
+  el.addEventListener("pointermove", (e) => {
+    if(!dragging) return;
+    const x = Math.max(0, ox + (e.clientX - sx));
+    const y = Math.max(0, oy + (e.clientY - sy));
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+  });
+  function stopDrag(e){
+    if(!dragging) return;
+    dragging = false;
+    el.style.zIndex = "";
+    const l = getPhotoLayout();
+    const prev = l[key] || {};
+    l[key] = {
+      x: parseInt(el.style.left, 10) || 0,
+      y: parseInt(el.style.top, 10) || 0,
+      r: prev.r || 0,
+      w: prev.w || 0
+    };
+    savePhotoLayout(l);
+    // 同步到云端（离线时进入队列，联网后自动上传）
+    if(key.indexOf("id:")===0 || key.indexOf("local:")===0 || key.indexOf("url:")===0){
+      enqueue({ type:"photo_layout_set", key:key, x:l[key].x, y:l[key].y, r:l[key].r, w:l[key].w });
+    }
+    updateLedHeight();
+  }
+  el.addEventListener("pointerup", stopDrag);
+  el.addEventListener("pointercancel", stopDrag);
+}
+function setLayoutMode(on){
+  ledString.classList.toggle("layout-mode", on);
+  const btn = $id("layoutToggle");
+  if(btn) btn.classList.toggle("active", on);
+  if(on){
+    // 退出所有照片内调整，避免与整卡拖动冲突
+    ledString.querySelectorAll(".led-photo").forEach(el=>{
+      el.classList.remove("adjust-mode");
+      const b = el.querySelector(".photo-hand-btn");
+      if(b) b.classList.remove("active");
+    });
+    showToast("拖动任意相纸即可自由排版，松手自动保存；再点一次「自由排版」完成", 3600);
+  }else{
+    showToast("排版已保存 ✔", 2000);
+  }
+}
+// 把排版数据应用到相纸 DOM：位置 / 宽度（相纸高宽等比缩放） / 旋转角度
+function applyLayoutToCard(el, cur){
+  if(cur && typeof cur.x==="number"){ el.style.left=cur.x+"px"; el.style.top=cur.y+"px"; }
+  if(cur && cur.w){ el.style.width=Math.round(cur.w)+"px"; }
+  el.style.setProperty("--r", ((cur&&cur.r)||0)+"deg");
+}
+(function bindLayoutButtons(){
+  const t = $id("layoutToggle"), r = $id("layoutReset");
+  if(t) t.addEventListener("click", ()=> setLayoutMode(!ledString.classList.contains("layout-mode")));
+  if(r) r.addEventListener("click", ()=>{
+    savePhotoLayout({});
+    enqueue({ type:"photo_layout_clear" });
+    renderPhotos();
+    showToast("已恢复自动排版", 2000);
+  });
+  // 排版模式下相纸底部控制条：旋转(↺↻) / 相纸放大缩小(−＋) —— 事件委托
+  ledString.addEventListener("click", (e)=>{
+    const btn=e.target.closest(".layout-controls button");
+    if(!btn) return;
+    const card=btn.closest(".led-photo");
+    if(!card) return;
+    const key=card.dataset.pkey;
+    if(!key) return;
+    const l=getPhotoLayout();
+    const cur=l[key]||{
+      x:parseInt(card.style.left,10)||0,
+      y:parseInt(card.style.top,10)||0,
+      r:0,
+      w:parseInt(card.style.width,10)||220
+    };
+    const act=btn.dataset.act;
+    if(act==="rot-") cur.r=((cur.r||0)-5+360)%360;
+    else if(act==="rot+") cur.r=((cur.r||0)+5)%360;
+    else if(act==="zoom-") cur.w=Math.max(120,Math.round((cur.w||parseInt(card.style.width,10)||220)*0.9));
+    else if(act==="zoom+") cur.w=Math.min(460,Math.round((cur.w||parseInt(card.style.width,10)||220)*1.1));
+    l[key]=cur;
+    savePhotoLayout(l);
+    applyLayoutToCard(card, cur);
+    enqueue({type:"photo_layout_set",key:key,x:cur.x,y:cur.y,r:cur.r||0,w:cur.w||0});
+    updateLedHeight();
+  });
+})();
+
 /* ---------- 覆盖照片墙：云端 Storage + 离线 dataURL 队列 ---------- */
 const _renderPhotosOriginal=renderPhotos;
 getPhotos=function(){try{return JSON.parse(localStorage.getItem("cgl_photos")||"[]")}catch(e){return[]}};
@@ -2901,6 +3048,15 @@ renderPhotos=function(){
   const list=getPhotos();
   if(!list.length){ledString.innerHTML='<div class="led-empty">布告板还空着，点下面的「上传照片」贴上第一张回忆 ✨</div>';return}
   ledString.innerHTML="";
+  const layout=getPhotoLayout();
+  const cw=ledString.clientWidth||600;
+  const gap=20, maxW=260;
+  const cols=Math.max(1,Math.floor((cw-8+gap)/(maxW+gap)));
+  let effW=(cw-8-gap*(cols-1))/cols;
+  if(effW>maxW) effW=maxW;
+  const offX=(cw-8-effW*cols-gap*(cols-1))/2; // 宽度受限时整体居中
+  const cardH=effW+40; // 照片区1:1 + 上下留白(9+30)
+  let auto=0;
   list.forEach((p,i)=>{
     const src=typeof p==="string"?p:p.url||p.dataUrl;
     const el=document.createElement("div");
@@ -2909,27 +3065,55 @@ renderPhotos=function(){
       '<button class="photo-hand-btn" title="调整照片位置/大小">✋</button>' +
       '<button class="photo-del" title="删除">✕</button>' +
       '<div class="photo-frame-inner"><img alt="照片"></div>' +
+      '<div class="layout-controls">' +
+        '<button data-act="rot-" title="向左旋转 5°">↺</button>' +
+        '<button data-act="rot+" title="向右旋转 5°">↻</button>' +
+        '<button data-act="zoom-" title="缩小相纸">−</button>' +
+        '<button data-act="zoom+" title="放大相纸">＋</button>' +
+      '</div>' +
       '<button class="photo-reset-btn">还原</button>';
     const imgEl = el.querySelector("img");
     const frameEl = el.querySelector(".photo-frame-inner");
     const handBtn = el.querySelector(".photo-hand-btn");
     imgEl.src=src;
+    el.style.width=Math.round(effW)+"px";
+    const key=photoKeyOf(p);
+    el.dataset.pkey=key;
+    const lp=layout[key];
+    if(lp && typeof lp.x==="number"){
+      // 已手动排版：用保存的位置/尺寸/旋转
+      applyLayoutToCard(el, lp);
+    }else{
+      // 未排版：自动按列排布
+      const row=Math.floor(auto/cols), col=auto%cols;
+      el.style.left=Math.round(col*(effW+gap)+offX+4)+"px";
+      el.style.top=Math.round(row*(cardH+gap)+16)+"px";
+      auto++;
+    }
     el.querySelector(".photo-del").addEventListener("click",()=>{
       const l=getPhotos(),target=l[i];
       l.splice(i,1);localPhotosCache(l);
+      const dl=getPhotoLayout();
+      if(dl[key]){delete dl[key];savePhotoLayout(dl);enqueue({type:"photo_layout_delete",key});}
       if(target?.id)enqueue({type:"photo_delete",id:target.id});
       else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="photo_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}
       renderPhotos();if(cloudReady)flushQueue()
     });
     handBtn.addEventListener("click", (e) => {
       e.stopPropagation();
+      if(ledString.classList.contains("layout-mode")){
+        showToast("请先点「📐 自由排版」退出排版模式，再调整照片", 2600);
+        return;
+      }
       const isActive = el.classList.toggle("adjust-mode");
       handBtn.classList.toggle("active", isActive);
       if(isActive) showToast("拖动照片移动位置，两根手指捏合可以缩放，调好后再点一次✋完成", 3200);
     });
-    setupPhotoAdjust(el, frameEl, imgEl, photoKeyOf(p));
+    setupPhotoAdjust(el, frameEl, imgEl, key);
+    setupPhotoDrag(el, key);
     ledString.appendChild(el);
   });
+  updateLedHeight();
 };
 renderPhotos(); // 立刻用新版本重新渲染一次，不用等云端数据拉取回来才有手势功能
 {const input=$id("photoInput"),fresh=input.cloneNode(true);input.replaceWith(fresh);fresh.addEventListener("change",function(){Array.from(this.files||[]).forEach(f=>compressImage(f,dataUrl=>{const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url:dataUrl,dataUrl};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl});renderPhotos();if(cloudReady)flushQueue();else showToast("📦照片已保存在本地，联网后自动上传",2500)}));this.value=""})}
@@ -3474,6 +3658,7 @@ function startRealtime(){
   const refreshMap = {
     coupon_bag: function(){ pullCloudData(); },
     photo_wall: function(){ pullCloudData(); },
+    photo_layout: function(){ pullCloudData(); },
     mood_diary: function(){ syncMoodsFromCloud(); },
     pet_state:  function(){ pullPetFromCloud(); }
   };
