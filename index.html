@@ -38,7 +38,6 @@
   --ink-light:#9A8CA3;
   --sky:#E6DFF5;
   --sea:#D4E4F7;
-  --word:#6890B8;
   --serif:"Noto Serif SC", "Songti SC", "SimSun", serif;
   --sans:"Noto Sans SC", system-ui, -apple-system, "PingFang SC", sans-serif;
 }
@@ -55,7 +54,6 @@ body.theme-rose {
   --ink-light:#a08697;
   --sky:#fceef3;
   --sea:#eaf1fa;
-  --word:#bf8575;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
@@ -244,7 +242,7 @@ body.theme-rose .nav-link:hover{background:rgba(224,117,154,0.12)}
   border-left:1px solid rgba(123,164,214,0.2);
 }
 body.theme-rose .nav-actions{border-left-color:rgba(224,117,154,0.2)}
-#audioBtn{
+#audioBtn,#audioBtnLogin{
   width:36px;height:36px;border-radius:50%;
   border:1px solid rgba(123,164,214,0.4);
   background:rgba(255,253,249,0.8);
@@ -255,12 +253,12 @@ body.theme-rose .nav-actions{border-left-color:rgba(224,117,154,0.2)}
   transition: all 0.3s ease;flex-shrink:0;
   -webkit-appearance:none;appearance:none;
 }
-body.theme-rose #audioBtn {
+body.theme-rose #audioBtn,body.theme-rose #audioBtnLogin {
   border-color:rgba(224,117,154,0.4);
   box-shadow:0 2px 8px rgba(224,117,154,0.15);
 }
-#audioBtn.mute{color:var(--ink-light);border-color:rgba(154,140,163,0.4)}
-#audioBtn.mute::after{content:"";position:absolute;width:18px;height:2px;background:var(--ink-light);transform:rotate(-45deg)}
+#audioBtn.mute,#audioBtnLogin.mute{color:var(--ink-light);border-color:rgba(154,140,163,0.4)}
+#audioBtn.mute::after,#audioBtnLogin.mute::after{content:"";position:absolute;width:18px;height:2px;background:var(--ink-light);transform:rotate(-45deg)}
 .theme-toggle{
   padding:5px 14px;border-radius:999px;
   border:1px solid var(--rose);background:transparent;color:var(--rose-deep);
@@ -403,9 +401,6 @@ body.theme-rose .chapter .ch-body{border-top-color:rgba(224,117,154,0.2)}
   background:rgba(123,164,214,0.08);letter-spacing:.5px;
 }
 body.theme-rose .chapter .ch-song{background:rgba(224,117,154,0.08)}
-
-.ch-sub-desc { font-size: 0.85em; color: var(--word); margin-top: 2px; line-height: 1.6; padding-left:4em; }
-
 /* ==================== 章节配乐播放器 ==================== */
 .ch-player{
   padding:12px 18px 14px;background:rgba(123,164,214,0.06);
@@ -452,7 +447,7 @@ body.theme-rose .ch-player{background:rgba(224,117,154,0.06)}
 .ch-playing-dot.active{display:inline-block}
 @keyframes chDotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
 .chapter .ch-sub{
-  padding:7px 18px;font-size:13.5px;color:var(--ink);
+  padding:7px 18px;font-size:13.5px;color:var(--ink-light);
   line-height:1.8;border-top:1px dashed rgba(123,164,214,0.12);
 }
 .chapter .ch-sub:first-of-type{border-top:none}
@@ -556,14 +551,89 @@ section#photos{max-width:90vw;}
 .cork-lights .wire{fill:none;stroke:#c79a3f;stroke-width:2;opacity:.5;stroke-linecap:round}
 body.theme-rose .cork-lights .wire{stroke:#cf8aa6}
 /* 缠绕灯线上交替闪烁的小灯泡（一半亮一半暗，每0.3秒轮换一次） */
-.bulb{position:absolute;top:0;left:0;width:15px;height:15px;border-radius:50%;z-index:1;pointer-events:none;background:radial-gradient(circle at 35% 35%, #fff8d0, #f6c96b 60%, #e0a83c);box-shadow:0 0 18px #ffd76a, 0 0 30px rgba(255,220,100,.85);animation:bulbBlink 0.4s steps(1,end) infinite;}
+.bulb{position:absolute;top:0;left:0;width:15px;height:15px;border-radius:50%;z-index:1;pointer-events:none;background:radial-gradient(circle at 35% 35%, #fff8d0, #f6c96b 60%, #e0a83c);box-shadow:0 0 18px #ffd76a, 0 0 30px rgba(255,220,100,.85);animation:bulbBlink 2s steps(1,end) infinite;}
 /* 第一组：先亮后暗 */
 .bulb.g1{animation-delay:0s}
 /* 第二组：先暗后亮（与第一组相差 1 秒，实现轮流交换） */
-.bulb.g2{animation-delay:-0.2s}
+.bulb.g2{animation-delay:-0.3s}
 .led-row{position:absolute;left:0;right:0;display:flex;justify-content:space-between;align-items:center;z-index:1;pointer-events:none}
 .led-row .bulb{flex-shrink:0}
 /* 灯泡位置：5行灯条，每行15个灯泡，均匀分布 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @keyframes bulbBlink{
   0%{opacity:1;box-shadow:0 0 18px #ffd76a,0 0 30px rgba(255,220,100,.85)}
   50%{opacity:.2;box-shadow:0 0 4px rgba(255,215,106,.25)}
@@ -581,6 +651,23 @@ body.theme-rose .cork-lights .wire{stroke:#cf8aa6}
 .led-photo:nth-child(4n){transform:rotate(3deg)}
 .led-photo:hover{transform:rotate(0deg) translateY(-5px);box-shadow:0 14px 28px rgba(60,80,110,.32);z-index:5}
 .led-photo img{width:100%;height:210px;object-fit:cover;display:block;background:#eee;border-radius:2px}
+.photo-frame-inner{position:relative;overflow:hidden;width:100%;height:210px;border-radius:2px;touch-action:none}
+.photo-frame-inner img{width:100%;height:100%;object-fit:cover;display:block;background:#eee;transform-origin:center center;user-select:none;-webkit-user-drag:none}
+.led-photo.adjust-mode .photo-frame-inner{outline:2px dashed var(--rose-deep);outline-offset:-2px;cursor:grab}
+.led-photo.adjust-mode .photo-frame-inner:active{cursor:grabbing}
+.photo-hand-btn{
+  position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:rgba(0,0,0,0.5);color:#fff;border:none;font-size:11px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;
+}
+.photo-hand-btn.active{background:var(--rose-deep)}
+.photo-reset-btn{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  font-size:10.5px;padding:4px 10px;border-radius:999px;
+  background:rgba(0,0,0,0.6);color:#fff;border:none;cursor:pointer;z-index:3;
+  display:none;white-space:nowrap;
+}
+.led-photo.adjust-mode .photo-reset-btn{display:block}
 /* 奇数张 = 红色图钉；偶数张 = 木质夹子 */
 .led-photo::before{content:"";position:absolute;top:-12px;left:50%;transform:translateX(-50%);
   width:20px;height:20px;border-radius:50%;z-index:3;
@@ -663,7 +750,7 @@ body.theme-rose .mood-nav button{border-color:rgba(224,117,154,0.4)}
 .mood-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .mood-cal-header{text-align:center;font-size:12px;font-weight:700;color:var(--ink-light);padding:8px 0;letter-spacing:1px}
 .mood-cal-day{
-  min-height:72px;border-radius:10px;padding:6px;cursor:pointer;
+  height:72px;overflow:hidden;border-radius:10px;padding:6px;cursor:pointer;
   background:rgba(255,255,255,0.6);border:1px solid rgba(123,164,214,0.15);
   display:flex;flex-direction:column;justify-content:space-between;
   transition:.2s;position:relative;
@@ -832,6 +919,7 @@ calc(env(safe-area-inset-top,0px) + 8px)
   .chapter .ch-title{font-size:15px}
   .led-photo{max-width:100%}
   .led-photo img{height:140px}
+  .photo-frame-inner{height:140px}
   /* 照片墙手机端适配 */
   .cork-board{padding:24px 12px 28px;height:100%;min-height:400px;border-width:12px}
   .bulb{width:10px;height:10px}
@@ -885,6 +973,7 @@ calc(env(safe-area-inset-top,0px) + 10px)
   .led-string{gap:22px;padding:18px 6px 11px}
   .led-photo{max-width:260px;padding:9px 9px 32px}
   .led-photo img{height:220px}
+  .photo-frame-inner{height:220px}
 }
 @media(min-width:1024px){
 
@@ -904,6 +993,7 @@ calc(env(safe-area-inset-top,0px) + 12px)
   .led-string{gap:24px;padding:20px 8px 12px}
   .led-photo{max-width:280px;padding:10px 10px 34px}
   .led-photo img{height:240px}
+  .photo-frame-inner{height:240px}
 }
 
 /* ===== 汉堡按钮：手机端显示，PC端隐藏 ===== */
@@ -1024,12 +1114,22 @@ body.theme-rose .drawer-item:hover,
 body.theme-rose .drawer-item:active {
   background: rgba(224,117,154,0.12);
 }
+#loginPage #audioBtnLogin {
+  position: absolute;
+  top: 30px;
+  right: 25px;
+  z-index: 999;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
 </style>
 </head>
 <body>
 <!-- ===== 登录页 ===== -->
 <div id="loginPage">
   <div class="login-card">
+    <button id="audioBtnLogin" title="背景音乐">♫</button>
     <div class="seal">归屿</div>
     <div class="login-head">
       <div class="book-title">《沧澜归屿》读者客服中心</div>
@@ -1494,31 +1594,26 @@ const CHAPTERS = [
   { n:"序章", t:"序章", q:"一切的开始，都是命中注定。", song:"Enchanted - Taylor Swift", audioUrl:"audio/ch0.mp3", lrcUrl:"audio/ch0.lrc" },
   { n:"第一章", t:"缘起", song:"好喜欢你 - 颜人中", audioUrl:"audio/ch1.mp3", lrcUrl:"audio/ch1.lrc",
     sub:[
-      {t:"第一次相遇",d:"那是其他人普通的一天，但是是我们是相遇的第一天❤"},{t:"不听妈妈的话，要听神明的话",d:"你和我都不知道命运的齿轮正悄悄转起。"},{t:"一切都是缘分",d:"2025年3月7号，两个陌生人的再次相见。"},{t:"这个世界好小",d:"缘分就是好多好多个巧合和碰巧。"},
-      {t:"我去载你吧",d:"误打误撞的电影--《哪吒2》"},{t:"有趣的对话",d:"喜欢你，从来不需要理由。"},{t:"莫比乌斯对戒",d:"莫比乌斯环打破了“正反面”的绝对界限，因此无论我们从哪个点出发最终都能相遇。"},{t:"刷题刷不明白",d:"以为你不想理我了 T.T"},
-      {t:"你说你很恋爱脑的故事",d:"月亮只有一个，而你也只有一个 ❤（约会邀请失败的第一次）"},{t:"瑜有情，乔有意",d:"是为数不多周瑜选择小乔的《孙策》，扑通...普通...心脏控制不住狂跳❤"},{t:"九州行之又是你的车",d:"被嫌弃加不信邪的一次，也是目前最后一次没有坐在你对位的一次，我被嫌弃了很伤心，很难过❤"},
-      {t:"这叫智取，宝贝儿",d:"你有你的张良计，我有我的过墙梯。"},{t:"我有一个朋友！",d:"无中生友套路失败，想了解你的是我。"}
+      "第一次相遇","不听妈妈的话，要听神明的话","一切都是缘分","这个世界好小",
+      "我去载你吧","有趣的对话","莫比乌斯对戒","刷题刷不明白",
+      "你说你很恋爱脑的故事","瑜有情，乔有意","九州行之又是你的车",
+      "这叫智取，宝贝儿","我有一个朋友！"
     ] },
   { n:"第二章", t:"坚持到底", song:"喜欢你 - 苡慧", audioUrl:"audio/ch2.mp3", lrcUrl:"audio/ch2.lrc",
     sub:[
-      {t:"未曾言明的拒绝",d:"既然你没有明着拒绝，那我想再试试看。"},{t:"念念不忘，必有回响",d:"如果时间可以暂停该有多好，故事的主角都修成正果了，希望我们也修成正果，念念不忘，必有回响。"},{t:"关心，总有回响",d:"虽然你的关心可能是害怕对我的亏欠，这样是不是我对你越好你越欠我，这样我想让你欠我一辈子。我喜欢你，每一天都比前一天多一点❤"},{t:"秋序与日月兮同光",d:"看着你的脸，想着背刺就背刺吧。秋序与日月兮同光，我与彤彤同在。"},
-      {t:"有些话，还是想亲口说",d:"你说了好多好多，担心我们的结局不好，我想说世界上哪有什么可以预测的结局，既然结局不是肯定的为什么不能试一试，我想亲口跟你说我喜欢你！❤"},{t:"第一次约会",d:"是我们第一次约会，是我第一次牵起你的手，也是我心脏不停狂跳的一天，那一天是我人生中开车最慢的一天❤"},{t:"喜欢，还是错觉？",d:"你还是会觉得你并不是喜欢我，然后把我晾在一旁不理不睬，心脏好痛，天快塌了，以后不能不理我了，好不好？❤"},{t:"23分15秒",d:"遇见你之前，时间对我毫无意义。遇见你之后，生命开始重新流逝，我渴望与你一同变老。可惜命运没有怜悯之心，我只能在每一个孤独的瞬息里爱你。"},
-      {t:"等待天亮",d:"回去中国前夕的不舍得，临时起意的日出，我们说走就走的旅程，跟你看了一个不完美又完美的日出，因为是有你的日出。"}
+      "未曾言明的拒绝","念念不忘，必有回响","关心，总有回响","秋序与日月兮同光",
+      "有些话，还是想亲口说","第一次约会","喜欢，还是错觉？","23分15秒","等待天亮"
     ] },
   { n:"第三章", t:"山海相隔，两座城市", song:"如果可以 - 韦礼安", audioUrl:"audio/ch3.mp3", lrcUrl:"audio/ch3.lrc",
-    sub:[    
-      {t:"看不到你的45天",d:"是想你的第1天,第二天,.....,第45天。你赶快回来好不好？每天都在倒数......❤"},{t:"你不在的生日",d:"祝我生日快乐。如果你在这里该有多好？蛋糕虽然还好，但是是你送的我舍不得吃。"},{t:"你在贵阳，我在新山",d:"是你会想我的时期，有好多好看的照片，我们一起打好多的视频。"},{t:"你去新疆，我在新山",d:"是你不想理我跟下头的时期，我很伤心的时期，是我以为我要失去你的时期。"},
-      {t:"归来的那一天",d:"你回来的那天，好像变了个人，回去中国前的你不见了，剩下想应付我的你。你告诉我你得空，但是你拒绝我邀约的一次（失败x2），是我开始疑惑的一次。"},{t:"没有",d:"我打给你想要问你一些问题，但是你说打字就好。<br>“你对我有没有好感？”我拿起手机对着你的对话框输入了我的疑惑。<br>“没有...”<br>“那祝你幸福...”<br> 如果可以，我想和你回到那天相遇......"}] },
+    sub:["看不到你的45天","你不在的生日","你在贵阳，我在新山","你去新疆，我在新山","归来的那一天","没有"] },
   { n:"第四章", t:"何其有幸", song:"像晴天像雨天 - 汪苏泷", audioUrl:"audio/ch4.mp3", lrcUrl:"audio/ch4.lrc",
     sub:[
-      {t:"不够喜欢",d:"你说你觉得你没有100%喜欢我，但是我觉得你会很喜欢我的。我慢慢地安抚你，告诉你别怕。<br>因为我好喜欢你！所以请和我在一起吧！❤<br>“你好，女朋友。”"},{t:"七夕有你",d:"我们的第一个七夕，我看了你的IG才找到你没有做过戒指。跟你一起的第一个七夕，我们去吃了你很喜欢的cafe，我送了你一束真玫瑰花。（因为你说你没地方放了。"},{t:"有你陪着的我",d:"我们在一起后的第一场电影《鬼灭之刃》，是你没看过的戏，也是你陪我去看的戏，有你真好❤️"},{t:"你和我的不安",d:"你觉得我们不会一起很久，我害怕你没有喜欢我，我们有很多的不安，但是我想要在努力一点，一辈子守护你，让你不再受伤。"},
-      {t:"寿司烤饭",d:"第一次你做饭给我吃，还问了我不吃什么。以后也想吃你做的饭。"},{t:"悄悄的礼物",d:"谢谢你为我悄悄准备的礼物🎁，谢谢你用心对我做的一切，谢谢你喜欢我。"},{t:"戏里戏外皆你",d:"我们的十生十世，我们披着角色的外衣体验着他们的故事，珍惜着我们。"},
-      {t:"婚礼",d:"你说过曾经的你也憧憬过披上白色的头纱嫁给自己喜欢的人，可是后来你觉得婚姻是坟墓，你觉得再相爱的人都会分开。你说遇到我以后，你觉得结婚很可怕的事。<br>我的公主对不起，是我救驾来迟了，我会像之前告诉你我们不会只在一起几个月这样证明给你看。"},{t:"仙女的二十岁生辰",d:"20th birthday，彤彤宝宝，生日快乐！！❤祝你快乐，不止生日！❤"},{t:"如约而至",d:"我们还没在一起前，我就约你的那场电影。"},{t:"生活趣事",d:"跟你一起的生活每天都是趣事。"},
-      {t:"重赴朝曦",d:"你又要回中国了，之前看的日出不美，我说过再带你来看的，我来赴约啦。"},{t:"你又不在的生日",d:"这是我们在一起后，我的第一个生日，但是你还是不在我身旁，不过你说了明年会陪我一起过。（喜欢你准备的所有礼物。"}
+      "不够喜欢","七夕有你","有你陪着的我","你和我的不安","寿司烤饭","悄悄的礼物",
+      "戏里戏外皆你","婚礼","仙女的二十岁生辰","如约而至","生活趣事","重赴朝曦","你又不在的生日"
     ] },
-  { n:"第五章", t:"日思夜想", song:"给我的crush - 大颖", audioUrl:"audio/ch5.mp3", lrcUrl:"audio/ch5.lrc", sub:[{t:"伤心的一天",d:"你要回去中国的当天，我也舍不得走，我也在车上偷偷地哭，从凌晨7点到早上9点才从你家出来。每当要出房门的时候我都会回头看看你，然后舍不得离开去抱你，你抱回了我，就这样过了十几分钟，我要离开了又舍不得离开，我们周而复，直到9点，我知道不能再停留才离去。我在车库等你去新加坡，你在马来西亚的每一秒钟我都有珍惜。"},{t:"看不到你的30天",d:"7月本来是我最开心的时间，也是我最期待慢慢过的时间，可是现在我只想快快过去，因为过了30天你才可以回来见我。"}] },
-  { n:"第六章", t:"潮屿长伴", song:"爱，存在 - 王静雯", audioUrl:"audio/ch6.mp3", lrcUrl:"audio/ch6.lrc", sub:[{t:"我很喜欢你",d:"无论多远的路，我都与你携手同行。❤"},{t:"爱不分对错",d:"亲爱的，爱是不需要还的。"},{t:"迪士尼城堡",d:"你也会有属于你的城堡~❤"},{t:"如果我们有争执了请看这页",d:"对不起，彤彤宝宝，原谅我好不好，拜托拜托。❤"}] },
-  { n:"第七章", t:"共赴未来", song:"宠坏 - 小潘潘、李俊佑", audioUrl:"audio/ch7.mp3", lrcUrl:"audio/ch7.lrc", sub:[{t:"未来",d:"你就是我的未来，我们未完待续.......❤"}] },
+  { n:"第五章", t:"日思夜想", song:"给我的crush - 大颖", audioUrl:"audio/ch5.mp3", lrcUrl:"audio/ch5.lrc", sub:["伤心的一天","看不到你的30天"] },
+  { n:"第六章", t:"潮屿长伴", song:"爱，存在 - 王静雯", audioUrl:"audio/ch6.mp3", lrcUrl:"audio/ch6.lrc", sub:["我很喜欢你","爱不分对错","迪士尼城堡","如果我们有争执了请看这页"] },
+  { n:"第七章", t:"共赴未来", song:"宠坏 - 小潘潘、李俊佑", audioUrl:"audio/ch7.mp3", lrcUrl:"audio/ch7.lrc", sub:["未来"] },
   { n:"后记", t:"后记", q:"书本的结尾，但不是故事的结局。",
     songOptions:[
       { label:"Love Story - Taylor Swift", audioUrl:"audio/ch8a.mp3", lrcUrl:"audio/ch8a.lrc" },
@@ -1659,6 +1754,7 @@ const inputEl = $id("passwordInput");
 const submitBtn = $id("submitBtn");
 const errMsg = $id("errMsg");
 const audioBtn = $id("audioBtn");
+const audioBtnLogin = $id("audioBtnLogin");
 const themeToggle = $id("themeToggle");
 /* ==================== 登录 ==================== */
 let currentUsername = ""; // 当前登录用户的邮箱，登录成功后由 unlock() 设置
@@ -1780,8 +1876,8 @@ function bgmResumeFromChapter(){
   }
 }
 function syncIcon(){
-  if(audio.paused){ audioBtn.classList.add("mute"); }
-  else{ audioBtn.classList.remove("mute"); }
+  if(audio.paused){ audioBtn.classList.add("mute"); if(audioBtnLogin) audioBtnLogin.classList.add("mute"); }
+  else{ audioBtn.classList.remove("mute"); if(audioBtnLogin) audioBtnLogin.classList.remove("mute"); }
 }
 let audioLoadedOnce = false; // audio.preload 本身不会变，不能拿它判断"是不是第一次"，要单独记一个标记
 function startMusic(){
@@ -1818,6 +1914,13 @@ audioBtn.addEventListener("click", (e)=>{
   }
   syncIcon();
 });
+if(audioBtnLogin){
+  audioBtnLogin.addEventListener("click", (e)=>{
+    e.stopPropagation();
+    if(audio.paused){ startMusic(); } else { audio.pause(); bgmPausedByChapter = false; }
+    syncIcon();
+  });
+}
 /* ==================== 在一起天数 + 三组倒计时 ==================== */
 function calcDays(){
   const now = new Date();
@@ -1895,13 +1998,8 @@ CHAPTERS.forEach((ch, chIdx)=>{
   const item = document.createElement("div");
   item.className = "chapter";
   let subHtml = "";
-   if(ch.sub && ch.sub.length > 0){
-    subHtml = ch.sub.map(function(s) {
-      var title = (typeof s === 'object') ? s.t : s;
-      var desc  = (typeof s === 'object' && s.d) ? s.d : '';
-      // 注意：这里去掉了 "· "，改由 CSS 统一控制圆点位置
-      return '<div class="ch-sub">·' + title + (desc ? '<div class="ch-sub-desc">' + desc + '</div>' : '') + '</div>';
-    }).join('');
+  if(ch.sub && ch.sub.length > 0){
+    subHtml = ch.sub.map(s => '<div class="ch-sub">· ' + s + '</div>').join('');
   }
 
   // 后记有两首可选，其他章节固定一首
@@ -2717,10 +2815,123 @@ window.addEventListener("offline",()=>{
   showToast("⚠️已离线，操作会先保存在本地",2500);
 });
 
+// ==================== 照片位置/缩放调整（手势） ====================
+// 每张照片的调整数据（缩放、位移）存在本地，key 用照片的稳定标识
+function getPhotoTransforms(){
+  try{ return JSON.parse(localStorage.getItem("cgl_photo_transforms") || "{}"); }
+  catch(e){ return {}; }
+}
+function savePhotoTransform(key, t){
+  const all = getPhotoTransforms();
+  all[key] = t;
+  localStorage.setItem("cgl_photo_transforms", JSON.stringify(all));
+}
+function getPhotoTransform(key){
+  const all = getPhotoTransforms();
+  return all[key] || { scale:1, x:0, y:0 };
+}
+function photoKeyOf(p){
+  if(p && p.id != null) return "id:" + p.id;
+  if(p && p._localId) return "local:" + p._localId;
+  const src = typeof p === "string" ? p : (p.url || p.dataUrl || "");
+  return "url:" + src;
+}
+
+// 给一张照片装上"手势调整"：拖动移动位置，双指捏合缩放，只有点了✋进入调整模式才生效
+function setupPhotoAdjust(photoEl, frameEl, imgEl, key){
+  let current = getPhotoTransform(key);
+  function apply(){
+    imgEl.style.transform = "translate(" + current.x + "px, " + current.y + "px) scale(" + current.scale + ")";
+  }
+  apply();
+
+  const pointers = new Map();
+  let start = null;
+
+  frameEl.addEventListener("pointerdown", (e) => {
+    if(!photoEl.classList.contains("adjust-mode")) return;
+    frameEl.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if(pointers.size === 1){
+      start = { mode: "pan", x0: e.clientX, y0: e.clientY, ox: current.x, oy: current.y };
+    }else if(pointers.size === 2){
+      const pts = Array.from(pointers.values());
+      start = { mode: "pinch", dist0: Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y), scale0: current.scale };
+    }
+  });
+  frameEl.addEventListener("pointermove", (e) => {
+    if(!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if(pointers.size === 1 && start && start.mode === "pan"){
+      current.x = start.ox + (e.clientX - start.x0);
+      current.y = start.oy + (e.clientY - start.y0);
+      apply();
+    }else if(pointers.size === 2 && start && start.mode === "pinch"){
+      const pts = Array.from(pointers.values());
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      current.scale = Math.min(4, Math.max(1, start.scale0 * (dist / start.dist0)));
+      apply();
+    }
+  });
+  function endPointer(e){
+    pointers.delete(e.pointerId);
+    if(pointers.size === 1){
+      const pt = Array.from(pointers.values())[0];
+      start = { mode: "pan", x0: pt.x, y0: pt.y, ox: current.x, oy: current.y };
+    }else if(pointers.size === 0){
+      start = null;
+      savePhotoTransform(key, current);
+    }
+  }
+  frameEl.addEventListener("pointerup", endPointer);
+  frameEl.addEventListener("pointercancel", endPointer);
+
+  photoEl.querySelector(".photo-reset-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    current = { scale: 1, x: 0, y: 0 };
+    apply();
+    savePhotoTransform(key, current);
+  });
+}
+
 /* ---------- 覆盖照片墙：云端 Storage + 离线 dataURL 队列 ---------- */
 const _renderPhotosOriginal=renderPhotos;
 getPhotos=function(){try{return JSON.parse(localStorage.getItem("cgl_photos")||"[]")}catch(e){return[]}};
-renderPhotos=function(){const list=getPhotos();if(!list.length){ledString.innerHTML='<div class="led-empty">布告板还空着，点下面的「上传照片」贴上第一张回忆 ✨</div>';return}ledString.innerHTML="";list.forEach((p,i)=>{const src=typeof p==="string"?p:p.url||p.dataUrl;const el=document.createElement("div");el.className="led-photo";el.innerHTML='<button class="photo-del" title="删除">✕</button><img alt="照片">';el.querySelector("img").src=src;el.querySelector(".photo-del").addEventListener("click",()=>{const l=getPhotos(),target=l[i];l.splice(i,1);localPhotosCache(l);if(target?.id)enqueue({type:"photo_delete",id:target.id});else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="photo_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}renderPhotos();if(cloudReady)flushQueue()});ledString.appendChild(el)})};
+renderPhotos=function(){
+  const list=getPhotos();
+  if(!list.length){ledString.innerHTML='<div class="led-empty">布告板还空着，点下面的「上传照片」贴上第一张回忆 ✨</div>';return}
+  ledString.innerHTML="";
+  list.forEach((p,i)=>{
+    const src=typeof p==="string"?p:p.url||p.dataUrl;
+    const el=document.createElement("div");
+    el.className="led-photo";
+    el.innerHTML=
+      '<button class="photo-hand-btn" title="调整照片位置/大小">✋</button>' +
+      '<button class="photo-del" title="删除">✕</button>' +
+      '<div class="photo-frame-inner"><img alt="照片"></div>' +
+      '<button class="photo-reset-btn">还原</button>';
+    const imgEl = el.querySelector("img");
+    const frameEl = el.querySelector(".photo-frame-inner");
+    const handBtn = el.querySelector(".photo-hand-btn");
+    imgEl.src=src;
+    el.querySelector(".photo-del").addEventListener("click",()=>{
+      const l=getPhotos(),target=l[i];
+      l.splice(i,1);localPhotosCache(l);
+      if(target?.id)enqueue({type:"photo_delete",id:target.id});
+      else if(target?._localId){const q=getQueue().filter(x=>!(x.type==="photo_add"&&x.localId===target._localId));saveQueue(q);updateSyncCount()}
+      renderPhotos();if(cloudReady)flushQueue()
+    });
+    handBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isActive = el.classList.toggle("adjust-mode");
+      handBtn.classList.toggle("active", isActive);
+      if(isActive) showToast("拖动照片移动位置，两根手指捏合可以缩放，调好后再点一次✋完成", 3200);
+    });
+    setupPhotoAdjust(el, frameEl, imgEl, photoKeyOf(p));
+    ledString.appendChild(el);
+  });
+};
+renderPhotos(); // 立刻用新版本重新渲染一次，不用等云端数据拉取回来才有手势功能
 {const input=$id("photoInput"),fresh=input.cloneNode(true);input.replaceWith(fresh);fresh.addEventListener("change",function(){Array.from(this.files||[]).forEach(f=>compressImage(f,dataUrl=>{const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url:dataUrl,dataUrl};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl});renderPhotos();if(cloudReady)flushQueue();else showToast("📦照片已保存在本地，联网后自动上传",2500)}));this.value=""})}
 {const old=$id("photoAddUrl"),btn=old.cloneNode(true);old.replaceWith(btn);btn.addEventListener("click",()=>{const input=$id("photoUrlInput"),url=input.value.trim();if(!url){showToast("请粘贴图片网址");return}const list=getPhotos();if(list.length>=MAX_PHOTOS){showToast("照片存满啦（最多 "+MAX_PHOTOS+" 张），请先删除一些～");return}const localId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2),item={_localId:localId,url};list.push(item);localPhotosCache(list);enqueue({type:"photo_add",localId,dataUrl:url});renderPhotos();input.value="";if(cloudReady)flushQueue();else showToast("📦图片地址已保存在本地，联网后自动同步",2500)})}
 
