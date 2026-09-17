@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>《沧澜归屿》读者客服中心</title>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
 <!-- iOS 主屏幕图标 -->
@@ -24,6 +24,8 @@
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
 }
+/* 手机端：禁止双击/双指缩放网页（touch-action:manipulation 会取消双击缩放，但保留正常滚动） */
+html,body{touch-action:manipulation;-webkit-text-size-adjust:100%}
 /* ============ 主题变量：默认星空海浪 + 落日玫瑰 ============ */
 :root{
   --rose:#7BA4D6;
@@ -675,6 +677,17 @@ body.theme-rose .cork-lights .wire{stroke:#cf8aa6}
   display:none;white-space:nowrap;
 }
 .led-photo.adjust-mode .photo-reset-btn{display:block}
+/* 电脑端四角裁剪手柄：进入✋调整模式后显示，鼠标拖四角方块拉大拉小照片 */
+.adjust-handle{
+  position:absolute;width:14px;height:14px;background:#fff;
+  border:1.5px solid #555;z-index:5;border-radius:2px;
+  box-shadow:0 1px 3px rgba(0,0,0,.3);display:none;
+}
+.led-photo.adjust-mode .adjust-handle{display:block}
+.h-tl{top:-7px;left:-7px;cursor:nwse-resize}
+.h-tr{top:-7px;right:-7px;cursor:nesw-resize}
+.h-bl{bottom:-7px;left:-7px;cursor:nesw-resize}
+.h-br{bottom:-7px;right:-7px;cursor:nwse-resize}
 /* 奇数张 = 红色图钉；偶数张 = 木质夹子 */
 .led-photo::before{content:"";position:absolute;top:-12px;left:50%;transform:translateX(-50%);
   width:20px;height:20px;border-radius:50%;z-index:3;
@@ -1768,6 +1781,8 @@ async function unlock(){
   currentUsername = await getUsername();
   const idn = IDENTITY[currentUsername];
   $id("whoAmI").textContent = currentUsername.split("@")[0] || currentUsername;
+  // 登录成功：若用户之前没有主动关过背景音乐，就自动恢复播放（换账号后也能正常出声）
+  if(!bgmUserPaused && !chapterAudioPlaying()) startMusic();
 }
 // 用户名输入框回车 → 跳到密码框
 $id("usernameInput").addEventListener("keydown", (e)=>{
@@ -1830,6 +1845,7 @@ submitBtn.addEventListener("click", async ()=>{
 const logoutBtnEl = $id("logoutBtn");
   if (logoutBtnEl) { logoutBtnEl.addEventListener("click", async ()=>{
   await sb.auth.signOut();
+  stopAllMusic(); // 登出：停掉章节歌+背景音乐，回到初始状态，避免登出后还在播
   mainApp.style.display = "none";
   loginPage.classList.remove("hidden");
   $id("usernameInput").value = "";
@@ -1860,6 +1876,7 @@ audio.addEventListener("timeupdate", ()=>{ localStorage.setItem("bgmTime", Strin
 /* --- 章节音乐 <-> 背景音乐 互斥控制 --- */
 /* 章节专属歌在播时，背景音乐暂停；章节歌暂停/停止后，背景音乐恢复 */
 let bgmPausedByChapter = false;
+let bgmUserPaused = false; // 用户是否主动关过背景音乐：登出重登 / 从后台回前台时尊重这个选择
 function chapterAudioPlaying(){
   return !!(currentPlayingAudio && !currentPlayingAudio.paused);
 }
@@ -1882,8 +1899,25 @@ function syncIcon(){
   if(audio.paused){ audioBtn.classList.add("mute"); if(audioBtnLogin) audioBtnLogin.classList.add("mute"); }
   else{ audioBtn.classList.remove("mute"); if(audioBtnLogin) audioBtnLogin.classList.remove("mute"); }
 }
+/* 登出 / 页面重置时：停掉所有音乐，回到初始状态（不播） */
+function stopAllMusic(){
+  // 1) 停章节歌
+  if(currentPlayingAudio){ try{ currentPlayingAudio.pause(); }catch(e){} }
+  currentPlayingAudio = null;
+  if(currentPlayingDot){ currentPlayingDot.classList.remove("active"); currentPlayingDot = null; }
+  currentPlayingSwitchAway = null;
+  document.querySelectorAll(".ch-play-btn").forEach(b=>{ b.textContent = "▶"; });
+  // 2) 停背景音乐并重置状态
+  try{ audio.pause(); }catch(e){}
+  bgmPausedByChapter = false;
+  bgmUserPaused = false;
+  audioLoadedOnce = false;
+  localStorage.removeItem("bgmTime");
+  syncIcon();
+}
 let audioLoadedOnce = false; // audio.preload 本身不会变，不能拿它判断"是不是第一次"，要单独记一个标记
 function startMusic(){
+  bgmUserPaused = false;
   if(chapterAudioPlaying()){
     bgmPausedByChapter = true;  // 章节歌正在播：先记下"想听背景乐"，等它暂停后再放
     syncIcon();
@@ -1914,16 +1948,23 @@ audioBtn.addEventListener("click", (e)=>{
   } else {
     audio.pause();
     bgmPausedByChapter = false;
+    bgmUserPaused = true;
   }
   syncIcon();
 });
 if(audioBtnLogin){
   audioBtnLogin.addEventListener("click", (e)=>{
     e.stopPropagation();
-    if(audio.paused){ startMusic(); } else { audio.pause(); bgmPausedByChapter = false; }
+    if(audio.paused){ startMusic(); } else { audio.pause(); bgmPausedByChapter = false; bgmUserPaused = true; }
     syncIcon();
   });
 }
+/* 从后台切回前台（手机退到桌面再回来 / 切换标签页回来）：若用户没主动关过背景音乐，自动重新播放 bgm */
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState === "visible" && !bgmUserPaused && !chapterAudioPlaying()){
+    startMusic();
+  }
+});
 /* ==================== 在一起天数 + 三组倒计时 ==================== */
 function calcDays(){
   const now = new Date();
@@ -2884,6 +2925,7 @@ function setupPhotoAdjust(photoEl, frameEl, imgEl, key){
   frameEl.addEventListener("pointerdown", (e) => {
     if(!photoEl.classList.contains("adjust-mode")) return;
     if(ledString.classList.contains("layout-mode")) return; // 自由排版模式下禁用照片内调整，避免手势冲突
+    if(e.target.closest(".adjust-handle")) return; // 拖动四角手柄不触发照片移动
     frameEl.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if(pointers.size === 1){
@@ -2925,6 +2967,38 @@ function setupPhotoAdjust(photoEl, frameEl, imgEl, key){
     current = { scale: 1, x: 0, y: 0 };
     apply();
     savePhotoTransform(key, current);
+  });
+
+  // ===== 电脑端四角手柄：鼠标拖动手柄，以照片中心为锚点拉大/拉小（手机双指捏合仍然可用） =====
+  ["tl","tr","bl","br"].forEach(pos=>{
+    const h=document.createElement("div");
+    h.className="adjust-handle h-"+pos;
+    frameEl.appendChild(h);
+    h.addEventListener("pointerdown", (e)=>{
+      if(!photoEl.classList.contains("adjust-mode")) return;
+      if(ledString.classList.contains("layout-mode")) return;
+      e.stopPropagation();
+      e.preventDefault();
+      frameEl.setPointerCapture(e.pointerId);
+      const r=imgEl.getBoundingClientRect();
+      const cx=r.left+r.width/2, cy=r.top+r.height/2;
+      const d0=Math.max(30, Math.hypot(e.clientX-cx, e.clientY-cy));
+      const s0=current.scale;
+      const move=ev=>{
+        const d=Math.hypot(ev.clientX-cx, ev.clientY-cy);
+        current.scale=Math.min(4, Math.max(1, s0*d/d0));
+        apply();
+      };
+      const up=()=>{
+        frameEl.removeEventListener("pointermove", move);
+        frameEl.removeEventListener("pointerup", up);
+        frameEl.removeEventListener("pointercancel", up);
+        savePhotoTransform(key, current);
+      };
+      frameEl.addEventListener("pointermove", move);
+      frameEl.addEventListener("pointerup", up);
+      frameEl.addEventListener("pointercancel", up);
+    });
   });
 }
 
@@ -3707,6 +3781,16 @@ document.querySelectorAll('.drawer-item').forEach(link => {
     if (topLink) topLink.click();
   });
 });
+
+/* ==================== 离线支持：Service Worker 缓存全站 ==================== */
+// 首次在线打开后，页面+音频会被缓存；之后断网也能打开网站、播放已缓存过的音乐。
+// 需要把 sw.js 和 index.html 放在同一个文件夹（GitHub Pages / HTTPS 环境才能生效）。
+// 数据本身（照片、排版、日记）早已支持离线：本地保存 + 联网后自动上传到后台。
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("./sw.js").catch(function(){ /* 环境不支持就静默，不影响在线使用 */ });
+  });
+}
 </script>
 </body>
 </html>
