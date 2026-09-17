@@ -1,0 +1,58 @@
+/* ============================================================
+   沧澜归屿 · 离线缓存 Service Worker
+   - 首次在线打开后，自动缓存页面和音频
+   - 之后断网也能打开网站、重播已缓存过的音乐
+   - 照片/排版/日记等数据本来就走 localStorage + 离线队列，
+     联网后会自动同步到后台，不受此文件影响
+   用法：把本文件（sw.js）和 index.html 放在同一个文件夹，
+   部署到 HTTPS 环境（如 GitHub Pages）即可生效。
+   ============================================================ */
+const CACHE_NAME = "cgl-site-v1";
+
+// 安装：缓存首页核心文件（bgm 等大文件改为"播放过就缓存"，避免首次安装卡住）
+self.addEventListener("install", (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((c) => c.addAll(["./", "./index.html"]))
+      .then(() => self.skipWaiting())
+  );
+});
+
+// 激活：清理旧版本缓存
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+// 请求：优先用缓存（离线可用），没有缓存才走网络，成功后再存进缓存
+self.addEventListener("fetch", (e) => {
+  const req = e.request;
+  if (req.method !== "GET") return;
+  try {
+    const url = new URL(req.url);
+    if (url.origin !== location.origin) return; // 只处理本站资源
+  } catch (err) {
+    return;
+  }
+  e.respondWith(
+    caches.match(req).then((hit) => {
+      if (hit) return hit;
+      return fetch(req)
+        .then((res) => {
+          if (res && res.ok && (res.type === "basic" || res.type === "cors")) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(req, clone));
+          }
+          return res;
+        })
+        .catch(() => {
+          // 离线且没缓存：访问页面时回退到首页
+          if (req.mode === "navigate") return caches.match("./index.html");
+          return new Response("", { status: 503, statusText: "Offline" });
+        });
+    })
+  );
+});
