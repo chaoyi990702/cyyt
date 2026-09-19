@@ -1,0 +1,13 @@
+{
+  "name": "沧澜归屿",
+  "short_name": "沧澜归屿",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FDFBF7",
+  "theme_color": "#7BA4D6",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "icon.jpeg", "sizes": "any", "type": "image/jpeg" }
+  ]
+}
