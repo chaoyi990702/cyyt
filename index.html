@@ -1185,31 +1185,21 @@ body.theme-rose .who-menu-item:hover,body.theme-rose .who-menu-item:active{backg
 
 /* ============ 【新增】聊天室 ============ */
 /* ============ 聊天室：右下角悬浮圆标 + 弹出面板 ============ */
-.chat-fab{position:fixed;right:16px;bottom:calc(18px + var(--sab));width:58px;height:58px;padding:0;border:none;border-radius:50%;cursor:pointer;z-index:850;display:flex;align-items:center;justify-content:center;color:#fff;
-  background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.42),rgba(255,255,255,0) 48%),linear-gradient(145deg,var(--rose-light),var(--rose-deep));
-  box-shadow:0 8px 22px rgba(92,138,194,.42),0 0 0 5px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.55);
-  transition:transform .18s,opacity .18s;-webkit-tap-highlight-color:transparent}
-.chat-fab svg{width:31px;height:31px;filter:drop-shadow(0 1px 2px rgba(40,60,90,.3))}
-.chat-fab .fab-heart{fill:var(--rose-deep)}
+.chat-fab{position:fixed;right:16px;bottom:calc(18px + var(--sab));width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;z-index:850;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;color:#fff;background:linear-gradient(145deg,var(--rose-light),var(--rose-deep));box-shadow:0 6px 18px rgba(92,138,194,.38);transition:transform .18s,opacity .18s;-webkit-tap-highlight-color:transparent}
 .chat-fab:active{transform:scale(.93)}
 .chat-fab.hide{opacity:0;pointer-events:none;transform:scale(.6)}
-.chat-fab .chat-badge{position:absolute;top:-3px;right:-3px;margin:0;box-shadow:0 0 0 2px #fff}
-.chat-fab:has(.chat-badge.show){animation:fabPulse 2.6s ease-out infinite}
-@keyframes fabPulse{0%{box-shadow:0 8px 22px rgba(92,138,194,.42),0 0 0 5px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.55),0 0 0 5px rgba(123,164,214,.55)}
-  75%,100%{box-shadow:0 8px 22px rgba(92,138,194,.42),0 0 0 5px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.55),0 0 0 20px rgba(123,164,214,0)}}
-@media (prefers-reduced-motion:reduce){.chat-fab:has(.chat-badge.show){animation:none}}
-.chat-backdrop{display:none}
-.chat-panel{position:fixed;right:16px;bottom:var(--chat-bottom,calc(18px + var(--sab)));width:min(380px,calc(100vw - 32px));height:var(--chat-h,min(600px,calc(100vh - 110px)));z-index:1200;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:var(--card-bg,#fffdf9);box-shadow:0 16px 48px rgba(40,60,90,.28);transform-origin:100% 100%;transform:scale(.85);opacity:0;visibility:hidden;pointer-events:none;transition:transform .2s ease,opacity .2s ease,visibility 0s linear .2s}
+.chat-fab .chat-badge{position:absolute;top:-4px;right:-4px;margin:0;box-shadow:0 0 0 2px #fff}
+.chat-panel{position:fixed;right:16px;bottom:calc(18px + var(--sab));width:min(380px,calc(100vw - 32px));height:min(600px,calc(100vh - 110px));z-index:1200;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card-bg,#fffdf9);box-shadow:0 16px 48px rgba(40,60,90,.28);transform-origin:100% 100%;transform:scale(.85);opacity:0;visibility:hidden;pointer-events:none;transition:transform .2s ease,opacity .2s ease,visibility 0s linear .2s}
 .chat-panel.open{transform:none;opacity:1;visibility:visible;pointer-events:auto;transition:transform .2s ease,opacity .2s ease,visibility 0s}
 .chat-titles{display:flex;flex-direction:column;min-width:0;flex:1 1 auto}
 .chat-sub{font-size:10.5px;color:var(--ink-light);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chat-close{flex:0 0 auto;width:30px;height:30px;border:none;border-radius:50%;background:rgba(123,164,214,.14);color:var(--ink-light);font-size:14px;cursor:pointer}
 @media (max-width:600px){
-  /* 手机：底部弹出的卡片，四周留出背景（背景轻微变暗、虚化），点背景也能收起 */
-  .chat-backdrop{display:block;position:fixed;inset:0;z-index:1190;background:rgba(30,45,70,.34);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s linear .2s}
-  .chat-backdrop.show{opacity:1;visibility:visible;transition:opacity .2s,visibility 0s}
-  .chat-panel{left:12px;right:12px;width:auto;bottom:var(--chat-bottom,calc(14px + var(--sab)));height:var(--chat-h,min(72vh,600px));border-radius:22px;transform:translateY(28px)}
+  .chat-panel{left:0;right:0;bottom:auto;top:var(--chat-top,0px);width:100%;height:var(--chat-vh,100vh);border-radius:0;transform:translateY(28px)}
   .chat-panel.open{transform:none}
+  .chat-panel .chat-head{padding-top:calc(12px + var(--sat))}
+  .chat-panel .chat-compose{padding-bottom:calc(10px + var(--sab))}
+  .chat-panel.kb .chat-compose{padding-bottom:10px}
 }
 .chat-card{padding:0;display:flex;flex-direction:column;height:min(74vh,620px);min-height:380px;overflow:hidden}
 .chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(123,164,214,.18)}
@@ -1279,8 +1269,7 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
 <!-- ===== 主站 ===== -->
 <div id="mainApp">
   <!-- 聊天室：右下角圆标，点开弹出面板 -->
-  <button class="chat-fab" id="chatFab" type="button" aria-label="打开聊天室"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 4H23A6 6 0 0 1 29 10V18A6 6 0 0 1 23 24H14L8 29V23.8A6 6 0 0 1 3 18V10A6 6 0 0 1 9 4Z" fill="#fff"/><path class="fab-heart" transform="translate(10.6 8.6) scale(.45)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span class="chat-badge"></span></button>
-  <div class="chat-backdrop" id="chatBackdrop"></div>
+  <button class="chat-fab" id="chatFab" type="button" aria-label="打开聊天室">💬<span class="chat-badge"></span></button>
   <div class="chat-panel" id="chatPanel" role="dialog" aria-label="聊天室">
     <div class="chat-head">
       <div class="chat-titles">
@@ -1332,9 +1321,6 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
           </div>
           <button class="who-menu-item" id="notifyToggleBtn" type="button" role="menuitem">
             <span>🔔 手机通知</span><span class="state" id="notifyState">未开启</span>
-          </button>
-          <button class="who-menu-item" id="pushTestBtn" type="button" role="menuitem">
-            <span>🧪 发送测试通知</span><span class="state" id="pushTestState"></span>
           </button>
           <button class="who-menu-item danger" id="logoutBtn" type="button" role="menuitem">
             <span>↩ 退出登录</span>
@@ -4275,26 +4261,24 @@ async function chatStart(){
     btn.addEventListener("click", function(){ chatSend(); inp.focus(); });
   }
   // 右下角圆标 / 弹出面板：点圆标打开，点 ✕ 或按 Esc 收起
-  const fab = $id("chatFab"), panel = $id("chatPanel"), closeBtn = $id("chatClose"), backdrop = $id("chatBackdrop");
+  const fab = $id("chatFab"), panel = $id("chatPanel"), closeBtn = $id("chatClose");
   if(fab && panel){
     const mq = window.matchMedia("(max-width:600px)");
     let prevOverflow = "";
     const fit = function(){
       const vv = window.visualViewport;
-      const kb = !!vv && window.innerHeight - vv.height > 120;          // 键盘弹出了
-      if(kb){
-        // 让面板始终待在“可见区域”里、贴着键盘上沿，不会被键盘顶出屏幕
-        const gap = Math.max(0, window.innerHeight - (vv.offsetTop + vv.height));
-        panel.style.setProperty("--chat-bottom", (gap + 10) + "px");
-        panel.style.setProperty("--chat-h", Math.max(220, Math.min(600, vv.height - (mq.matches ? 64 : 40))) + "px");
+      if(mq.matches){
+        panel.style.setProperty("--chat-vh", (vv ? vv.height : window.innerHeight) + "px");   // 键盘弹出时面板跟着缩，输入框不会被挡住
+        panel.style.setProperty("--chat-top", (vv ? vv.offsetTop : 0) + "px");
+        panel.classList.toggle("kb", !!vv && window.innerHeight - vv.height > 120);
       }else{
-        panel.style.removeProperty("--chat-bottom"); panel.style.removeProperty("--chat-h");
+        panel.style.removeProperty("--chat-vh"); panel.style.removeProperty("--chat-top"); panel.classList.remove("kb");
       }
     };
     const openChat = function(){
       if(panel.classList.contains("open")) return;
       fit();
-      panel.classList.add("open"); fab.classList.add("hide"); if(backdrop) backdrop.classList.add("show");
+      panel.classList.add("open"); fab.classList.add("hide");
       chatVisible = true;
       if(mq.matches){ prevOverflow = document.body.style.overflow; document.body.style.overflow = "hidden"; }
       chatRender(true);
@@ -4303,14 +4287,13 @@ async function chatStart(){
     };
     const closeChat = function(){
       if(!panel.classList.contains("open")) return;
-      panel.classList.remove("open"); fab.classList.remove("hide"); if(backdrop) backdrop.classList.remove("show");
+      panel.classList.remove("open"); fab.classList.remove("hide");
       chatVisible = false;
       if(inp) inp.blur();
       document.body.style.overflow = prevOverflow;
     };
     fab.addEventListener("click", openChat);
     if(closeBtn) closeBtn.addEventListener("click", closeChat);
-    if(backdrop) backdrop.addEventListener("click", closeChat);
     document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeChat(); });
     if(window.visualViewport){
       window.visualViewport.addEventListener("resize", function(){ if(panel.classList.contains("open")) fit(); });
@@ -4332,7 +4315,7 @@ async function chatStart(){
 
 /* ==================== 【新增】手机通知（Web Push） ==================== */
 // ↓↓↓ 把 VAPID「公钥」粘贴在这里（生成方法见「部署说明.md」）
-const VAPID_PUBLIC_KEY = "BK6PxJWyOBEN-BU7qW6m1vw57U6i9SM76PMmoDdgFPP5M2L1_SSYMLLUGSQCfSz4WGBuu75bNBibVVrHu_w-lvQ";
+const VAPID_PUBLIC_KEY = "BOT0WaT2t26UuuomC3-1o3bY9VYi1Yxkv_L4kJCwzAIT9lVA47R3xB4sW7CTf4_JyrhiXcGdoLHBWu0XO-bnywI";
 
 function pushB64ToU8(b64){
   const pad = "=".repeat((4 - b64.length % 4) % 4);
@@ -4437,51 +4420,6 @@ function pushOnLogin(){
     if(window.closeWhoMenu) closeWhoMenu();
     if(window.__pushOn) await disablePush(); else await enablePush();
   });
-})();
-
-
-// 【新增】发送测试通知：一键检查“服务器 → 手机”这条线路，并直接告诉你卡在哪一步
-function pushExplain(r){
-  if(!r) return "❌ 服务器没有回应：数据库触发器可能没建好，请重新运行 supabase-setup.sql 和 supabase-update-v3.sql";
-  const code = r.status_code, body = String(r.body || "");
-  if(code === 401) return "❌ 服务器返回 401：send-push 函数还开着 Verify JWT。请到 Supabase → Edge Functions → send-push 把它关掉，再重新部署";
-  if(code === 403) return "❌ 服务器返回 403：数据库里的 x-webhook-secret 和函数的 PUSH_WEBHOOK_SECRET 不一致，请改成同一串";
-  if(code === 404) return "❌ 服务器返回 404：找不到名为 send-push 的函数，请确认已部署、名字一致";
-  if(code !== 200) return "❌ 服务器返回 " + code + "：" + body.slice(0, 140);
-  let j = {}; try{ j = JSON.parse(body); }catch(e){}
-  if(j.errors && j.errors.length) return "❌ 推送服务拒绝了通知（状态 " + (j.errors[0].status || "?") + "）：多半是 VAPID 密钥不匹配。index.html 里的公钥、函数里的 VAPID_PUBLIC_KEY 和 VAPID_PRIVATE_KEY 必须是同一对";
-  if(j.sent > 0) return "✅ 服务器已发出通知（" + j.sent + " 台设备）。现在锁屏或回到桌面，几秒内应该会弹出。如果还是没有，就是手机系统这一端挡住了（专注模式 / 省电 / 通知设置）";
-  if(j.removed > 0) return "⚠️ 这台设备的登记已失效，已被清除。请把「手机通知」关掉再重新开启一次";
-  if(j.targets === 0) return "⚠️ 服务器没找到这个账号登记过的设备。请把「手机通知」关掉再重新开启一次";
-  return "⚠️ 服务器已响应但没有发出：" + body.slice(0, 140);
-}
-async function pushSelfTest(){
-  const st = $id("pushTestState");
-  const say = function(t){ if(st) st.textContent = t; };
-  if(!sb){ showToast("还没连上云端"); return; }
-  if(!window.__pushOn){ showToast("请先打开上面的「手机通知」", 3600); return; }
-  say("发送中…");
-  const ins = await sb.from("push_tests").insert({ note: "test" }).select().single();
-  if(ins.error || !ins.data){
-    say(""); showToast("测试失败：请先在 Supabase 运行 supabase-update-v3.sql（" + (ins.error && ins.error.message || "无返回") + "）", 7000); return;
-  }
-  const since = ins.data.created_at;
-  let r = null;
-  for(let i = 0; i < 12; i++){
-    await new Promise(function(ok){ setTimeout(ok, 1000); });
-    const q = await sb.rpc("push_test_result", { p_since: since });
-    if(!q.error && q.data && q.data.length){
-      const row = q.data[0];
-      r = row;
-      if(row.status_code !== 200 || String(row.body || "").indexOf('"test":true') >= 0) break;   // 拿到了测试对应的回应
-    }
-  }
-  say("");
-  showToast(pushExplain(r), 12000);
-}
-(function(){
-  const b = $id("pushTestBtn"); if(!b) return;
-  b.addEventListener("click", function(){ if(window.closeWhoMenu) closeWhoMenu(); pushSelfTest().catch(function(e){ console.error(e); showToast("测试失败：" + (e && e.message || e), 5000); }); });
 })();
 
 /* ==================== 离线支持：Service Worker 缓存全站 ==================== */
