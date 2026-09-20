@@ -4332,7 +4332,7 @@ async function chatStart(){
 
 /* ==================== 【新增】手机通知（Web Push） ==================== */
 // ↓↓↓ 把 VAPID「公钥」粘贴在这里（生成方法见「部署说明.md」）
-const VAPID_PUBLIC_KEY = "BK6PxJWyOBEN-BU7qW6m1vw57U6i9SM76PMmoDdgFPP5M2L1_SSYMLLUGSQCfSz4WGBuu75bNBibVVrHu_w-lvQ";
+const VAPID_PUBLIC_KEY = "BOF7R_cRU13EuvbPZrvPIcwzSL9H-ApgJWalrz1hDnP5Zwl8CTiW8Z0MbDkF1ZjNRqnpNKvVQ0cigPvAEFHE5AU";
 
 function pushB64ToU8(b64){
   const pad = "=".repeat((4 - b64.length % 4) % 4);
@@ -4386,7 +4386,8 @@ async function syncPushSubscription(create){
   let healed = false;
   if(sub){
     const cur = pushKeyOf(sub);
-    if(cur && VAPID_PUBLIC_KEY && cur !== VAPID_PUBLIC_KEY.replace(/=+$/, "")){   // 公钥换过了：用旧公钥登记的订阅已作废，自动用新公钥重新登记
+    const stale = cur ? (VAPID_PUBLIC_KEY && cur !== VAPID_PUBLIC_KEY.replace(/=+$/, "")) : create;   // 读不出公钥时，主动开启也强制重新登记
+    if(stale){   // 公钥换过了：用旧公钥登记的订阅已作废，自动用新公钥重新登记
       try{ await sb.rpc("delete_push_subscription", { p_endpoint: sub.endpoint }); }catch(e){}
       try{ await sub.unsubscribe(); }catch(e){}
       sub = null; healed = true;
@@ -4473,7 +4474,9 @@ function pushExplain(r, ctx){
   if(j.errors && j.errors.length){
     const v = j.vapid || {}, page = String(ctx.pageKey || "").replace(/=+$/, ""), sub = String(ctx.subKey || "");
     let why;
-    if(v.pub && page && v.pub !== page) why = "网页 index.html 里的公钥，和函数实际使用的公钥不一样。请把 index.html 里 VAPID_PUBLIC_KEY 那一行改成：" + v.pub + "（公钥是公开的，可以直接发给我帮你改），然后重新上传";
+    const mismatch = j.errors.some(function(x){ return String(x.body || "").indexOf("VapidPkHashMismatch") >= 0; });
+    if(mismatch && !(v.pub && page && v.pub !== page)) why = "这条设备登记是用另一把公钥创建的（旧登记）。请在 Supabase 运行 delete from public.push_subscriptions;，然后在每台设备上把「手机通知」关掉再重新开启（新版会强制重新登记）";
+    else if(v.pub && page && v.pub !== page) why = "网页 index.html 里的公钥，和函数实际使用的公钥不一样。请把 index.html 里 VAPID_PUBLIC_KEY 那一行改成：" + v.pub + "（公钥是公开的，可以直接发给我帮你改），然后重新上传";
     else if(v.pub && sub && v.pub !== sub) why = "这台设备是用旧公钥登记的。请确认已经打开过新页面，再把「手机通知」关掉重新开启";
     else if(!v.subject || /example\.com/.test(v.subject)) why = "VAPID_SUBJECT 没设置好，请设为 mailto:你的真实邮箱，然后重新部署";
     else why = "密钥是配套的，但仍被拒绝，多半是数据库里还留着旧设备的登记。请在 Supabase 运行 delete from public.push_subscriptions;，然后每台设备重新开启通知";
