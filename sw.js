@@ -8,7 +8,7 @@ importScripts('./sw-push.js');
    用法：把本文件（sw.js）和 index.html 放在同一个文件夹，
    部署到 HTTPS 环境（如 GitHub Pages）即可生效。
    ============================================================ */
-const CACHE_NAME = "cgl-site-v2";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
+const CACHE_NAME = "cgl-site-v3";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
 
 // 安装：缓存首页核心文件（bgm 等大文件改为"播放过就缓存"，避免首次安装卡住）
 self.addEventListener("install", (e) => {
