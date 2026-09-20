@@ -4332,6 +4332,7 @@ async function chatStart(){
 
 /* ==================== 【新增】手机通知（Web Push） ==================== */
 // ↓↓↓ 把 VAPID「公钥」粘贴在这里（生成方法见「部署说明.md」）
+const APP_BUILD = "v9";   // 页面版本号：测试通知的提示里会显示，用来确认手机上跑的是不是最新页面
 const VAPID_PUBLIC_KEY = "BOF7R_cRU13EuvbPZrvPIcwzSL9H-ApgJWalrz1hDnP5Zwl8CTiW8Z0MbDkF1ZjNRqnpNKvVQ0cigPvAEFHE5AU";
 
 function pushB64ToU8(b64){
@@ -4481,7 +4482,8 @@ function pushExplain(r, ctx){
     else if(!v.subject || /example\.com/.test(v.subject)) why = "VAPID_SUBJECT 没设置好，请设为 mailto:你的真实邮箱，然后重新部署";
     else why = "密钥是配套的，但仍被拒绝，多半是数据库里还留着旧设备的登记。请在 Supabase 运行 delete from public.push_subscriptions;，然后每台设备重新开启通知";
     if(v.envPubOk === false) why += "（另外：Secrets 里的 VAPID_PUBLIC_KEY 和私钥不是一对，函数已自动改用私钥算出的公钥，可以顺手把 Secrets 里的公钥也改成同一串）";
-    return "❌ 推送服务拒绝了通知（状态 " + (j.errors[0].status || "?") + "）：" + why;
+    return "❌ 推送服务拒绝了通知（状态 " + (j.errors[0].status || "?") + "）：" + why +
+      "  【页面 " + APP_BUILD + "｜网页公钥 " + (page.slice(0, 8) || "空") + "｜函数公钥 " + String(v.pub || "").slice(0, 8) + "｜设备登记 " + (sub.slice(0, 8) || "读不出") + "】";
   }
   if(j.removed > 0) return "⚠️ 这台设备的登记已失效，已被清除。请把「手机通知」关掉再重新开启一次";
   if(j.targets === 0) return "⚠️ 服务器没找到这个账号登记过的设备。请把「手机通知」关掉再重新开启一次";
