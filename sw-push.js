@@ -3,6 +3,19 @@
  *     importScripts('./sw-push.js');
  * 这样不会动到你原来的离线缓存逻辑。
  */
+// 桌面图标未读角标：用 Cache 存一个计数（页面打开时会清零）
+async function bumpBadge() {
+  try {
+    const c = await caches.open('cgl-badge');
+    const key = new URL('__badge', self.registration.scope).href;
+    const r = await c.match(key);
+    const n = r ? (parseInt(await r.text(), 10) || 0) : 0;
+    const m = n + 1;
+    await c.put(key, new Response(String(m)));
+    if (self.navigator && self.navigator.setAppBadge) await self.navigator.setAppBadge(m);
+  } catch (e) { /* 浏览器不支持角标就算了 */ }
+}
+
 self.addEventListener('push', function (event) {
   let d = {};
   try { d = event.data ? event.data.json() : {}; }
@@ -27,6 +40,7 @@ self.addEventListener('push', function (event) {
     const looking = wins.some(function (w) { return w.visibilityState === 'visible' && w.focused; });
     if (looking && !isIOS && !d.force) return;   // 测试通知（force）一律显示
     await self.registration.showNotification(title, options);
+    await bumpBadge();   // 桌面图标上的未读角标 +1（打开网站后会清零）
   })());
 });
 
