@@ -1184,6 +1184,23 @@ body.theme-rose .who-menu-item:hover,body.theme-rose .who-menu-item:active{backg
 .who-menu-item.danger{color:#d9606f}
 
 /* ============ 【新增】聊天室 ============ */
+/* ============ 聊天室：右下角悬浮圆标 + 弹出面板 ============ */
+.chat-fab{position:fixed;right:16px;bottom:calc(18px + var(--sab));width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;z-index:850;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;color:#fff;background:linear-gradient(145deg,var(--rose-light),var(--rose-deep));box-shadow:0 6px 18px rgba(92,138,194,.38);transition:transform .18s,opacity .18s;-webkit-tap-highlight-color:transparent}
+.chat-fab:active{transform:scale(.93)}
+.chat-fab.hide{opacity:0;pointer-events:none;transform:scale(.6)}
+.chat-fab .chat-badge{position:absolute;top:-4px;right:-4px;margin:0;box-shadow:0 0 0 2px #fff}
+.chat-panel{position:fixed;right:16px;bottom:calc(18px + var(--sab));width:min(380px,calc(100vw - 32px));height:min(600px,calc(100vh - 110px));z-index:1200;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card-bg,#fffdf9);box-shadow:0 16px 48px rgba(40,60,90,.28);transform-origin:100% 100%;transform:scale(.85);opacity:0;visibility:hidden;pointer-events:none;transition:transform .2s ease,opacity .2s ease,visibility 0s linear .2s}
+.chat-panel.open{transform:none;opacity:1;visibility:visible;pointer-events:auto;transition:transform .2s ease,opacity .2s ease,visibility 0s}
+.chat-titles{display:flex;flex-direction:column;min-width:0;flex:1 1 auto}
+.chat-sub{font-size:10.5px;color:var(--ink-light);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-close{flex:0 0 auto;width:30px;height:30px;border:none;border-radius:50%;background:rgba(123,164,214,.14);color:var(--ink-light);font-size:14px;cursor:pointer}
+@media (max-width:600px){
+  .chat-panel{left:0;right:0;bottom:auto;top:var(--chat-top,0px);width:100%;height:var(--chat-vh,100vh);border-radius:0;transform:translateY(28px)}
+  .chat-panel.open{transform:none}
+  .chat-panel .chat-head{padding-top:calc(12px + var(--sat))}
+  .chat-panel .chat-compose{padding-bottom:calc(10px + var(--sab))}
+  .chat-panel.kb .chat-compose{padding-bottom:10px}
+}
 .chat-card{padding:0;display:flex;flex-direction:column;height:min(74vh,620px);min-height:380px;overflow:hidden}
 .chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(123,164,214,.18)}
 body.theme-rose .chat-head{border-bottom-color:rgba(224,117,154,.18)}
@@ -1251,6 +1268,23 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
 </div>
 <!-- ===== 主站 ===== -->
 <div id="mainApp">
+  <!-- 聊天室：右下角圆标，点开弹出面板 -->
+  <button class="chat-fab" id="chatFab" type="button" aria-label="打开聊天室">💬<span class="chat-badge"></span></button>
+  <div class="chat-panel" id="chatPanel" role="dialog" aria-label="聊天室">
+    <div class="chat-head">
+      <div class="chat-titles">
+        <span class="chat-partner" id="chatPartner">聊天室</span>
+        <span class="chat-sub">发出 5 分钟内，点一下自己的消息可以撤回</span>
+      </div>
+      <span class="chat-conn" id="chatConn"><i></i><span>连接中…</span></span>
+      <button class="chat-close" id="chatClose" type="button" aria-label="收起聊天室">✕</button>
+    </div>
+    <div class="chat-list" id="chatList"></div>
+    <div class="chat-compose">
+      <textarea id="chatInput" rows="1" maxlength="1000" placeholder="说点什么吧…" enterkeyhint="send"></textarea>
+      <button class="chat-send" id="chatSend" type="button">发送</button>
+    </div>
+  </div>
   <nav class="topnav">
     <div class="nav-left">
       <button class="hamburger-btn" id="hamburgerBtn" aria-label="菜单">☰</button>
@@ -1573,24 +1607,6 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
           </div>
           <div id="partnerMoodView" class="mood-diary-view partner-view"></div>
         </div>
-      </div>
-    </div>
-  </section>
-  <div class="wave-div"><svg viewBox="0 0 640 56" preserveAspectRatio="none"><path d="M0 30 Q 80 12 160 28 T 320 28 T 480 28 T 640 26 V56 H0 Z" fill="#7BA4D6" opacity="0.35"/></svg></div>
-  <!-- 聊天室 -->
-  <section id="chat">
-    <div class="sec-eyebrow">悄悄话</div>
-    <h2 class="sec-title">我们的聊天室</h2>
-    <p class="sec-sub">只有我们两个人的小房间，对方发来的消息会实时出现。发出 5 分钟内，点一下自己发的消息可以撤回。</p>
-    <div class="card chat-card">
-      <div class="chat-head">
-        <span class="chat-partner" id="chatPartner">聊天室</span>
-        <span class="chat-conn" id="chatConn"><i></i><span>连接中…</span></span>
-      </div>
-      <div class="chat-list" id="chatList"></div>
-      <div class="chat-compose">
-        <textarea id="chatInput" rows="1" maxlength="1000" placeholder="说点什么吧…" enterkeyhint="send"></textarea>
-        <button class="chat-send" id="chatSend" type="button">发送</button>
       </div>
     </div>
   </section>
@@ -2781,6 +2797,7 @@ truthDraw.addEventListener("click", ()=>{
 /* ==================== 顶部导航平滑滚动 ==================== */
 document.querySelectorAll(".nav-link").forEach(link=>{
   link.addEventListener("click", ()=>{
+    if(link.dataset.target === "chat"){ if(window.openChatPanel) window.openChatPanel(); return; }   // 聊天室是右下角面板，不滚动
     const target = document.getElementById(link.dataset.target);
     if(!target) return;
     const top = target.getBoundingClientRect().top + window.pageYOffset - 60;
@@ -4243,14 +4260,47 @@ async function chatStart(){
     });
     btn.addEventListener("click", function(){ chatSend(); inp.focus(); });
   }
-  const sec = $id("chat");
-  if(sec && "IntersectionObserver" in window){
-    new IntersectionObserver(function(es){
-      es.forEach(function(en){
-        chatVisible = en.isIntersecting;
-        if(chatVisible && chatUser && !document.hidden) chatMarkRead();
-      });
-    }, { threshold: 0.35 }).observe(sec);
+  // 右下角圆标 / 弹出面板：点圆标打开，点 ✕ 或按 Esc 收起
+  const fab = $id("chatFab"), panel = $id("chatPanel"), closeBtn = $id("chatClose");
+  if(fab && panel){
+    const mq = window.matchMedia("(max-width:600px)");
+    let prevOverflow = "";
+    const fit = function(){
+      const vv = window.visualViewport;
+      if(mq.matches){
+        panel.style.setProperty("--chat-vh", (vv ? vv.height : window.innerHeight) + "px");   // 键盘弹出时面板跟着缩，输入框不会被挡住
+        panel.style.setProperty("--chat-top", (vv ? vv.offsetTop : 0) + "px");
+        panel.classList.toggle("kb", !!vv && window.innerHeight - vv.height > 120);
+      }else{
+        panel.style.removeProperty("--chat-vh"); panel.style.removeProperty("--chat-top"); panel.classList.remove("kb");
+      }
+    };
+    const openChat = function(){
+      if(panel.classList.contains("open")) return;
+      fit();
+      panel.classList.add("open"); fab.classList.add("hide");
+      chatVisible = true;
+      if(mq.matches){ prevOverflow = document.body.style.overflow; document.body.style.overflow = "hidden"; }
+      chatRender(true);
+      if(chatUser && !document.hidden) chatMarkRead();
+      if(!mq.matches && inp) setTimeout(function(){ inp.focus(); }, 220);
+    };
+    const closeChat = function(){
+      if(!panel.classList.contains("open")) return;
+      panel.classList.remove("open"); fab.classList.remove("hide");
+      chatVisible = false;
+      if(inp) inp.blur();
+      document.body.style.overflow = prevOverflow;
+    };
+    fab.addEventListener("click", openChat);
+    if(closeBtn) closeBtn.addEventListener("click", closeChat);
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeChat(); });
+    if(window.visualViewport){
+      window.visualViewport.addEventListener("resize", function(){ if(panel.classList.contains("open")) fit(); });
+      window.visualViewport.addEventListener("scroll", function(){ if(panel.classList.contains("open")) fit(); });
+    }
+    window.addEventListener("resize", function(){ if(panel.classList.contains("open")) fit(); });
+    window.openChatPanel = openChat;
   }
   // 手机从后台切回来：补拉错过的消息
   document.addEventListener("visibilitychange", function(){
