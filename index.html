@@ -4332,7 +4332,7 @@ async function chatStart(){
 
 /* ==================== 【新增】手机通知（Web Push） ==================== */
 // ↓↓↓ 把 VAPID「公钥」粘贴在这里（生成方法见「部署说明.md」）
-const VAPID_PUBLIC_KEY = "BOT0WaT2t26UuuomC3-1o3bY9VYi1Yxkv_L4kJCwzAIT9lVA47R3xB4sW7CTf4_JyrhiXcGdoLHBWu0XO-bnywI";
+const VAPID_PUBLIC_KEY = "BK6PxJWyOBEN-BU7qW6m1vw57U6i9SM76PMmoDdgFPP5M2L1_SSYMLLUGSQCfSz4WGBuu75bNBibVVrHu_w-lvQ";
 
 function pushB64ToU8(b64){
   const pad = "=".repeat((4 - b64.length % 4) % 4);
@@ -4471,13 +4471,13 @@ function pushExplain(r, ctx){
   let j = {}; try{ j = JSON.parse(body); }catch(e){}
   if(j.sent > 0) return "✅ 服务器已发出通知（" + j.sent + " 台设备" + (j.errors && j.errors.length ? "，另有 " + j.errors.length + " 条旧登记失败，可忽略或清理" : "") + "）。现在锁屏或回到桌面，几秒内应该会弹出。如果还是没有，就是手机系统这一端挡住了（专注模式 / 省电 / 通知设置）";
   if(j.errors && j.errors.length){
-    const v = j.vapid || {}, pk = String(ctx.pageKey || "").slice(0, 8), sk = String(ctx.subKey || "").slice(0, 8);
+    const v = j.vapid || {}, page = String(ctx.pageKey || "").replace(/=+$/, ""), sub = String(ctx.subKey || "");
     let why;
-    if(v.pairOk === false) why = "函数里的 VAPID 公钥和私钥不是同一对。请重新生成一对，公钥和私钥都从同一次的结果里复制";
-    else if(v.pubHead && pk && v.pubHead !== pk) why = "网页 index.html 里的公钥（" + pk + "…）和函数里的公钥（" + v.pubHead + "…）不一样。请把网页里的改成函数里的那个，再重新上传";
-    else if(v.pubHead && sk && v.pubHead !== sk) why = "这台设备是用旧公钥（" + sk + "…）登记的。请把「手机通知」关掉再重新开启";
-    else if(!v.subject || /example\.com|未设置/.test(v.subject)) why = "VAPID_SUBJECT 没设置好，请设为 mailto:你的真实邮箱，然后重新部署";
-    else why = "密钥看起来是配套的，但仍被拒绝，多半是数据库里还留着旧设备的登记。请在 Supabase 运行 delete from public.push_subscriptions;，然后每台设备重新开启通知";
+    if(v.pub && page && v.pub !== page) why = "网页 index.html 里的公钥，和函数实际使用的公钥不一样。请把 index.html 里 VAPID_PUBLIC_KEY 那一行改成：" + v.pub + "（公钥是公开的，可以直接发给我帮你改），然后重新上传";
+    else if(v.pub && sub && v.pub !== sub) why = "这台设备是用旧公钥登记的。请确认已经打开过新页面，再把「手机通知」关掉重新开启";
+    else if(!v.subject || /example\.com/.test(v.subject)) why = "VAPID_SUBJECT 没设置好，请设为 mailto:你的真实邮箱，然后重新部署";
+    else why = "密钥是配套的，但仍被拒绝，多半是数据库里还留着旧设备的登记。请在 Supabase 运行 delete from public.push_subscriptions;，然后每台设备重新开启通知";
+    if(v.envPubOk === false) why += "（另外：Secrets 里的 VAPID_PUBLIC_KEY 和私钥不是一对，函数已自动改用私钥算出的公钥，可以顺手把 Secrets 里的公钥也改成同一串）";
     return "❌ 推送服务拒绝了通知（状态 " + (j.errors[0].status || "?") + "）：" + why;
   }
   if(j.removed > 0) return "⚠️ 这台设备的登记已失效，已被清除。请把「手机通知」关掉再重新开启一次";
