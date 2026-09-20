@@ -8,7 +8,7 @@ importScripts('./sw-push.js');
    用法：把本文件（sw.js）和 index.html 放在同一个文件夹，
    部署到 HTTPS 环境（如 GitHub Pages）即可生效。
    ============================================================ */
-const CACHE_NAME = "cgl-site-v8";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
+const CACHE_NAME = "cgl-site-v9";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
 
 // 安装：缓存首页核心文件（bgm 等大文件改为"播放过就缓存"，避免首次安装卡住）
 self.addEventListener("install", (e) => {
@@ -36,6 +36,19 @@ self.addEventListener("fetch", (e) => {
     const url = new URL(req.url);
     if (url.origin !== location.origin) return; // 只处理本站资源
   } catch (err) {
+    return;
+  }
+  // 页面本身（首页 / index.html）：优先联网取最新版，离线时才用缓存 —— 这样你更新网站后，手机不用“开两次”就能拿到新版
+  const isPage = req.mode === "navigate" || /\/(index\.html)?$/.test(new URL(req.url).pathname);
+  if (isPage) {
+    e.respondWith(
+      fetch(req, { cache: "no-store" })
+        .then((res) => {
+          if (res && res.ok) { const clone = res.clone(); caches.open(CACHE_NAME).then((c) => c.put(req, clone)); }
+          return res;
+        })
+        .catch(() => caches.match(req).then((hit) => hit || caches.match("./index.html") || caches.match("./")))
+    );
     return;
   }
   e.respondWith(
