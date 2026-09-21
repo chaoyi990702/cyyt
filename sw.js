@@ -8,7 +8,7 @@ importScripts('./sw-push.js');
    用法：把本文件（sw.js）和 index.html 放在同一个文件夹，
    部署到 HTTPS 环境（如 GitHub Pages）即可生效。
    ============================================================ */
-const CACHE_NAME = "cgl-site-v11";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
+const CACHE_NAME = "cgl-site-v12";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
 
 // 安装：缓存首页核心文件（bgm 等大文件改为"播放过就缓存"，避免首次安装卡住）
 self.addEventListener("install", (e) => {
@@ -67,6 +67,24 @@ self.addEventListener("fetch", (e) => {
           if (req.mode === "navigate") return caches.match("./index.html");
           return new Response("", { status: 503, statusText: "Offline" });
         });
+    })
+  );
+});
+
+/* ============================================================
+   宠物通知点击：跳转到宠物板块
+   （只处理 tag 以 cgl-pet 开头的通知，其他通知交给 sw-push.js）
+   ============================================================ */
+self.addEventListener("notificationclick", (e) => {
+  const tag = e.notification.tag || "";
+  e.notification.close();
+  if (tag.indexOf("cgl-pet") !== 0) return;
+  e.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const c of list) {
+        if ("focus" in c) { c.focus(); c.postMessage({ type: "cgl-goto", target: "pet" }); return; }
+      }
+      return self.clients.openWindow("./?goto=pet");
     })
   );
 });
