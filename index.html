@@ -967,6 +967,9 @@ body.theme-rose .pet-idle-card{background:rgba(224,117,154,.10)}
 .pet-room svg{width:100%;height:100%;display:block}
 .pet-scene-toggle{position:absolute;top:8px;right:8px;z-index:5;border:none;border-radius:999px;padding:5px 12px;font:600 11.5px var(--sans);color:var(--rose-deep);background:rgba(255,255,255,.88);box-shadow:0 2px 8px rgba(60,90,140,.16);cursor:pointer;transition:transform .12s}
 .pet-scene-toggle:active{transform:scale(.95)}
+.pet-pause-toggle{position:absolute;top:8px;left:8px;z-index:5;border:none;border-radius:999px;padding:5px 12px;font:600 11.5px var(--sans);color:var(--rose-deep);background:rgba(255,255,255,.88);box-shadow:0 2px 8px rgba(60,90,140,.16);cursor:pointer;transition:transform .12s,background .15s,color .15s}
+.pet-pause-toggle:active{transform:scale(.95)}
+.pet-pause-toggle.on{background:#f6a25c;color:#fff}
 .pet-yarn{cursor:pointer;transform-box:fill-box;transform-origin:center;animation:yarnBob 3s ease-in-out infinite}
 @keyframes yarnBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 /* ===== 四种状态展示 ===== */
@@ -1865,6 +1868,7 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
       <div class="pet-scene" id="petScene">
         <div class="pet-room" id="petRoom"></div>
         <button class="pet-scene-toggle" id="petSceneToggle" type="button" aria-label="切换场景">🌊 海边</button>
+        <button class="pet-pause-toggle" id="petPauseBtn" type="button" aria-label="暂停宠物实时更新">⏸ 暂停更新</button>
         <div class="pet-say" id="petSay"></div>
         <div class="pet-svg-wrap" id="petSvgWrap"></div>
         <div class="pet-away"><b>🧭</b><span id="petAwayNote">探险中…</span></div>
@@ -3082,6 +3086,12 @@ function catchMissBall(b){
 }
 function catchSpawnOne(){
   const field = $id("catchField"); if(!field || !catchRun) return;
+  // 安全阀：场上球太多（异常堆积）时先跳过这次生成，避免无限增长拖垮页面
+  if(field.children.length > 25){
+    clearTimeout(catchSpawn);
+    catchSpawn = setTimeout(function(){ if(catchRun) catchSpawnOne(); }, catchSpawnDelay(catchLevelNow()));
+    return;
+  }
   const lv = catchLevelNow();
   const b = document.createElement("div");
   b.className = "catch-ball"; b.textContent = "🧶";
@@ -3187,6 +3197,12 @@ function memFlip(c, i){
     memUpdate();
   });
 })();
+// 切到后台时自动结束小游戏，避免动画/计时器在不可见时持续堆积
+document.addEventListener("visibilitychange", function(){
+  if(!document.hidden) return;
+  if(catchRun) endCatchGame();
+  if(memRun) memEnd();
+});
 /* ==================== 顶部导航平滑滚动 ==================== */
 document.querySelectorAll(".nav-link").forEach(link=>{
   link.addEventListener("click", ()=>{
@@ -4046,6 +4062,8 @@ let petState = {
 };
 let petNoExtra = false, petBusy = false, petCd = {}, petSig = "", petSayTimer = null, petSheetBuild = null, petHintShown = false;
 let petRoomMode = true, petRoomBuilt = null;
+let petPaused = false;
+try{ petPaused = localStorage.getItem("cgl_pet_paused") === "1"; }catch(e){}
 
 function petClamp(v){ return Math.max(0, Math.min(100, v)); }
 function petDefaults(){
@@ -4525,6 +4543,18 @@ function petRender(){
   });
 }
 function updatePetUI(){ petRender(); }
+function petUpdatePauseBtn(){
+  const b = $id("petPauseBtn"); if(!b) return;
+  b.classList.toggle("on", petPaused);
+  b.textContent = petPaused ? "▶️ 已暂停，点击恢复" : "⏸ 暂停更新";
+}
+function petPauseToggle(){
+  petPaused = !petPaused;
+  try{ localStorage.setItem("cgl_pet_paused", petPaused ? "1" : "0"); }catch(e){}
+  petUpdatePauseBtn();
+  showToast(petPaused ? "已暂停宠物的实时更新和云同步" : "宠物更新已恢复");
+  if(!petPaused){ try{ pullPetFromCloud(); }catch(e){} petLoop(); }
+}
 
 /* ---------- 弹出面板 ---------- */
 function petSheet(title, build){
@@ -4752,6 +4782,7 @@ function petCheckHungerNotify(){
   }
 }
 function petLoop(){
+  if(petPaused) return;
   petCatchUp();
   const ex = petState.extra;
   if(ex.trip && Date.now() >= ex.trip.end) petFinishTrip();
@@ -4881,6 +4912,8 @@ function petOpenBook(){
   on("petSvgWrap", petPat);
   on("petSheetClose", petSheetClose);
   on("petSceneToggle", petSceneToggle);
+  on("petPauseBtn", petPauseToggle);
+  petUpdatePauseBtn();
   const ps = $id("petScene");
   if(ps) ps.addEventListener("click", function(e){ if(e.target && e.target.closest && e.target.closest("[data-yarn]")) petPlayYarn(); });
   const ov = $id("petOverlay");
@@ -4944,7 +4977,7 @@ function applyPetState(p){
 }
 
 async function syncPetToCloud(){
-  if(!cloudReady) return;
+  if(!cloudReady || petPaused) return;
   try{
     const {data, error} = await sb.from("pet_state").select("*").eq("username","global").limit(1);
     if(error) throw error;
@@ -4990,7 +5023,7 @@ console.log("心情日记和电子宠物初始化完成");
 /* ==================== 实时同步 Realtime（新增） ==================== */
 // 从云端拉回共享宠物状态并刷新界面
 async function pullPetFromCloud(){
-  if(!cloudReady) return;
+  if(!cloudReady || petPaused) return;
   try{
     const {data, error} = await sb.from("pet_state").select("*").eq("username","global").limit(1);
     if(error || !data || !data[0]) return;
