@@ -771,8 +771,9 @@ body.theme-rose .quiz-opt.correct{background:rgba(243,168,194,0.35);border-color
 .catch-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink-light);font-size:13px;line-height:1.7;padding:0 18px}
 .catch-ball{position:absolute;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;transition:transform .12s}
 .catch-ball:active{transform:scale(.8)}
-.catch-foot{display:flex;justify-content:space-between;gap:8px;margin-top:10px;font-size:12px;color:var(--ink-light)}
+.catch-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 10px;margin-top:10px;font-size:12px;color:var(--ink-light)}
 .catch-foot b{color:var(--rose-deep)}
+.catch-ball.missed{opacity:.35}
 .mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
 .mem-card{position:relative;aspect-ratio:1;border:none;border-radius:12px;cursor:pointer;padding:0;background:transparent;-webkit-tap-highlight-color:transparent}
 .mem-card .mem-back,.mem-card .mem-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .25s ease}
@@ -888,6 +889,25 @@ body.theme-rose .pet-scene{background:linear-gradient(180deg,#ffe0ea 0%,#fff1f5 
 .pet-say.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .pet-say::after{content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;background:#fff;transform:translateX(-50%) rotate(45deg)}
 .pet-heart{position:absolute;bottom:110px;font-size:22px;color:#ff6f9c;pointer-events:none;animation:petHeart 1.1s ease-out forwards;z-index:3}
+/* —— 互动画面：喂食 / 玩耍 / 洗澡 的动画层（叠加在场景里，不遮挡画面） —— */
+.pet-fx{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.pet-fx .fx-el{position:absolute;pointer-events:none}
+.fx-food{left:50%;bottom:96px;font-size:36px;animation:fxFeedDrop 1.7s ease-in forwards;filter:drop-shadow(0 3px 6px rgba(80,60,40,.25))}
+@keyframes fxFeedDrop{0%{transform:translateX(-50%) translateY(-230px) scale(.85);opacity:0}16%{opacity:1}66%{transform:translateX(-50%) translateY(0) scale(1.05);opacity:1}82%{transform:translateX(-50%) translateY(-4px) scale(1.12);opacity:1}100%{transform:translateX(-50%) translateY(8px) scale(.35);opacity:0}}
+.fx-nom{font:700 16px var(--serif);color:#d9606f;opacity:0;animation:fxNom 1s ease-out forwards}
+@keyframes fxNom{0%{opacity:0;transform:translateY(8px) scale(.55)}35%{opacity:1;transform:translateY(-2px) scale(1.15)}100%{opacity:0;transform:translateY(-26px) scale(.95)}}
+.fx-bubble{animation:fxRise 2.6s ease-out forwards;opacity:0}
+@keyframes fxRise{0%{opacity:0;transform:translateY(12px) scale(.55)}22%{opacity:1}100%{opacity:0;transform:translateY(-130px) scale(1.18)}}
+.fx-tease{animation:fxTease 1.6s ease-in-out infinite;font-size:32px}
+@keyframes fxTease{0%,100%{transform:translateX(-26px) rotate(-16deg)}50%{transform:translateX(26px) rotate(16deg)}}
+.fx-stroke{animation:fxStroke 1.3s ease-in-out infinite;font-size:46px}
+@keyframes fxStroke{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+.fx-laser{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,#ff9a8a,#e03535);box-shadow:0 0 14px rgba(224,53,53,.9);animation:fxLaser 1.5s ease-in-out infinite alternate}
+@keyframes fxLaser{0%{transform:translate(0,0)}100%{transform:translate(160px,-44px)}}
+/* —— 床上睡猫（房间模式睡觉画面） —— */
+.pet-bed{position:absolute;left:-2%;bottom:0;width:52%;z-index:4;opacity:0;visibility:hidden;transition:opacity .5s ease;pointer-events:none}
+.pet-bed.show{opacity:1;visibility:visible}
+.pet-bed svg{width:100%;height:auto;display:block}
 .pk-line{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 .pk-ink{fill:var(--ink)}
 .pf-deep{fill:var(--rose-deep)}
@@ -1293,8 +1313,9 @@ body.theme-rose .who-menu-item:hover,body.theme-rose .who-menu-item:active{backg
   .chat-panel{left:0;right:0;top:0;bottom:var(--chat-bottom,0px);width:auto;height:auto;border-radius:0;box-shadow:none;transform:translateX(100%);transition:transform .24s ease,opacity 0s,visibility 0s linear .24s}
   .chat-panel.open{transform:translateX(0);transition:transform .24s ease,opacity 0s,visibility 0s}
   .chat-panel.dragging{transition:none}
-  .chat-head{padding-top:calc(12px + var(--sat,0px));position:relative}
+  .chat-head{padding-top:calc(12px + var(--sat,0px));position:relative;flex:0 0 auto}
   .chat-close{order:-1;margin-right:2px}
+  .chat-compose{flex:0 0 auto;padding-bottom:calc(10px + var(--sab,0px))}
 }
 /* ============ 气泡样式（可在「聊天与通知设置」里切换）============ */
 [data-bubble="flat"] .bubble{border-radius:6px;box-shadow:none}
@@ -1801,11 +1822,11 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
     <div class="game-sub">🧶 接毛球 · 赢贝壳</div>
     <div class="card catch-card">
       <div class="catch-top">
-        <span>接住掉下来的毛球，每个 +1 🐚，限时 20 秒</span>
+        <span>接住掉下来的毛球，每个 +1 🐚，不限时！会越下越快、越下越多，漏掉 5 个就结束，拼手速～</span>
         <button class="btn-ghost" id="catchStart" type="button">开始</button>
       </div>
       <div class="catch-field" id="catchField"><div class="catch-empty">点「开始」接毛球～<br>贝壳会存进你们俩的宠物贝壳包</div></div>
-      <div class="catch-foot"><span>已接住 <b id="catchGot">0</b> 个</span><span>时间 <b id="catchTime">0</b>s</span><span>贝壳 <b id="catchShell">0</b> 🐚</span></div>
+      <div class="catch-foot"><span>已接住 <b id="catchGot">0</b> 个</span><span>难度 <b id="catchLv">Lv.1</b></span><span>漏球 <b id="catchMiss">0</b>/5</span><span>贝壳 <b id="catchShell">0</b> 🐚</span></div>
     </div>
 
     <div class="game-sub">🀄 翻牌配对 · 赢贝壳</div>
@@ -3028,18 +3049,18 @@ function gameEarnShells(n, why){
   try{ syncPetToCloud(); }catch(e){}
   showToast("+" + n + " 🐚 " + (why || "已存进宠物贝壳包"), 3200);
 }
-/* —— 接毛球 —— */
-let catchTimer = null, catchSpawn = null, catchLeft = 0, catchGot = 0, catchRun = false;
-function catchTick(){
-  catchLeft--;
-  if(catchLeft <= 0){ endCatchGame(); return; }
-  updateCatchUI();
-}
-function updateCatchUI(){
-  const a = $id("catchGot"), b = $id("catchTime"), c = $id("catchShell");
+/* —— 接毛球（不限时 · 越下越快 · 越下越多 · 漏 5 个结束） —— */
+let catchTimer = null, catchSpawn = null, catchElapsed = 0, catchMiss = 0, catchGot = 0, catchShell = 0, catchRun = false;
+const CATCH_MISS_MAX = 5;
+function catchLevelNow(){ return 1 + Math.floor(catchGot / 6) + Math.floor(catchElapsed / 15); }
+function catchSpawnDelay(lv){ return Math.max(170, Math.round(520 * Math.pow(0.86, lv - 1))); }
+function catchFallMs(lv){ return Math.max(1100, (2.2 + Math.random() * 1.4) * 1000 * Math.pow(0.9, lv - 1)); }
+function catchUpdate(){
+  const a = $id("catchGot"), b = $id("catchLv"), c = $id("catchMiss"), d = $id("catchShell");
   if(a) a.textContent = catchGot;
-  if(b) b.textContent = catchLeft;
-  if(c) c.textContent = catchShell;
+  if(b) b.textContent = "Lv." + catchLevelNow();
+  if(c) c.textContent = catchMiss + "/" + CATCH_MISS_MAX;
+  if(d) d.textContent = catchShell;
 }
 function catchBall(b){
   if(!catchRun || b.dataset.got === "1") return;
@@ -3049,45 +3070,62 @@ function catchBall(b){
   b.style.transition = "transform .15s";
   b.style.transform = "scale(1.25)";
   setTimeout(function(){ b.remove(); }, 180);
-  if(catchShell >= 15) endCatchGame(); else updateCatchUI();
+  catchUpdate();
+}
+function catchMissBall(b){
+  if(!catchRun || b.dataset.got === "1") return;
+  b.dataset.got = "1";
+  b.classList.add("missed");
+  catchMiss++;
+  catchUpdate();
+  if(catchMiss >= CATCH_MISS_MAX) endCatchGame();
+}
+function catchSpawnOne(){
+  const field = $id("catchField"); if(!field || !catchRun) return;
+  const lv = catchLevelNow();
+  const b = document.createElement("div");
+  b.className = "catch-ball"; b.textContent = "🧶";
+  b.style.left = (6 + Math.random() * 78) + "%";
+  b.style.top = "-44px";
+  b.dataset.got = "0";
+  b.addEventListener("pointerdown", function(ev){ ev.stopPropagation(); catchBall(b); });
+  field.appendChild(b);
+  const dur = catchFallMs(lv);
+  const anim = b.animate([
+    { transform: "translateY(0)" },
+    { transform: "translateY(" + (field.clientHeight + 80) + "px)" }
+  ], { duration: dur, easing: "linear" });
+  anim.onfinish = function(){ if(b.parentNode) b.remove(); catchMissBall(b); };
+  clearTimeout(catchSpawn);
+  catchSpawn = setTimeout(function(){ if(catchRun) catchSpawnOne(); }, catchSpawnDelay(catchLevelNow()));
+}
+function catchTick(){
+  if(!catchRun) return;
+  catchElapsed++;
+  catchUpdate();
 }
 function endCatchGame(){
   if(!catchRun) return;
   catchRun = false;
-  clearInterval(catchTimer); clearInterval(catchSpawn);
+  clearInterval(catchTimer); clearTimeout(catchSpawn);
   catchTimer = null; catchSpawn = null;
-  const s = $id("catchStart"); if(s) s.disabled = false;
+  const s = $id("catchStart"); if(s){ s.disabled = false; s.textContent = "再来一局"; }
   if(catchGot > 0) gameEarnShells(catchGot, "接毛球奖励");
   const f = $id("catchField");
-  if(f) f.innerHTML = '<div class="catch-empty">本局接住 ' + catchGot + ' 个，获得 <b style="color:var(--rose-deep)">+' + catchGot + ' 🐚</b>。再来一局？</div>';
-  updateCatchUI();
+  if(f) f.innerHTML = '<div class="catch-empty">本局接住 <b style="color:var(--rose-deep)">' + catchGot + '</b> 个、漏掉 ' + catchMiss + ' 个，获得 <b style="color:var(--rose-deep)">+' + catchGot + ' 🐚</b>。再来一局？</div>';
+  catchUpdate();
 }
 (function(){
   const start = $id("catchStart"), field = $id("catchField");
   if(!start || !field) return;
   start.addEventListener("click", function(){
-    if(catchRun) return;
-    catchRun = true; catchGot = 0; catchShell = 0; catchLeft = 20;
-    field.innerHTML = ""; start.disabled = true;
-    updateCatchUI();
-    clearInterval(catchTimer); clearInterval(catchSpawn);
+    if(catchRun){ endCatchGame(); return; }
+    catchRun = true; catchGot = 0; catchMiss = 0; catchShell = 0; catchElapsed = 0;
+    field.innerHTML = ""; start.disabled = false; start.textContent = "结束";
+    catchUpdate();
+    clearInterval(catchTimer); clearTimeout(catchSpawn);
     catchTimer = setInterval(catchTick, 1000);
-    catchSpawn = setInterval(function(){
-      if(!catchRun) return;
-      const b = document.createElement("div");
-      b.className = "catch-ball"; b.textContent = "🧶";
-      b.style.left = (6 + Math.random() * 78) + "%";
-      b.style.top = "-44px";
-      b.dataset.got = "0";
-      const dur = (2.2 + Math.random() * 1.6) * 1000;
-      b.addEventListener("pointerdown", function(ev){ ev.stopPropagation(); catchBall(b); });
-      field.appendChild(b);
-      const anim = b.animate([
-        { transform: "translateY(0)" },
-        { transform: "translateY(" + (field.clientHeight + 80) + "px)" }
-      ], { duration: dur, easing: "linear" });
-      anim.onfinish = function(){ if(b.parentNode) b.remove(); };
-    }, 520);
+    catchSpawnOne();
   });
 })();
 /* —— 翻牌配对 —— */
@@ -3956,7 +3994,9 @@ const PET_FOODS = [
 ];
 const PET_PLAYS = [
   { id: "tease",  name: "逗它玩",  ico: "🪀", price: 0, happy: 12, energy: -8, sat: -4, note: "免费 · 心情 +12 · 精力 -8" },
-  { id: "bubble", name: "追泡泡",  ico: "🫧", price: 5, happy: 22, energy: -8, sat: -5, note: "心情 +22 · 精力 -8" }
+  { id: "bubble", name: "追泡泡",  ico: "🫧", price: 5, happy: 22, energy: -8, sat: -5, note: "心情 +22 · 精力 -8" },
+  { id: "stroke", name: "撸猫",    ico: "🖐️", price: 0, happy: 14, energy: -7, sat: -3, note: "免费 · 心情 +14 · 精力 -7" },
+  { id: "laser",  name: "激光笔",  ico: "🔦", price: 6, happy: 18, energy: -9, sat: -4, note: "心情 +18 · 精力 -9" }
 ];
 const PET_TRIPS = {
   short: { name: "海边散步", ico: "🐚", min: 15,  coins: [8, 14],    items: 0.25, exp: 10, energy: 15, sat: 8 },
@@ -3976,10 +4016,17 @@ const PET_ITEMS = [
 const PET_ACC = [
   { id: "bow",     slot: "head", name: "蝴蝶结", ico: "🎀", price: 30 },
   { id: "straw",   slot: "head", name: "草帽",   ico: "👒", price: 60 },
+  { id: "flower",  slot: "head", name: "小花环", ico: "🏵️", price: 90 },
   { id: "crown",   slot: "head", name: "小皇冠", ico: "👑", price: 120 },
+  { id: "bunny",   slot: "head", name: "兔耳朵", ico: "🐰", price: 150 },
+  { id: "halo",    slot: "head", name: "天使光环", ico: "😇", price: 200 },
+  { id: "bell",    slot: "neck", name: "铃铛项圈", ico: "🔔", price: 70 },
   { id: "bowtie",  slot: "neck", name: "领结",   ico: "👔", price: 40 },
   { id: "scarf",   slot: "neck", name: "红围巾", ico: "🧣", price: 50 },
-  { id: "glasses", slot: "face", name: "圆框眼镜", ico: "👓", price: 80 }
+  { id: "pearl",   slot: "neck", name: "珍珠项链", ico: "📿", price: 180 },
+  { id: "cape",    slot: "neck", name: "小披风", ico: "🧥", price: 260 },
+  { id: "glasses", slot: "face", name: "圆框眼镜", ico: "👓", price: 80 },
+  { id: "shades",  slot: "face", name: "小墨镜", ico: "🕶️", price: 140 }
 ];
 const PET_SAY = {
   happy:  ["嘿嘿，今天心情超好～", "有你们在真好 ♡", "想去海边玩！"],
@@ -4181,10 +4228,17 @@ function petSvgFace(face, o){
   if(!o.plain){
     if(w.neck === "scarf") s += '<path fill="#e46b7a" d="M64 132 Q100 150 136 132 L136 142 Q100 160 64 142 Z"/><path fill="#d4566a" d="M114 146 L123 166 L107 164 Z"/>';
     if(w.neck === "bowtie") s += '<path fill="#6d8fd6" d="M100 140 L80 130 L80 150 Z M100 140 L120 130 L120 150 Z"/><circle cx="100" cy="140" r="5" fill="#4a6cb8"/>';
+    if(w.neck === "bell") s += '<path d="M74 132 Q100 148 126 132" fill="none" stroke="#e0707f" stroke-width="6" stroke-linecap="round"/><circle cx="100" cy="148" r="8" fill="#f6c96b" stroke="#d9a233" stroke-width="2"/><path d="M96 150 h8" stroke="#a87b1f" stroke-width="1.8"/><circle cx="99" cy="145.5" r="1.7" fill="#a87b1f"/>';
+    if(w.neck === "pearl"){ const ps = [[76,137],[86,146],[100,150],[114,146],[124,137]]; ps.forEach(function(p){ s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="4.6" fill="#fff" stroke="#d8c6e8" stroke-width="1.2"/>'; }); }
+    if(w.neck === "cape") s += '<path d="M64 136 Q100 170 136 136 L136 150 Q100 188 64 150 Z" fill="#e0707f" opacity=".93"/><path d="M64 136 Q100 170 136 136 L136 150 Q100 188 64 150 Z" fill="none" stroke="#d4566a" stroke-width="1.6" opacity=".8"/><circle cx="100" cy="156" r="3.4" fill="#f6c96b"/>';
     if(w.face === "glasses") s += '<g fill="rgba(255,255,255,.28)" stroke="#3d3d4d" stroke-width="3"><circle cx="80" cy="89" r="13"/><circle cx="120" cy="89" r="13"/></g><path d="M93 89 H107" stroke="#3d3d4d" stroke-width="3"/>';
+    if(w.face === "shades") s += '<g fill="#2b2b33"><rect x="66" y="82" width="27" height="19" rx="7"/><rect x="107" y="82" width="27" height="19" rx="7"/></g><path d="M93 90 H107" stroke="#2b2b33" stroke-width="4"/><path d="M71 86 l5 0 M112 86 l5 0" stroke="rgba(255,255,255,.55)" stroke-width="2.6" stroke-linecap="round"/>';
     if(w.head === "bow") s += '<g transform="translate(133 46) rotate(18)"><path fill="#ff8fb1" d="M0 0 L-17 -10 L-17 10 Z M0 0 L17 -10 L17 10 Z"/><circle r="4.5" fill="#ff5f8f"/></g>';
     else if(w.head === "straw") s += '<ellipse cx="100" cy="58" rx="52" ry="9" fill="#e9c98a"/><path fill="#f6dfae" d="M66 56 Q100 16 134 56 Z"/><rect x="72" y="50" width="56" height="7" rx="3" fill="#e46b7a"/>';
     else if(w.head === "crown") s += '<path fill="#f6c453" stroke="#d9a233" stroke-width="2" d="M80 50 L84 26 L94 40 L100 20 L106 40 L116 26 L120 50 Z"/><circle cx="100" cy="40" r="2.6" fill="#ff6f9c"/>';
+    else if(w.head === "flower") s += '<g transform="translate(136 46)"><circle cx="0" cy="0" r="8.5" fill="#ffc4d6"/><circle cx="9.5" cy="-6" r="7" fill="#ffb3c8"/><circle cx="-9.5" cy="-6" r="7" fill="#ffb3c8"/><circle cx="9.5" cy="6.5" r="7" fill="#ffb3c8"/><circle cx="-9.5" cy="6.5" r="7" fill="#ffb3c8"/><circle cx="0" cy="0" r="4" fill="#ffe08a"/></g>';
+    else if(w.head === "bunny") s += '<path d="M87 50 Q79 14 92 8 Q95 28 96 44 Z" fill="#fff" stroke="#e8b8c4" stroke-width="2"/><path d="M113 50 Q121 14 108 8 Q105 28 104 44 Z" fill="#fff" stroke="#e8b8c4" stroke-width="2"/><path d="M91 22 Q89 34 92 44 M109 22 Q111 34 108 44" fill="none" stroke="#ffc4d6" stroke-width="2.6" stroke-linecap="round"/>';
+    else if(w.head === "halo") s += '<ellipse cx="100" cy="38" rx="26" ry="7" fill="none" stroke="#e8b53a" stroke-width="5.5"/><ellipse cx="100" cy="38" rx="26" ry="7" fill="none" stroke="#ffe9a8" stroke-width="2.2"/>';
   }
   s += '</g></svg>';
   return s;
@@ -4231,6 +4285,15 @@ function petRoomSvg(){
     '<path d="M20 170 L56 170 L50 126 L26 126 Z" fill="#f6e2b0"/>' +
     '<rect x="26" y="118" width="24" height="10" rx="4" fill="#e8c98a"/>' +
     '<ellipse cx="38" cy="146" rx="22" ry="24" fill="rgba(255,236,170,.3)"/>' +
+    // 小床（窗户下方，睡觉时它会跑来这里睡）
+    '<rect x="18" y="150" width="134" height="10" rx="4" fill="#c99866"/>' +
+    '<rect x="14" y="142" width="12" height="24" rx="4" fill="#b9865a"/>' +
+    '<rect x="20" y="136" width="132" height="12" rx="6" fill="#d9ab7f"/>' +
+    '<rect x="22" y="146" width="126" height="18" rx="8" fill="#fff"/>' +
+    '<ellipse cx="44" cy="144" rx="17" ry="9" fill="#fdeef2" stroke="#f0b3c4" stroke-width="1.5"/>' +
+    '<rect x="64" y="134" width="84" height="28" rx="11" fill="#e0707f"/>' +
+    '<path d="M64 134 Q106 116 148 134 L148 162 Q106 146 64 162 Z" fill="#e0707f"/>' +
+    '<path d="M72 138 h10 M92 134 v10 M114 140 h12" stroke="#f6a6ba" stroke-width="2" stroke-linecap="round"/>' +
     petYarn(44, 202, 10, "#e0707f", 0) + petYarn(122, 204, 9, "#5C8AC2", .9) + petYarn(296, 200, 11, "#f6c96b", 1.7) +
     '</svg>';
 }
@@ -4287,6 +4350,90 @@ function petFloat(sym){
   sc.appendChild(h);
   setTimeout(function(){ h.remove(); }, 1200);
 }
+/* —— 互动画面：喂食 / 玩耍 / 洗澡 的动作动画（叠加在场景里，不遮挡宠物本体） —— */
+function petFx(kind, arg){
+  const sc = $id("petScene"); if(!sc) return;
+  let el = sc.querySelector(".pet-fx");
+  if(!el){ el = document.createElement("div"); el.className = "pet-fx"; sc.appendChild(el); }
+  el.innerHTML = "";
+  clearTimeout(el._t);
+  el._t = setTimeout(function(){ if(el.parentNode) el.innerHTML = ""; }, 3800);
+  const put = function(cls, style, delay){
+    const d = document.createElement("span");
+    d.className = "fx-el " + cls;
+    if(style) d.style.cssText = style;
+    if(delay) d.style.animationDelay = delay;
+    el.appendChild(d);
+    return d;
+  };
+  if(kind === "feed"){
+    put("fx-food", "left:50%;bottom:96px;font-size:34px", "");
+    put("fx-nom", "left:42%;bottom:138px;animation-delay:1.05s");
+  }else if(kind === "bath"){
+    for(let i = 0; i < 8; i++){
+      put("fx-bubble", "left:" + (30 + Math.random() * 40) + "%;bottom:" + (44 + Math.random() * 34) + "px;font-size:" + (16 + Math.random() * 14) + "px", (i * .18) + "s");
+    }
+    put("fx-nom", "left:36%;bottom:150px;animation-delay:.3s");
+  }else if(kind === "tease"){
+    put("fx-tease", "left:36%;bottom:96px", "");
+    put("fx-nom", "left:38%;bottom:150px;animation-delay:.6s");
+  }else if(kind === "bubble"){
+    for(let i = 0; i < 5; i++){
+      put("fx-bubble", "left:" + (26 + Math.random() * 40) + "%;bottom:" + (60 + Math.random() * 30) + "px;font-size:" + (15 + Math.random() * 10) + "px", (i * .25) + "s");
+    }
+  }else if(kind === "stroke"){
+    put("fx-stroke", "left:47%;top:26%", "");
+    put("fx-nom", "left:38%;bottom:150px;animation-delay:.5s");
+  }else if(kind === "laser"){
+    put("fx-laser", "left:18%;top:42%", "");
+    put("fx-nom", "left:38%;bottom:150px;animation-delay:.7s");
+  }
+}
+/* —— 睡觉：房间模式里跑到床上睡 —— */
+let petBedEl = null, petBedAnim = "", petBedWant = false;
+function petBedSvg(){
+  return '<svg viewBox="0 0 220 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<rect x="2" y="96" width="216" height="12" rx="5" fill="#c99866"/>' +
+    '<rect x="0" y="86" width="216" height="12" rx="6" fill="#d9ab7f"/>' +
+    '<rect x="6" y="62" width="208" height="26" rx="11" fill="#fff"/>' +
+    '<ellipse cx="40" cy="60" rx="26" ry="13" fill="#fdeef2" stroke="#f0b3c4" stroke-width="1.6"/>' +
+    '<path d="M62 86 Q104 46 156 66 L156 88 Q104 66 62 88 Z" fill="#e0707f"/>' +
+    '<path d="M62 86 Q104 46 156 66" fill="none" stroke="#f6a6ba" stroke-width="3" stroke-linecap="round"/>' +
+    '<path d="M96 52 Q104 40 112 52 Q108 56 104 52 Q100 56 96 52 Z" fill="#fff"/>' +
+    '<ellipse cx="70" cy="58" rx="17" ry="13" fill="#fff" stroke="#f0b3c4" stroke-width="2"/>' +
+    '<path class="pk-line" d="M64 57 Q70 62 76 57"/><path class="pk-line" d="M64 63 Q70 68 76 63"/>' +
+    '<ellipse cx="56" cy="64" rx="4" ry="2.6" fill="rgba(255,120,150,.42)"/><ellipse cx="84" cy="64" rx="4" ry="2.6" fill="rgba(255,120,150,.42)"/>' +
+    '<path d="M66 69 L74 69 L70 73 Z" fill="#f29aa8"/><path class="pk-line" d="M68 76 Q70 78 72 76"/>' +
+    '<path d="M58 54 L52 34 L68 48 Z" fill="#f6a25c"/><path d="M82 54 L88 34 L72 48 Z" fill="#f6a25c"/>' +
+    '<text class="pet-z" x="120" y="34">z</text><text class="pet-z" style="animation-delay:1.2s" x="132" y="22">Z</text>' +
+    '</svg>';
+}
+function petGoToBed(going){
+  const sc = $id("petScene"), wrap = $id("petSvgWrap");
+  if(!sc || !wrap) return;
+  if(!petBedEl){
+    petBedEl = document.createElement("div");
+    petBedEl.id = "petBed"; petBedEl.className = "pet-bed";
+    sc.appendChild(petBedEl);
+  }
+  if(going){
+    // 海边没有床，原地睡就好
+    if(!petRoomMode) return;
+    clearTimeout(wrap._bedTO);
+    wrap.classList.add("walking");
+    wrap.style.left = "8%";
+    wrap._bedTO = setTimeout(function(){
+      if(petState.isSleeping){ wrap.style.opacity = "0"; petBedEl.innerHTML = petBedSvg(); petBedEl.classList.add("show"); }
+    }, 2350);
+  }else{
+    clearTimeout(wrap._bedTO);
+    petBedEl.classList.remove("show");
+    wrap.style.opacity = "";
+    wrap.classList.add("walking");
+    wrap.style.left = "50%";
+    wrap._bedTO = setTimeout(function(){ wrap.classList.remove("walking"); }, 2350);
+  }
+}
 let petWanderNext = 0, petWanderX = 50;
 function petWanderMaybe(away){
   const wrap = $id("petSvgWrap"); if(!wrap) return;
@@ -4335,6 +4482,14 @@ function petRender(){
     }
   }
   petWanderMaybe(away);
+  // 睡觉 / 醒来：跑去床上睡（跨设备同步、夜晚自动入睡时也会触发；海边没床就原地睡）
+  const sleepingNow = petState.isSleeping && !away;
+  const bedWant = sleepingNow && petRoomMode;
+  if(bedWant !== petBedWant){
+    petBedWant = bedWant;
+    if(bedWant){ petBedAnim = "in"; petGoToBed(true); }
+    else { petBedAnim = ""; petGoToBed(false); }
+  }
   const tg = $id("petSceneToggle");
   if(tg){ tg.style.display = away ? "none" : ""; tg.textContent = petRoomMode ? "🌊 海边" : "🏠 房间"; }
   // 放置：贝壳篮
@@ -4442,7 +4597,7 @@ function petDoFeed(id){
     petState.happy = petClamp(petState.happy + f.happy);
     petState.energy = petClamp(petState.energy + f.energy);
     petState.exp += 4;
-    petRecord("喂了" + f.name); petSay("好吃！♡"); petFloat("🍴");
+    petRecord("喂了" + f.name); petSay("好吃！♡"); petFloat("🍴"); petFx("feed", f.ico); petSheetClose();
   });
 }
 function petDoPlay(id){
@@ -4459,6 +4614,8 @@ function petDoPlay(id){
     petState.hunger = petClamp(petState.hunger + p.sat);
     petState.exp += 6;
     petRecord("陪它" + p.name); petSay("好开心！！"); petFloat("♥");
+    petFx(p.id === "tease" ? "tease" : p.id === "bubble" ? "bubble" : p.id === "stroke" ? "stroke" : "laser");
+    petSheetClose();
   });
 }
 function petDoBath(){
@@ -4470,7 +4627,7 @@ function petDoBath(){
     ex.clean = petClamp(ex.clean + 45);
     petState.happy = petClamp(petState.happy - 2);
     petState.exp += 4;
-    petRecord("给它洗了个澡"); petSay("香香的～"); petFloat("🫧");
+    petRecord("给它洗了个澡"); petSay("香香的～"); petFloat("🫧"); petFx("bath");
   });
 }
 function petToggleSleep(){
@@ -4480,6 +4637,7 @@ function petToggleSleep(){
     petState.isSleeping = !petState.isSleeping;
     petRecord(petState.isSleeping ? "哄它去睡觉了 zzz" : "把它叫醒了");
     if(petState.isSleeping) petSay("zzZ…"); else petSay("嗯…醒啦");
+    petGoToBed(petState.isSleeping);
   });
 }
 function petCollectBasket(){
@@ -5308,11 +5466,14 @@ async function chatStart(){
       const vv = window.visualViewport;
       const kb = !!vv && window.innerHeight - vv.height > 120;          // 键盘弹出了
       if(kb){
-        // 让面板始终待在“可见区域”里、贴着键盘上沿，不会被键盘顶出屏幕
+        // 让面板顶贴“可见区域”顶部：对方名字 + 返回键永远留在屏幕上，不被键盘顶出去
+        const top = Math.max(0, Math.round(vv.offsetTop || 0));
         const gap = Math.max(0, window.innerHeight - (vv.offsetTop + vv.height));
+        panel.style.top = top + "px";
         panel.style.setProperty("--chat-bottom", (gap + 10) + "px");
-        panel.style.setProperty("--chat-h", Math.max(220, Math.min(600, vv.height - (mq.matches ? 64 : 40))) + "px");
+        if(!mq.matches) panel.style.setProperty("--chat-h", Math.max(220, Math.min(600, vv.height - 40)) + "px");
       }else{
+        panel.style.top = "";
         panel.style.removeProperty("--chat-bottom"); panel.style.removeProperty("--chat-h");
       }
     };
@@ -5321,7 +5482,7 @@ async function chatStart(){
       fit();
       panel.classList.add("open"); fab.classList.add("hide"); if(backdrop) backdrop.classList.add("show");
       chatVisible = true;
-      if(mq.matches){ prevOverflow = document.body.style.overflow; document.body.style.overflow = "hidden"; }
+      if(mq.matches){ prevOverflow = document.body.style.overflow; document.body.style.overflow = "hidden"; if(window.scrollY > 0) window.scrollTo(0, 0); }
       chatRender(true);
       if(chatUser && !document.hidden) chatMarkRead();
       if(!mq.matches && inp) setTimeout(function(){ inp.focus(); }, 220);
