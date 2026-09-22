@@ -868,10 +868,19 @@ body.theme-rose .pet-coins{background:rgba(224,117,154,.14)}
 .pet-scene{position:relative;height:232px;border-radius:20px;overflow:hidden;background:linear-gradient(180deg,#d9eaff 0%,#eef6ff 60%,#f6e7c8 60%,#efd9a8 100%);border:1px solid rgba(123,164,214,.22)}
 body.theme-rose .pet-scene{background:linear-gradient(180deg,#ffe0ea 0%,#fff1f5 60%,#f6e7c8 60%,#efd9a8 100%)}
 .pet-scene.sleeping::after{content:"";position:absolute;inset:0;background:rgba(40,50,90,.3);pointer-events:none}
-.pet-svg-wrap{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:206px;height:206px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pet-svg-wrap{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:206px;height:206px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:left 2.5s cubic-bezier(.45,.05,.55,.95)}
 .pet-svg-wrap svg{width:100%;height:100%;overflow:visible;animation:petBob 3.2s ease-in-out infinite}
+.pet-svg-wrap.walking svg{animation:petBob 1.15s ease-in-out infinite}
+.pet-svg-wrap.walking.face-left svg{transform:scaleX(-1)}
+.pet-scene[data-stage="0"] .pet-svg-wrap svg{animation-duration:2.3s}
+.pet-scene[data-stage="4"] .pet-svg-wrap svg{animation-duration:4.6s}
+.pet-scene[data-stage="4"] .pet-svg-wrap.walking svg{animation-duration:1.7s}
 .pet-scene.sleeping .pet-svg-wrap svg{animation:petBreath 4.2s ease-in-out infinite}
 .pet-scene.away .pet-svg-wrap{display:none}
+.pet-beach-sea{animation:petWaveMove 7s linear infinite}
+.pet-beach-sea2{animation:petWaveMove 5s linear infinite reverse;opacity:.55}
+@keyframes petWaveMove{from{transform:translateX(0)}to{transform:translateX(-210px)}}
+@media (prefers-reduced-motion:reduce){.pet-beach-sea,.pet-beach-sea2{animation:none}}
 .pet-away{display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--ink-light);font-size:14px}
 .pet-away b{font-size:34px}
 .pet-scene.away .pet-away{display:flex}
@@ -1277,13 +1286,15 @@ body.theme-rose .who-menu-item:hover,body.theme-rose .who-menu-item:active{backg
 .chat-panel.open{transform:none;opacity:1;visibility:visible;pointer-events:auto;transition:transform .2s ease,opacity .2s ease,visibility 0s}
 .chat-titles{display:flex;flex-direction:column;min-width:0;flex:1 1 auto}
 .chat-sub{font-size:10.5px;color:var(--ink-light);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chat-close{flex:0 0 auto;width:30px;height:30px;border:none;border-radius:50%;background:rgba(123,164,214,.14);color:var(--ink-light);font-size:14px;cursor:pointer}
+.chat-close{flex:0 0 auto;width:30px;height:30px;border:none;border-radius:50%;background:rgba(123,164,214,.14);color:var(--ink-light);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 @media (max-width:600px){
-  /* 手机：底部弹出的卡片，四周留出背景（背景轻微变暗、虚化），点背景也能收起 */
-  .chat-backdrop{display:block;position:fixed;inset:0;z-index:1190;background:rgba(30,45,70,.34);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s linear .2s}
-  .chat-backdrop.show{opacity:1;visibility:visible;transition:opacity .2s,visibility 0s}
-  .chat-panel{left:12px;right:12px;width:auto;bottom:var(--chat-bottom,calc(14px + var(--sab)));height:var(--chat-h,min(72vh,600px));border-radius:22px;transform:translateY(28px)}
-  .chat-panel.open{transform:none}
+  /* 手机：整屏聊天室，从右侧滑入，像原生App里"进入一个页面"，右滑可退出 */
+  .chat-backdrop{display:none}
+  .chat-panel{left:0;right:0;top:0;bottom:var(--chat-bottom,0px);width:auto;height:auto;border-radius:0;box-shadow:none;transform:translateX(100%);transition:transform .24s ease,opacity 0s,visibility 0s linear .24s}
+  .chat-panel.open{transform:translateX(0);transition:transform .24s ease,opacity 0s,visibility 0s}
+  .chat-panel.dragging{transition:none}
+  .chat-head{padding-top:calc(12px + var(--sat,0px));position:relative}
+  .chat-close{order:-1;margin-right:2px}
 }
 /* ============ 气泡样式（可在「聊天与通知设置」里切换）============ */
 [data-bubble="flat"] .bubble{border-radius:6px;box-shadow:none}
@@ -1432,7 +1443,7 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
         <span class="chat-sub">发出 5 分钟内，点一下自己的消息可以撤回</span>
       </div>
       <span class="chat-conn" id="chatConn"><i></i><span>连接中…</span></span>
-      <button class="chat-close" id="chatClose" type="button" aria-label="收起聊天室">✕</button>
+      <button class="chat-close" id="chatClose" type="button" aria-label="收起聊天室"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 4.5 L7.5 12 L15 19.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="chat-list" id="chatList"></div>
     <div class="chat-compose">
@@ -3936,7 +3947,7 @@ initMoodSelector();
 
 /* ==================== 电子宠物：养成 + 放置 ==================== */
 const PET_NAMES = ["小屿", "小澜", "星星", "海浪", "月亮"];
-const PET_STAGES = ["幼崽", "小少年", "青年", "成年"];
+const PET_STAGES = ["幼崽", "小少年", "青年", "成年", "长者"];
 const PET_FOODS = [
   { id: "cookie", name: "小饼干", ico: "🍪", price: 0,  sat: 10, happy: 1,  energy: 0, note: "免费 · 每 15 秒一块" },
   { id: "fish",   name: "小鱼干", ico: "🐟", price: 5,  sat: 25, happy: 3,  energy: 0, note: "饱腹 +25 · 心情 +3" },
@@ -3977,6 +3988,7 @@ const PET_SAY = {
   dirty:  ["身上黏黏的…想洗澡", "有点臭臭的…"],
   tired:  ["好困…想睡觉…"],
   sad:    ["有点无聊…陪我玩嘛", "呜…想要抱抱"],
+  bored:  ["唉…有点郁闷", "没意思…陪我说说话嘛", "呼～发呆中"],
   sleep:  ["zzZ…"]
 };
 
@@ -4003,7 +4015,7 @@ function petNormExtra(e){
   o.recent = Array.isArray(e.recent) ? e.recent : [];
   return o;
 }
-function petStage(l){ return l >= 13 ? 3 : l >= 8 ? 2 : l >= 4 ? 1 : 0; }
+function petStage(l){ return l >= 22 ? 4 : l >= 13 ? 3 : l >= 8 ? 2 : l >= 4 ? 1 : 0; }
 function petNeed(l){ return Math.max(25, l * 25); }
 function petAvg(){ const e = petState.extra; return (petState.hunger + petState.happy + petState.energy + e.clean) / 4; }
 function petWho(){ try{ return chatName(chatUser.email); }catch(e){ return "有人"; } }
@@ -4030,6 +4042,7 @@ function petFace(){
   if(e.clean < 25) return "dirty";
   if(petState.energy < 20) return "tired";
   if(petState.happy < 30) return "sad";
+  if(petState.happy < 50) return "bored";
   return petAvg() >= 70 ? "happy" : "normal";
 }
 
@@ -4048,18 +4061,27 @@ function loadPet(){
 function petSave(){ try{ localStorage.setItem("cgl_pet", JSON.stringify(petState)); }catch(e){} }
 
 // 按“距离上次结算过了多久”补算：不管网站开没开，数值都会缓慢变化；但最多算 12 小时、也不会低于 10，宠物不会出事
+function isNightAt(t){ const h = new Date(t).getHours(); return h >= 20 || h < 6; }   // 20:00–6:00 视为夜里，跟着天黑天亮走
+function isNight(){ return isNightAt(Date.now()); }
 function petCatchUp(){
   const ex = petState.extra, now = Date.now();
-  let dt = (now - (ex.lastTick || now)) / 3600000;
+  const prevTick = ex.lastTick || now;
+  let dt = (now - prevTick) / 3600000;
   ex.lastTick = now;
-  if(!(dt > 0) || ex.trip) return;               // 探险中不消耗
+  if(!(dt > 0) || ex.trip) return;               // 探险中不消耗、也不打扰作息
   dt = Math.min(dt, 12);
   const dec = function(v, rate){ return v <= 10 ? v : Math.max(10, v - rate * dt); };
+  // 跟着日出日落走：天黑了没睡就哄睡，天亮了还在睡就叫醒（不管离开了多久、或者是不是刚开起网站）
+  const wasNight = isNightAt(prevTick), nowNight = isNight();
+  if(wasNight !== nowNight){
+    if(nowNight && !petState.isSleeping){ petState.isSleeping = true; petRecord(petState.name + "天黑啦，乖乖去睡觉咯 zzZ", true); }
+    else if(!nowNight && petState.isSleeping){ petState.isSleeping = false; petRecord(petState.name + "天亮啦，精神满满地醒来啦", true); }
+  }
   if(petState.isSleeping){
     petState.energy = Math.min(100, petState.energy + 15 * dt);
     petState.hunger = dec(petState.hunger, 2);
     ex.clean = dec(ex.clean, 1);
-    if(petState.energy >= 100){ petState.isSleeping = false; petRecord(petState.name + "睡醒啦，精神满满！", true); }
+    if(petState.energy >= 100 && !nowNight){ petState.isSleeping = false; petRecord(petState.name + "睡醒啦，精神满满！", true); }   // 白天小睡饱了会自己醒，晚上还是照常睡到天亮
   }else{
     petState.hunger = dec(petState.hunger, 5);
     petState.happy  = dec(petState.happy, 3);
@@ -4084,7 +4106,8 @@ function petSvgFace(face, o){
   const ex = o.plain ? null : (petState.extra || null);
   const w = (o.plain || !ex || !ex.worn) ? {} : ex.worn;
   const dirty = !o.plain && ex && ex.clean != null && ex.clean < 30;
-  const sc = [0.78, 0.88, 0.98, 1.06][st] || 1;
+  const sc = [0.78, 0.88, 0.98, 1.06, 1.0][st] || 1;
+  const elder = st === 4;
   let s = '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
   s += '<defs><linearGradient id="pgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:#f9ae63"/><stop offset="1" style="stop-color:#ef8a3d"/></linearGradient>';
   s += '<clipPath id="pgHead"><circle cx="100" cy="92" r="46"/></clipPath></defs>';
@@ -4108,6 +4131,7 @@ function petSvgFace(face, o){
   // 头顶花纹（随成长阶段）
   if(st >= 1) s += '<path fill="none" stroke="#e58a3c" stroke-width="2.6" stroke-linecap="round" d="M76 66 l0 11 M90 60 l0 12 M110 60 l0 12 M124 66 l0 11"/>';
   if(st >= 3) s += '<path fill="#f6c453" stroke="#e5b53a" stroke-width="1.2" d="M100 58 l3.4 6.6 7.2 .8 -5.2 5 1.3 7.2 -6.7 -3.4 -6.7 3.4 1.3 -7.2 -5.2 -5 7.2 -.8 Z"/>';
+  if(elder) s += '<path d="M70 108 Q100 118 130 108 L128 122 Q100 132 72 122 Z" fill="#fff" opacity=".85"/><path fill="none" stroke="#c9c2b8" stroke-width="2" stroke-linecap="round" d="M64 94 Q100 82 136 94"/>';
   // 眼睛
   const ey = 89;
   if(face === "sleep"){
@@ -4119,6 +4143,11 @@ function petSvgFace(face, o){
       s += '<g class="pet-eye"><ellipse class="pk-ink" cx="' + cx + '" cy="' + ey + '" rx="6.6" ry="8.2"/><circle cx="' + (cx + 2.3) + '" cy="' + (ey - 2.6) + '" r="2" fill="#fff"/></g>';
     });
     s += '<path class="pk-line" d="M67 79 L88 75 M133 79 L112 75"/>';
+  }else if(face === "bored"){
+    [80, 120].forEach(function(cx){
+      s += '<path class="pk-line" d="M' + (cx - 6) + ' ' + ey + ' H' + (cx + 6) + '"/>';
+    });
+    s += '<text x="150" y="64" font-size="15" opacity=".75">💭</text>';
   }else{
     const ry = face === "tired" ? 3.4 : 7.4;
     [80, 120].forEach(function(cx){
@@ -4133,6 +4162,7 @@ function petSvgFace(face, o){
   // 嘴巴
   if(face === "happy") s += '<path d="M90 107 Q100 126 110 107 Z" fill="#e0697f"/><path d="M94 113 Q100 121 106 113 Z" fill="#ff9db0"/>';
   else if(face === "hungry") s += '<ellipse cx="100" cy="112" rx="4.6" ry="5.6" fill="#c2455f"/>';
+  else if(face === "bored") s += '<path class="pk-line" d="M94 111 L106 111"/>';
   else if(face === "sad" || face === "dirty") s += '<path class="pk-line" d="M93 115 Q100 108 107 115"/>';
   else if(face === "tired") s += '<path class="pk-line" d="M94 110 L106 110"/>';
   else if(face === "sleep") s += '<path class="pk-line" d="M95 110 Q100 114 105 110"/>';
@@ -4162,7 +4192,7 @@ function petSvgFace(face, o){
 function petSvg(){ return petSvgFace(petFace(), {}); }
 function petStatesStrip(){
   const el = $id("petStates"); if(!el) return;
-  const states = [["normal","日常"],["happy","开心"],["hungry","饿了"],["sleep","睡觉"]];
+  const states = [["normal","日常"],["happy","开心"],["bored","郁闷"],["sad","伤心"],["hungry","饿了"],["tired","累了"],["sleep","睡觉"]];
   el.innerHTML = states.map(function(x){
     return '<div class="pet-state-item">' + petSvgFace(x[0], { plain: true, st: 0 }) + '<span>' + x[1] + '</span></div>';
   }).join("");
@@ -4204,6 +4234,27 @@ function petRoomSvg(){
     petYarn(44, 202, 10, "#e0707f", 0) + petYarn(122, 204, 9, "#5C8AC2", .9) + petYarn(296, 200, 11, "#f6c96b", 1.7) +
     '</svg>';
 }
+function petBeachSvg(){
+  return '<svg viewBox="0 0 420 232" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<defs><linearGradient id="pbSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe0ff"/><stop offset="1" stop-color="#eaf5ff"/></linearGradient>' +
+    '<linearGradient id="pbSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fcbe8"/><stop offset="1" stop-color="#bfe4ef"/></linearGradient></defs>' +
+    '<rect x="0" y="0" width="420" height="232" fill="url(#pbSky)"/>' +
+    '<circle cx="352" cy="46" r="26" fill="#ffe9a8"/><circle cx="352" cy="46" r="26" fill="#fff3c9" opacity=".5"><animate attributeName="r" values="26;30;26" dur="4s" repeatCount="indefinite"/></circle>' +
+    '<path d="M0 96 Q60 84 120 96 T240 96 T360 96 T480 96 V128 H0 Z" fill="#d8eef9" opacity=".7"/>' +
+    '<rect x="0" y="120" width="420" height="60" fill="url(#pbSea)"/>' +
+    '<g class="pet-beach-sea2"><path d="M0 130 Q52 120 105 130 T210 130 T315 130 T420 130 T525 130 T630 130 V150 H0 Z" fill="#eaf7fb"/></g>' +
+    '<g class="pet-beach-sea"><path d="M0 148 Q52 134 105 148 T210 148 T315 148 T420 148 T525 148 T630 148 V182 H0 Z" fill="#fbfeff"/></g>' +
+    '<path d="M0 176 Q52 164 105 176 T210 176 T315 176 T420 176 T525 176 T630 176 V178 H0 Z" fill="#fff" opacity=".9"/>' +
+    '<rect x="0" y="176" width="420" height="56" fill="#f3dcae"/>' +
+    '<ellipse cx="90" cy="182" rx="120" ry="10" fill="#fff" opacity=".55"/>' +
+    '<ellipse cx="320" cy="196" rx="90" ry="8" fill="#fff" opacity=".4"/>' +
+    '<circle cx="52" cy="206" r="10" fill="#e6c07d"/><circle cx="52" cy="206" r="10" fill="none" stroke="#d9ac5f" stroke-width="1.4"/>' +
+    '<g transform="translate(150 214) rotate(-8)"><path d="M0 0 Q7 -13 14 0 Q7 6 0 0Z" fill="#ff9fb6"/></g>' +
+    '<g transform="translate(268 208)"><path d="M-10 4 Q0 -10 10 4 Q0 10 -10 4Z" fill="#8fb9e0"/></g>' +
+    '<text x="220" y="222" font-size="16">🦀</text>' +
+    '<text x="358" y="216" font-size="14">⭐</text>' +
+    '</svg>';
+}
 function petSceneToggle(){
   petRoomMode = !petRoomMode;
   try{ localStorage.setItem("cgl_pet_room", petRoomMode ? "1" : "0"); }catch(e){}
@@ -4236,6 +4287,21 @@ function petFloat(sym){
   sc.appendChild(h);
   setTimeout(function(){ h.remove(); }, 1200);
 }
+let petWanderNext = 0, petWanderX = 50;
+function petWanderMaybe(away){
+  const wrap = $id("petSvgWrap"); if(!wrap) return;
+  if(away || petState.isSleeping || document.hidden){ return; }
+  const now = Date.now();
+  if(now < petWanderNext) return;
+  petWanderNext = now + 7000 + Math.random() * 6000;
+  const prevX = petWanderX;
+  petWanderX = 26 + Math.random() * 48;
+  wrap.classList.toggle("face-left", petWanderX < prevX);
+  wrap.style.left = petWanderX + "%";
+  wrap.classList.add("walking");
+  clearTimeout(wrap._walkTO);
+  wrap._walkTO = setTimeout(function(){ wrap.classList.remove("walking"); }, 2500);
+}
 function petRender(){
   if(!$id("petName")) return;
   const ex = petState.extra, now = Date.now(), st = petStage(petState.level);
@@ -4254,18 +4320,21 @@ function petRender(){
   const scene = $id("petScene");
   scene.classList.toggle("sleeping", !!petState.isSleeping && !away);
   scene.classList.toggle("away", away);
+  scene.dataset.stage = st;
   const sig = [st, petFace(), ex.worn.head, ex.worn.neck, ex.worn.face, away ? 1 : 0, ex.clean < 30 ? 1 : 0].join("|");
   if(sig !== petSig){ petSig = sig; $id("petSvgWrap").innerHTML = petSvg(); }
   // 房间 / 海边 场景切换
   const roomEl = $id("petRoom");
   if(roomEl){
-    if(petRoomMode && !away){
-      if(petRoomBuilt !== petRoomMode){ petRoomBuilt = petRoomMode; roomEl.innerHTML = petRoomSvg(); }
-      roomEl.style.display = "block";
-    }else{
+    if(away){
       roomEl.style.display = "none";
+    }else{
+      const wantMode = petRoomMode ? "room" : "beach";
+      if(petRoomBuilt !== wantMode){ petRoomBuilt = wantMode; roomEl.innerHTML = petRoomMode ? petRoomSvg() : petBeachSvg(); }
+      roomEl.style.display = "block";
     }
   }
+  petWanderMaybe(away);
   const tg = $id("petSceneToggle");
   if(tg){ tg.style.display = away ? "none" : ""; tg.textContent = petRoomMode ? "🌊 海边" : "🏠 房间"; }
   // 放置：贝壳篮
@@ -4729,6 +4798,7 @@ async function syncPetToCloud(){
       applyPetState(cloud);
       return;
     }
+    const nowTs = Date.now();
     const payload = {
       username: "global",
       name: petState.name,
@@ -4738,7 +4808,7 @@ async function syncPetToCloud(){
       level: petState.level,
       exp: petState.exp,
       is_sleeping: petState.isSleeping,
-      updated_at: new Date(localTs || Date.now()).toISOString()
+      updated_at: new Date(nowTs).toISOString()
     };
     if(!petNoExtra) payload.extra = petState.extra;
     const send = function(){ return cloud ? sb.from("pet_state").update(payload).eq("id", cloud.id) : sb.from("pet_state").insert([payload]); };
@@ -4747,6 +4817,8 @@ async function syncPetToCloud(){
       petNoExtra = true; delete payload.extra; res = await send();
     }
     if(res.error) throw res.error;
+    petState.updatedAt = nowTs;   // 记住这次推送的时间戳，避免下次误判成"本地没变化"而不再推送，导致多设备数值对不上
+    petSave();
     if(petNoExtra && !petHintShown){
       petHintShown = true;
       showToast("宠物的新玩法还需要在 Supabase 运行 supabase-update-v5.sql，现在贝壳、探险等进度只保存在这台设备上", 6500);
@@ -4871,6 +4943,13 @@ if("serviceWorker" in navigator){
 /* ==================== 【新增】聊天室（Supabase Realtime） ==================== */
 const CHAT_NAMES = { "cy@site.com": "cy", "tongtong@site.com": "彤彤" };  // 聊天室里显示的名字，可自行修改
 const CHAT_PAGE = 60;
+const CHAT_MAX_KEEP = 300;   // 长时间开着网站、消息越攒越多时，只保留最近这些在内存/画面里，避免越用越卡、越用越占内存
+function chatTrim(){
+  if(chatMsgs.length > CHAT_MAX_KEEP){
+    chatMsgs.splice(0, chatMsgs.length - CHAT_MAX_KEEP);
+    chatHasMore = true;   // 顶上还有更早的消息，需要时点"加载更早的消息"随时能翻回去看
+  }
+}
 const CHAT_RECALL_MS = 5 * 60 * 1000;   // 撤回时限：5 分钟（服务器端同样限制）
 let chatUser = null, chatMsgs = [], chatChannel = null, chatHasMore = false, chatLoaded = false, chatVisible = false;
 let chatRemoteRead = 0, chatPartnerRead = 0, chatReadsChannel = null, authToken = "", presLastActive = Date.now(), presTimer = null;   // 已读位置（跨设备同步）/ 在线心跳
@@ -5150,6 +5229,7 @@ function chatOnInsert(row){
     if(ti >= 0) chatMsgs.splice(ti, 1);       // 自己刚发的：用服务器版本替换“发送中”
   }
   chatMsgs.push(row); chatSort();
+  chatTrim();
   chatRender(mine);
   if(!mine){
     if(!document.hidden) playChatSound();
@@ -5256,6 +5336,38 @@ async function chatStart(){
     fab.addEventListener("click", openChat);
     if(closeBtn) closeBtn.addEventListener("click", closeChat);
     if(backdrop) backdrop.addEventListener("click", closeChat);
+    // 手机整屏聊天室：像原生App一样，从屏幕上右滑可以退出
+    (function(){
+      let dragging = false, dragOK = false, startX = 0, startY = 0, curX = 0;
+      const DRAG_MIN = 70;
+      panel.addEventListener("touchstart", function(e){
+        if(!mq.matches || !panel.classList.contains("open")) return;
+        const t = e.touches[0]; startX = t.clientX; startY = t.clientY; curX = 0; dragging = true; dragOK = false;
+      }, { passive: true });
+      panel.addEventListener("touchmove", function(e){
+        if(!dragging) return;
+        const t = e.touches[0], dx = t.clientX - startX, dy = t.clientY - startY;
+        if(!dragOK){
+          if(Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+          dragOK = Math.abs(dx) > Math.abs(dy) * 1.2;
+          if(!dragOK){ dragging = false; return; }
+        }
+        if(dx <= 0) return;
+        curX = dx;
+        panel.classList.add("dragging");
+        panel.style.transform = "translateX(" + dx + "px)";
+      }, { passive: true });
+      const endDrag = function(){
+        if(!dragging) return;
+        dragging = false;
+        panel.classList.remove("dragging");
+        panel.style.transform = "";
+        if(curX > DRAG_MIN) closeChat();
+        curX = 0;
+      };
+      panel.addEventListener("touchend", endDrag);
+      panel.addEventListener("touchcancel", endDrag);
+    })();
     document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeChat(); });
     if(window.visualViewport){
       window.visualViewport.addEventListener("resize", function(){ if(panel.classList.contains("open")) fit(); });
