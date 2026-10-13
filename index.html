@@ -1404,6 +1404,8 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
 .chat-badge.show{display:inline-block}
 .hamburger-btn{position:relative}
 .hamburger-btn.has-unread::after{content:"";position:absolute;top:2px;right:3px;width:8px;height:8px;border-radius:50%;background:#e0607a;box-shadow:0 0 0 2px rgba(253,251,247,.9)}
+/* 照片墙 / 宠物区不在屏幕里时暂停动画（灯泡、毛球、海浪…），省电也省内存，手机上更明显 */
+.anim-off *,.anim-off *::before,.anim-off *::after{animation-play-state:paused !important}
 </style>
 </head>
 <body>
@@ -1928,6 +1930,39 @@ window.addEventListener('unhandledrejection', function(e) {
   console.error("[Unhandled Promise Rejection]", e.reason);
 });
 
+/* ==================== 崩溃线索记录（排查白屏用）====================
+   正常离开页面会记一笔"已正常结束"；如果下次打开发现没有，就说明上次是在前台被系统/浏览器强制关掉的，
+   登录后会弹出一条提示，写明当时停在哪、页面元素多少个、各类事件累计次数，截图发给我即可定位。 */
+window.__dg = { auth:0, rt:0, photo:0, audio:0 };
+(function(){
+  var K = "cgl_alive", t0 = Date.now(), prev = null;
+  try{ prev = JSON.parse(localStorage.getItem(K) || "null"); }catch(e){}
+  if(prev && prev.running){
+    var mins = Math.max(0, Math.round(((prev.last||0) - (prev.t0||0)) / 60000));
+    window.__crashNote = "⚠️ 上次网站是异常退出的（运行约 " + mins + " 分钟）。最后停在「" + (prev.sec||"?") + "」；页面元素 " + (prev.nodes||"?") +
+      " 个；登录刷新 " + (prev.auth||0) + " 次；云端推送 " + (prev.rt||0) + " 次；照片重绘 " + (prev.photo||0) + " 次；章节音频 " + (prev.audio||0) + " 个" +
+      (prev.play ? "；正在播放音乐" : "") + (prev.game ? "；正在玩小游戏" : "") + "。把这段截图发给我。";
+  }
+  function snap(running){
+    var o = { running: running, t0: t0, last: Date.now(), sec: "", nodes: 0, auth: window.__dg.auth, rt: window.__dg.rt, photo: window.__dg.photo, audio: window.__dg.audio, play: false, game: false };
+    try{
+      var el = document.elementFromPoint(window.innerWidth/2, window.innerHeight/2);
+      var sc = el && el.closest && el.closest("section");
+      o.sec = sc ? sc.id : "";
+      var cp = document.getElementById("chatPanel");
+      if(cp && cp.classList.contains("open")) o.sec = "chat";
+      o.nodes = document.getElementsByTagName("*").length;
+    }catch(e){}
+    try{ o.play = !!(chapterAudioPlaying() || !audio.paused); }catch(e){}
+    try{ o.game = !!(catchRun || memRun); }catch(e){}
+    try{ localStorage.setItem(K, JSON.stringify(o)); }catch(e){}
+  }
+  setTimeout(function(){ snap(true); }, 3000);
+  setInterval(function(){ if(!document.hidden) snap(true); }, 15000);
+  document.addEventListener("visibilitychange", function(){ snap(!document.hidden); });
+  window.addEventListener("pagehide", function(){ snap(false); });
+})();
+
 /* ==================== Supabase 配置（必须在最顶部） ==================== */
 const SUPABASE_URL = "https://onvgmtwiokhsixcybfky.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9udmdtdHdpb2toc2l4Y3liZmt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTQ2NTYsImV4cCI6MjEwNDA3MDY1Nn0.tMavqmXKhlRKKbzX-PIYNKRGhK9DwnResvbpDMBpM5k";
@@ -2171,6 +2206,7 @@ async function unlock(){
   mainApp.style.display = "block";
   window.scrollTo(0,0);
   currentUsername = await getUsername();
+  if(window.__crashNote){ const _n = window.__crashNote; window.__crashNote = ""; setTimeout(function(){ showToast(_n, 15000); }, 1500); }
   const idn = IDENTITY[currentUsername];
   { const nm = currentUsername.split("@")[0] || currentUsername;
     const wn = $id("whoName");     if(wn) wn.textContent = nm;
@@ -2272,7 +2308,13 @@ themeToggle.addEventListener("click", ()=>{
 const audio = new Audio(MUSIC_URL);
 audio.loop = true;
 audio.preload = "none";
-audio.addEventListener("timeupdate", ()=>{ localStorage.setItem("bgmTime", String(audio.currentTime)); });
+let _bgmSaveAt = 0;   // 以前每秒写好几次 localStorage（手机上是同步写盘，很吃力），改成每 5 秒一次
+audio.addEventListener("timeupdate", ()=>{
+  const n = Date.now();
+  if(n - _bgmSaveAt < 5000) return;
+  _bgmSaveAt = n;
+  try{ localStorage.setItem("bgmTime", String(audio.currentTime)); }catch(e){}
+});
 /* --- 章节音乐 <-> 背景音乐 互斥控制 --- */
 /* 章节专属歌在播时，背景音乐暂停；章节歌暂停/停止后，背景音乐恢复 */
 let bgmPausedByChapter = false;
@@ -2508,6 +2550,11 @@ let currentPlayingAudio = null;
 let currentPlayingDot = null;
 let currentPlayingSwitchAway = null; // 当前播放中的那首被别的章节顶替时，要执行的"复位"回调（暂停+标记重播+按钮变回▶）
 
+// 释放一个不再使用的 Audio：手机浏览器不会自动回收已缓冲的音频，放着不管会越攒越多
+function releaseAudio(a){
+  if(!a) return;
+  try{ a._released = true; a.pause(); a.removeAttribute("src"); a.load(); }catch(e){}
+}
 function formatTime(sec){
   if(!isFinite(sec) || sec < 0) sec = 0;
   const m = Math.floor(sec / 60);
@@ -2577,6 +2624,7 @@ function initChapterPlayer(itemEl, ch){
         currentAudioUrl = btn.dataset.audio;
         currentLrcUrl = btn.dataset.lrc;
         lyrics = [];
+        releaseAudio(audio);
         audio = null;
         wasSwitchedAway = false; // 后记换曲是主动选择，不需要重播标记
         resetControls();
@@ -2610,7 +2658,7 @@ function initChapterPlayer(itemEl, ch){
 
   // 这首被别的章节顶替时调用：暂停、标记下次要从头播、按钮和小圆点复位
   function switchAwayHandler(){
-    if(audio) audio.pause();
+    if(audio) releaseAudio(audio);
     wasSwitchedAway = true;
     playBtn.textContent = "▶";
     dot.classList.remove("active");
@@ -2623,6 +2671,7 @@ function initChapterPlayer(itemEl, ch){
       return null;
     }
     audio = new Audio(currentAudioUrl);
+    window.__dg.audio++;
     audio.loop = true; // 播完自动重播，直到手动暂停
     audio.preload = "none";
 
@@ -2639,7 +2688,9 @@ function initChapterPlayer(itemEl, ch){
         lyricEl.textContent = line || "";
       }
     });
+    const _thisAudio = audio;
     audio.addEventListener("error", () => {
+      if(_thisAudio._released) return;   // 我们自己释放时触发的 error 不要弹提示
       showToast("音乐文件加载失败，检查一下文件路径对不对～");
     });
 
@@ -2664,6 +2715,7 @@ function initChapterPlayer(itemEl, ch){
     if(a.paused){
       // 情况A：如果之前被切换走了（用户点了其他章节的歌），则销毁旧audio重建→从头播
       if(wasSwitchedAway){
+        releaseAudio(audio);
         audio = null;
         wasSwitchedAway = false;
         // 重新创建audio会从头开始
@@ -3064,6 +3116,7 @@ function gameEarnShells(n, why){
   if(!petState.extra) petState.extra = petNormExtra(null);
   petState.extra.coins = (petState.extra.coins || 0) + n;
   petSave(); petRender();
+  petDirty = true;
   try{ syncPetToCloud(); }catch(e){}
   showToast("+" + n + " 🐚 " + (why || "已存进宠物贝壳包"), 3200);
 }
@@ -3333,7 +3386,13 @@ async function pullPhotosFromCloud(){
   if(!cloudReady) return;
   try{
     const {data,error}=await sb.from("photo_wall").select("*").order("created_at",{ascending:true});
-    if(!error&&Array.isArray(data)){localPhotosCache(data.map(x=>({id:x.id,url:x.url||x.file_url||x.image_url})).filter(x=>x.url));renderPhotos()}
+    if(!error&&Array.isArray(data)){
+      const next=data.map(x=>({id:x.id,url:x.url||x.file_url||x.image_url})).filter(x=>x.url);
+      let same=false;
+      try{ same = JSON.stringify(next) === JSON.stringify(getPhotos().map(x=>({id:x&&x.id,url:x&&x.url}))); }catch(e){}
+      if(same) return;   // 照片没变就不重绘（重绘会把几十张图重新解码，手机很吃内存）
+      localPhotosCache(next); renderPhotos();
+    }
   }catch(e){}
 }
 async function pullPhotoLayoutFromCloud(){
@@ -3343,7 +3402,9 @@ async function pullPhotoLayoutFromCloud(){
     if(!lErr&&Array.isArray(lData)){
       const merged={};
       lData.forEach(r=>{ if(r.photo_key) merged[r.photo_key]={x:r.x||0,y:r.y||0,r:r.rotate||0,w:r.width||0}; });
-      localStorage.setItem("cgl_photo_layout",JSON.stringify(merged));
+      const nextStr=JSON.stringify(merged);
+      if(nextStr===localStorage.getItem("cgl_photo_layout")) return;   // 排版没变就不重绘
+      localStorage.setItem("cgl_photo_layout",nextStr);
       renderPhotos();
     }
   }catch(e){}
@@ -3698,6 +3759,7 @@ function applyLayoutToCard(el, cur){
 const _renderPhotosOriginal=renderPhotos;
 getPhotos=function(){try{return JSON.parse(localStorage.getItem("cgl_photos")||"[]")}catch(e){return[]}};
 renderPhotos=function(){
+  window.__dg.photo++;
   const list=getPhotos();
   if(!list.length){ledString.innerHTML='<div class="led-empty">布告板还空着，点下面的「上传照片」贴上第一张回忆 ✨</div>';return}
   ledString.innerHTML="";
@@ -4088,6 +4150,7 @@ let petState = {
 let petNoExtra = false, petBusy = false, petCd = {}, petSig = "", petSayTimer = null, petSheetBuild = null, petHintShown = false;
 let petRoomMode = true, petRoomBuilt = null;
 let petPaused = false;
+let petDirty = false;   // 本地有没推送的改动
 try{ petPaused = localStorage.getItem("cgl_pet_paused") === "1"; }catch(e){}
 
 function petClamp(v){ return Math.max(0, Math.min(100, v)); }
@@ -4616,6 +4679,7 @@ async function petAct(fn){
     petState.updatedAt = Date.now();
     petLevelCheck();
     petSave(); petRender(); petSheetRefresh();
+    petDirty = true;
     syncPetToCloud();
   }finally{ petBusy = false; }
 }
@@ -4985,6 +5049,7 @@ flushQueue = async function(){
  /* 共享宠物状态：本地时间戳 petState.updatedAt 记录最后一次本地改动；
    推送前先比对云端 updated_at，云端更新就先吸收云端、绝不把本地旧值写回去（修复喂食/等级被回退） */
 function applyPetState(p){
+  petDirty = false;   // 刚吸收了云端的最新状态，本地和云端一致
   if(!("extra" in p)) petNoExtra = true;      // 云端还没有 extra 这一列（没运行 supabase-update-v5.sql）
   if(p.name!=null) petState.name=p.name;
   if(p.hunger!=null) petState.hunger=p.hunger;
@@ -5033,6 +5098,7 @@ async function syncPetToCloud(){
       petNoExtra = true; delete payload.extra; res = await send();
     }
     if(res.error) throw res.error;
+    petDirty = false;
     petState.updatedAt = nowTs;   // 记住这次推送的时间戳，避免下次误判成"本地没变化"而不再推送，导致多设备数值对不上
     petSave();
     if(petNoExtra && !petHintShown){
@@ -5042,7 +5108,12 @@ async function syncPetToCloud(){
   }catch(e){ console.error("pet cloud sync error:", e); }
 }
 
-  setInterval(syncPetToCloud, 30000);
+  // 每 30 秒：本地有改动才推送，没有就只拉一次云端。
+  // （以前是每 30 秒无条件写库一次，两台设备开着会互相触发实时推送、反复刷新页面，手机一直在收发数据）
+  setInterval(function(){
+    if(document.hidden || petPaused) return;
+    if(petDirty) syncPetToCloud(); else pullPetFromCloud();
+  }, 30000);
 console.log("心情日记和电子宠物初始化完成");
 
 /* ==================== 实时同步 Realtime（新增） ==================== */
@@ -5074,15 +5145,27 @@ function startRealtime(){
   };
   Object.keys(refreshMap).forEach(function(t){
     var ch = sb.channel("rt_" + t)
-      .on("postgres_changes", { event:"*", schema:"public", table:t }, function(){ refreshMap[t](); })
+      .on("postgres_changes", { event:"*", schema:"public", table:t }, function(){ window.__dg.rt++; refreshMap[t](); })
       .subscribe();
     rtChannels.push(ch);
   });
   console.log("Realtime 实时订阅已启动:", Object.keys(refreshMap).join(", "));
 }
 // 鉴权变化（登录/恢复会话）后，带 token 重新订阅，确保 RLS 下的实时推送能到达，并补拉一次数据
+let rtAuthUid = "";   // 实时订阅当前是为哪个账号建立的
 try{ sb.auth.onAuthStateChange(function(_e,session){
-    try{ if(session && sb.realtime){ sb.realtime.setAuth(session.access_token); startRealtime(); pullCloudData(); pullPetFromCloud(); syncPetToCloud(); } }catch(e){}
+    window.__dg.auth++;
+    try{
+      if(!session){ rtAuthUid = ""; return; }
+      if(!sb.realtime) return;
+      sb.realtime.setAuth(session.access_token);   // 令牌刷新：只更新令牌就够了
+      // 手机每次从别的 App 切回来，登录库都会再通知一次"已登录"。以前每次都会把 5 个实时通道拆掉重建、
+      // 再把券/照片/宠物全部重新拉取重绘一遍；现在只在"首次登录 / 换了账号"时才这样做。
+      if(session.user && session.user.id !== rtAuthUid){
+        rtAuthUid = session.user.id;
+        startRealtime(); pullCloudData(); pullPetFromCloud(); syncPetToCloud();
+      }
+    }catch(e){}
   }); }catch(e){}
 startRealtime();
 // 永久登录：启动时若本地仍有有效会话，自动进入主站，无需重新输入（除非手动点退出）
@@ -5911,6 +5994,20 @@ applyBubble(bubbleId());
   const x = $id("setClose"); if(x) x.addEventListener("click", close);
   ov.addEventListener("click", function(e){ if(e.target === ov) close(); });
   document.addEventListener("keydown", function(e){ if(e.key === "Escape") close(); });
+})();
+
+/* ==================== 看不见的区域暂停动画 ==================== */
+(function(){
+  if(!("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      e.target.classList.toggle("anim-off", !e.isIntersecting);
+      e.target.querySelectorAll("svg").forEach(function(sv){
+        try{ if(e.isIntersecting) sv.unpauseAnimations(); else sv.pauseAnimations(); }catch(_){}
+      });
+    });
+  }, { rootMargin: "160px 0px" });
+  ["photos","pet"].forEach(function(id){ const el = document.getElementById(id); if(el) io.observe(el); });
 })();
 
 /* ==================== 离线支持：Service Worker 缓存全站 ==================== */
