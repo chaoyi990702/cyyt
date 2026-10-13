@@ -8,7 +8,7 @@ importScripts('./sw-push.js');
    用法：把本文件（sw.js）和 index.html 放在同一个文件夹，
    部署到 HTTPS 环境（如 GitHub Pages）即可生效。
    ============================================================ */
-const CACHE_NAME = "cgl-site-v16";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
+const CACHE_NAME = "cgl-site-v11";   // 每次改了 index.html 想让手机立刻更新，就把这个数字加 1
 
 // 安装：缓存首页核心文件（bgm 等大文件改为"播放过就缓存"，避免首次安装卡住）
 self.addEventListener("install", (e) => {
@@ -32,9 +32,14 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
+  // 音频 / 视频 / 带 Range 的请求：完全交给浏览器自己处理，Service Worker 不插手。
+  // 原因：手机播放音乐时会分段请求（返回 206 局部内容），而 Cache API 不能存 206；
+  // 以前每一段都会 clone() 一份响应再存缓存失败，那份 clone 没人读，会把整段音频（最大 40MB）白白留在内存里。
+  if (req.headers.has("range") || req.destination === "audio" || req.destination === "video") return;
   try {
     const url = new URL(req.url);
     if (url.origin !== location.origin) return; // 只处理本站资源
+    if (/\.(mp3|m4a|aac|wav|flac|ogg|mp4|webm)$/i.test(url.pathname)) return;
   } catch (err) {
     return;
   }
@@ -56,9 +61,11 @@ self.addEventListener("fetch", (e) => {
       if (hit) return hit;
       return fetch(req)
         .then((res) => {
-          if (res && res.ok && (res.type === "basic" || res.type === "cors")) {
+          // 只缓存完整的(200)且不大的文件；局部内容(206)和大文件不存，也不 clone，避免占内存
+          const len = parseInt((res && res.headers && res.headers.get("content-length")) || "0", 10) || 0;
+          if (res && res.status === 200 && (res.type === "basic" || res.type === "cors") && len < 5 * 1024 * 1024) {
             const clone = res.clone();
-            caches.open(CACHE_NAME).then((c) => c.put(req, clone));
+            caches.open(CACHE_NAME).then((c) => c.put(req, clone)).catch(() => {});
           }
           return res;
         })
@@ -67,24 +74,6 @@ self.addEventListener("fetch", (e) => {
           if (req.mode === "navigate") return caches.match("./index.html");
           return new Response("", { status: 503, statusText: "Offline" });
         });
-    })
-  );
-});
-
-/* ============================================================
-   宠物通知点击：跳转到宠物板块
-   （只处理 tag 以 cgl-pet 开头的通知，其他通知交给 sw-push.js）
-   ============================================================ */
-self.addEventListener("notificationclick", (e) => {
-  const tag = e.notification.tag || "";
-  e.notification.close();
-  if (tag.indexOf("cgl-pet") !== 0) return;
-  e.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
-      for (const c of list) {
-        if ("focus" in c) { c.focus(); c.postMessage({ type: "cgl-goto", target: "pet" }); return; }
-      }
-      return self.clients.openWindow("./?goto=pet");
     })
   );
 });
