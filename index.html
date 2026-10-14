@@ -1404,6 +1404,7 @@ body.theme-rose .chat-compose{border-top-color:rgba(224,117,154,.18)}
 .chat-badge.show{display:inline-block}
 .hamburger-btn{position:relative}
 .hamburger-btn.has-unread::after{content:"";position:absolute;top:2px;right:3px;width:8px;height:8px;border-radius:50%;background:#e0607a;box-shadow:0 0 0 2px rgba(253,251,247,.9)}
+.coupon-grid .coupon:last-child:nth-child(odd){grid-column:1 / -1}
 /* 照片墙 / 宠物区不在屏幕里时暂停动画（灯泡、毛球、海浪…），省电也省内存，手机上更明显 */
 .anim-off *,.anim-off *::before,.anim-off *::after{animation-play-state:paused !important}
 /* 手机轻量模式：宠物眨眼/ZZZ/臭味/毛球/海浪、状态小图改为静态（照片墙灯带保持原样），保留宠物整体的轻微起伏 */
@@ -1650,6 +1651,16 @@ body.lite .pet-z{opacity:1}
       <div id="sendCouponPanel" style="display:none;margin-top:12px;">
         <select id="sendCouponSelect" style="width:100%;padding:8px;border-radius:8px;margin-bottom:8px;"></select>
         <button id="sendCouponConfirmBtn" class="bp-use-btn" style="width:100%">🎁 免费送券给彤彤</button>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(123,164,214,.35)">
+          <div style="font-size:13px;color:var(--ink-light);margin-bottom:8px">✍️ 自定义一张券（想写什么都行）</div>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input id="customCouponIcon" maxlength="4" placeholder="♡" style="width:56px;padding:8px;border-radius:8px;border:1px solid rgba(123,164,214,.4);text-align:center;font-size:16px">
+            <input id="customCouponName" maxlength="20" placeholder="券的名字，如：周末约会券" style="flex:1;min-width:0;padding:8px;border-radius:8px;border:1px solid rgba(123,164,214,.4);font-size:16px">
+          </div>
+          <input id="customCouponTip" maxlength="60" placeholder="券的说明，如：凭券可指定一次周末去哪玩" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(123,164,214,.4);margin-bottom:8px;font-size:16px">
+          <select id="customCouponTo" style="width:100%;padding:8px;border-radius:8px;margin-bottom:8px;"><option value="tongtong@site.com">送给彤彤</option><option value="self">加到我自己的背包</option></select>
+          <button id="customCouponBtn" class="bp-use-btn" style="width:100%">➕ 添加这张券</button>
+        </div>
       </div>
     </div>
   </section>
@@ -2089,10 +2100,11 @@ const TIMELINE = [
 const COUPONS = [
   { icon:"♡", name:"抱抱券", tip:"凭券可兑换一个抱抱" },
   { icon:"♡", name:"奶茶券", tip:"凭券可兑换一杯奶茶" },
-  { icon:"♡", name:"免生气券", tip:"凭券可抵消一次生气" },
   { icon:"♡", name:"亲亲券", tip:"凭券可兑换一个亲亲" },
   { icon:"♡", name:"陪我看电影券", tip:"凭券指定一部电影" },
-  { icon:"♡", name:"听我讲心事券", tip:"凭券交换今晚的心事" }
+  { icon:"♡", name:"哄我券", tip:"凭此券快来哄我" },
+  { icon:"♡", name:"陪我券", tip:"凭此券可召唤宝宝陪伴" },
+  { icon:"♡", name:"你先道歉券", tip:"我不管！使用此券，都是我对！" }
 ];
 
 const DEFAULT_LETTERS = [
@@ -2797,6 +2809,8 @@ const backpackCount = $id("backpackCount");
 const claimState = $id("claimState");
 
 function todayKey(){ return new Date().toISOString().slice(0,10); }
+// 券的名字/说明现在可以自定义，显示前先转义，避免输入的特殊符号破坏页面
+function escHtml(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
 
 // 获取当前登录用户的邮箱（作为 username）
 async function getUsername(){
@@ -2891,10 +2905,11 @@ async function renderBackpack(){
     item.className = "backpack-item";
     item.innerHTML =
       '<div class="bp-info">' +
-        '<span class="bp-icon">'+(cp.icon || '♡')+'</span>' +
+        '<span class="bp-icon">'+escHtml(cp.icon || '♡')+'</span>' +
         '<div>' +
-          '<div class="bp-name">'+cp.name+'</div>' +
-          '<div class="bp-code">券号 '+cp.code+' · '+(cp.claim_date||cp.date)+'</div>' +
+          '<div class="bp-name">'+escHtml(cp.name)+'</div>' +
+          (cp.tip ? '<div class="bp-code">'+escHtml(cp.tip)+'</div>' : '') +
+          '<div class="bp-code">券号 '+escHtml(cp.code)+' · '+escHtml(cp.claim_date||cp.date)+'</div>' +
         '</div>' +
       '</div>' +
       '<button class="bp-use-btn" data-id="'+cp.id+'">使用</button>';
@@ -2905,7 +2920,18 @@ async function renderBackpack(){
       btn.disabled = true;
       const couponId = parseInt(btn.getAttribute("data-id"), 10);
       setTimeout(async () => {
-        // 表里没有 used 字段，用完直接删除这一行
+        // ① 先给对方留一条"我用券了"的记录（对方会收到手机通知 + 打开网站时的强提醒弹窗）
+        const myEmail = await getUsername();
+        const { error: logErr } = await sb.from("coupon_uses").insert({
+          username: myEmail, icon: cp.icon, name: cp.name, tip: cp.tip, code: cp.code
+        });
+        if(logErr){
+          console.error("通知对方失败:", logErr);
+          showToast("没能通知到对方，这张券先不用掉，请稍后再试");
+          btn.classList.remove("using"); btn.textContent = "使用"; btn.disabled = false;
+          return;
+        }
+        // ② 表里没有 used 字段，用完直接删除这一行
         const { error } = await sb
           .from("coupon_bag")
           .delete()
@@ -2920,6 +2946,50 @@ async function renderBackpack(){
 
 renderCouponGrid();
 renderBackpack();
+
+/* ===== 对方使用了券 → 强提醒弹窗（必须点「我知道啦」才会消失，没确认的话下次打开还会弹） ===== */
+let _cuShowing = false;
+async function checkUnseenCouponUses(){
+  if(_cuShowing || !sb) return;
+  try{
+    const me = await getUsername(); if(!me) return;
+    const { data, error } = await sb.from("coupon_uses").select("*")
+      .is("seen_at", null).neq("username", me).order("id", { ascending: true });
+    if(error){ console.error("coupon_uses:", error); return; }
+    if(!data || !data.length){ try{ navigator.clearAppBadge && navigator.clearAppBadge(); }catch(e){} return; }
+    try{ navigator.setAppBadge && navigator.setAppBadge(data.length); }catch(e){}
+    _cuShowing = true;
+    showCouponUsedModal(data);
+  }catch(e){ console.error(e); }
+}
+function showCouponUsedModal(rows){
+  const who = (typeof CHAT_NAMES !== "undefined" && CHAT_NAMES[rows[0].username]) || "TA";
+  const ov = document.createElement("div");
+  ov.id = "couponUsedOverlay";
+  ov.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:24px";
+  const items = rows.map(r =>
+    '<div style="margin:12px 0"><div style="font-size:30px">'+escHtml(r.icon||"♡")+'</div>' +
+    '<div style="font-weight:700;font-size:18px;margin-top:2px">'+escHtml(r.name)+'</div>' +
+    (r.tip ? '<div style="font-size:13px;opacity:.7;margin-top:2px">'+escHtml(r.tip)+'</div>' : '') + '</div>'
+  ).join("");
+  ov.innerHTML =
+    '<div style="background:#fff;color:#333;border-radius:18px;padding:24px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3)">' +
+    '<div style="font-size:15px;margin-bottom:4px">🎫 '+escHtml(who)+' 使用了兑换券</div>' + items +
+    '<button id="cuAckBtn" style="width:100%;margin-top:10px;padding:12px;border:0;border-radius:12px;font-size:16px;color:#fff;background:linear-gradient(135deg,#7BA4D6,#F3A8C2)">我知道啦 ♥</button></div>';
+  document.body.appendChild(ov);
+  try{ navigator.vibrate && navigator.vibrate([200,100,200]); }catch(e){}
+  ov.querySelector("#cuAckBtn").addEventListener("click", async () => {
+    const { error } = await sb.from("coupon_uses").update({ seen_at: new Date().toISOString() }).in("id", rows.map(r => r.id));
+    if(error){ console.error(error); showToast("确认失败，请再点一次"); return; }
+    ov.remove(); _cuShowing = false;
+    try{ navigator.clearAppBadge && navigator.clearAppBadge(); }catch(e){}
+    checkUnseenCouponUses();
+  });
+}
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) checkUnseenCouponUses(); });
+window.addEventListener("focus", checkUnseenCouponUses);
+setInterval(function(){ if(!document.hidden) checkUnseenCouponUses(); }, 60000);   // 实时通道断了也能兜底
+setTimeout(checkUnseenCouponUses, 2500);
 
 // 送券给彤彤的逻辑
 async function setupSendCouponBtn() {
@@ -2958,7 +3028,8 @@ async function setupSendCouponBtn() {
         code: code,
         date: todayKey(),
         claim_date: null,
-        claim_idx: null
+        claim_idx: null,
+        given_by: username
       });
 
     if (insertError) {
@@ -2968,6 +3039,29 @@ async function setupSendCouponBtn() {
     }
 
     showToast("已成功送出「" + chosen.name + "」给彤彤！🎉");
+  });
+
+  // 自定义券：名字、说明、图标都可以自己写
+  const customBtn = panel.querySelector("#customCouponBtn");
+  if(customBtn) customBtn.addEventListener("click", async () => {
+    const name = (panel.querySelector("#customCouponName").value || "").trim().slice(0, 20);
+    const tip  = (panel.querySelector("#customCouponTip").value || "").trim().slice(0, 60);
+    const icon = ((panel.querySelector("#customCouponIcon").value || "").trim() || "♡").slice(0, 4);
+    const toSel = panel.querySelector("#customCouponTo").value;
+    if(!name){ showToast("请先写上券的名字"); return; }
+    const owner = toSel === "self" ? username : toSel;
+    customBtn.disabled = true;
+    const code = "CGL-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+    const { error } = await sb.from("coupon_bag").insert({
+      username: owner, icon: icon, name: name, tip: tip, code: code,
+      date: todayKey(), claim_date: null, claim_idx: null, given_by: username
+    });
+    customBtn.disabled = false;
+    if(error){ console.error("自定义券插入失败:", error); showToast("添加失败：" + (error.message || "请检查数据库权限设置")); return; }
+    panel.querySelector("#customCouponName").value = "";
+    panel.querySelector("#customCouponTip").value = "";
+    showToast(toSel === "self" ? "已加到你的背包：「" + name + "」" : "已送出「" + name + "」给彤彤！🎉");
+    if(toSel === "self"){ renderBackpack(); }
   });
 }
 
@@ -3857,7 +3951,7 @@ setTimeout(()=>probeCloud(),50);
 
 
 /* ==================== 心情日记 ==================== */
-const MOOD_EMOJIS = ['😍','🥰','😊','😄','🤗','😌','😴','😢','😭','😤','😱','🤔','🥳','💖'];
+const MOOD_EMOJIS = ['😍','🥰','😊','😄','🤗','😌','🫠','😴','😢','😭','😤','😱','🤔','🥳','💖'];
 let moodYear = new Date().getFullYear();
 let moodMonth = new Date().getMonth();
 let selectedMood = '';
@@ -5162,6 +5256,7 @@ function startRealtime(){
     photo_wall: function(){ pullPhotosFromCloud(); },
     photo_layout: function(){ pullPhotoLayoutFromCloud(); },
     mood_diary: function(){ syncMoodsFromCloud(); },
+    coupon_uses: function(){ checkUnseenCouponUses(); },
     pet_state:  function(){ pullPetFromCloud(); }
   };
   Object.keys(refreshMap).forEach(function(t){
@@ -5184,7 +5279,7 @@ try{ sb.auth.onAuthStateChange(function(_e,session){
       // 再把券/照片/宠物全部重新拉取重绘一遍；现在只在"首次登录 / 换了账号"时才这样做。
       if(session.user && session.user.id !== rtAuthUid){
         rtAuthUid = session.user.id;
-        startRealtime(); pullCloudData(); pullPetFromCloud(); syncPetToCloud();
+        startRealtime(); pullCloudData(); pullPetFromCloud(); syncPetToCloud(); checkUnseenCouponUses();
       }
     }catch(e){}
   }); }catch(e){}
