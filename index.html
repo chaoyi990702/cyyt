@@ -531,6 +531,9 @@ body.theme-rose .backpack-item{border-color:rgba(224,117,154,0.5)}
 .bp-use-btn:active{transform:scale(0.94)}
 .bp-use-btn.using{opacity:.75}
 .backpack-empty{text-align:center;color:var(--ink-light);font-size:13px;padding:22px 0;letter-spacing:1px}
+.backpack-list.expanded{max-height:60vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-right:2px}
+.bp-more-btn{display:block;width:100%;margin-top:4px;padding:10px;border-radius:12px;border:1px dashed var(--rose);background:transparent;color:var(--rose-deep);font-size:13.5px;letter-spacing:1px;cursor:pointer;-webkit-appearance:none;appearance:none}
+.bp-more-btn:active{transform:scale(.98)}
 /* ============ 照片墙（Ins风网格布告板 + 缠绕LED灯线 + 拍立得图钉/木夹） ============ */
 .cork-board{
   position:relative;
@@ -2892,15 +2895,23 @@ async function renderCouponGrid(){
 }
 
 // 渲染背包
+let backpackExpanded = false;
+const BACKPACK_PREVIEW = 3;   // 默认显示几张，想多想少改这里
+
 async function renderBackpack(){
   const list = await getBackpack();
   backpackCount.textContent = list.length + " 张";
   if(list.length === 0){
+    backpackExpanded = false;
+    backpackList.classList.remove("expanded");
     backpackList.innerHTML = '<div class="backpack-empty">背包空空的，先去领一张券吧 🎀</div>';
     return;
   }
+  if(list.length <= BACKPACK_PREVIEW) backpackExpanded = false;
+  const shown = backpackExpanded ? list : list.slice(0, BACKPACK_PREVIEW);
+  backpackList.classList.toggle("expanded", backpackExpanded);
   backpackList.innerHTML = "";
-  list.forEach((cp) => {
+  shown.forEach((cp) => {
     const item = document.createElement("div");
     item.className = "backpack-item";
     item.innerHTML =
@@ -2920,7 +2931,6 @@ async function renderBackpack(){
       btn.disabled = true;
       const couponId = parseInt(btn.getAttribute("data-id"), 10);
       setTimeout(async () => {
-        // ① 先给对方留一条"我用券了"的记录（对方会收到手机通知 + 打开网站时的强提醒弹窗）
         const myEmail = await getUsername();
         const { error: logErr } = await sb.from("coupon_uses").insert({
           username: myEmail, icon: cp.icon, name: cp.name, tip: cp.tip, code: cp.code
@@ -2931,19 +2941,29 @@ async function renderBackpack(){
           btn.classList.remove("using"); btn.textContent = "使用"; btn.disabled = false;
           return;
         }
-        // ② 表里没有 used 字段，用完直接删除这一行
-        const { error } = await sb
-          .from("coupon_bag")
-          .delete()
-          .eq("id", couponId);
+        const { error } = await sb.from("coupon_bag").delete().eq("id", couponId);
         if(error){ console.error(error); return; }
         renderBackpack();
       }, 600);
     });
     backpackList.appendChild(item);
   });
-}
 
+  // 超过预览数量时，底部出现「显示更多 / 收起」
+  if(list.length > BACKPACK_PREVIEW){
+    const more = document.createElement("button");
+    more.type = "button";
+    more.className = "bp-more-btn";
+    more.textContent = backpackExpanded
+      ? "收起 ▲"
+      : "显示更多（还有 " + (list.length - BACKPACK_PREVIEW) + " 张）▼";
+    more.addEventListener("click", () => {
+      backpackExpanded = !backpackExpanded;
+      renderBackpack();
+    });
+    backpackList.appendChild(more);
+  }
+}
 renderCouponGrid();
 renderBackpack();
 
@@ -2966,16 +2986,30 @@ function showCouponUsedModal(rows){
   const who = (typeof CHAT_NAMES !== "undefined" && CHAT_NAMES[rows[0].username]) || "TA";
   const ov = document.createElement("div");
   ov.id = "couponUsedOverlay";
-  ov.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:24px";
-  const items = rows.map(r =>
-    '<div style="margin:12px 0"><div style="font-size:30px">'+escHtml(r.icon||"♡")+'</div>' +
-    '<div style="font-weight:700;font-size:18px;margin-top:2px">'+escHtml(r.name)+'</div>' +
-    (r.tip ? '<div style="font-size:13px;opacity:.7;margin-top:2px">'+escHtml(r.tip)+'</div>' : '') + '</div>'
+  ov.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px))";
+
+  // 相同的券合并成 ×N，列表短很多
+  const groups = [], map = {};
+  rows.forEach(r => {
+    const k = (r.icon || "") + "|" + r.name + "|" + (r.tip || "");
+    if(map[k]) map[k].n++; else { map[k] = { r: r, n: 1 }; groups.push(map[k]); }
+  });
+  const items = groups.map(g =>
+    '<div style="margin:10px 0;padding-bottom:10px;border-bottom:1px dashed rgba(0,0,0,.08)">' +
+    '<div style="font-size:26px">' + escHtml(g.r.icon || "♡") + '</div>' +
+    '<div style="font-weight:700;font-size:17px;margin-top:2px">' + escHtml(g.r.name) +
+      (g.n > 1 ? ' <span style="color:#e0759a">×' + g.n + '</span>' : '') + '</div>' +
+    (g.r.tip ? '<div style="font-size:12.5px;opacity:.7;margin-top:2px">' + escHtml(g.r.tip) + '</div>' : '') +
+    '</div>'
   ).join("");
+
   ov.innerHTML =
-    '<div style="background:#fff;color:#333;border-radius:18px;padding:24px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3)">' +
-    '<div style="font-size:15px;margin-bottom:4px">🎫 '+escHtml(who)+' 使用了兑换券</div>' + items +
-    '<button id="cuAckBtn" style="width:100%;margin-top:10px;padding:12px;border:0;border-radius:12px;font-size:16px;color:#fff;background:linear-gradient(135deg,#7BA4D6,#F3A8C2)">我知道啦 ♥</button></div>';
+    '<div style="background:#fff;color:#333;border-radius:18px;padding:20px 18px 16px;max-width:340px;width:100%;' +
+      'max-height:min(80vh,80dvh);display:flex;flex-direction:column;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3)">' +
+      '<div style="flex:0 0 auto;font-size:15px;margin-bottom:6px">🎫 ' + escHtml(who) + ' 使用了 ' + rows.length + ' 张兑换券</div>' +
+      '<div style="flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain">' + items + '</div>' +
+      '<button id="cuAckBtn" style="flex:0 0 auto;width:100%;margin-top:12px;padding:12px;border:0;border-radius:12px;font-size:16px;color:#fff;background:linear-gradient(135deg,#7BA4D6,#F3A8C2)">我知道啦 ♥</button>' +
+    '</div>';
   document.body.appendChild(ov);
   try{ navigator.vibrate && navigator.vibrate([200,100,200]); }catch(e){}
   ov.querySelector("#cuAckBtn").addEventListener("click", async () => {
